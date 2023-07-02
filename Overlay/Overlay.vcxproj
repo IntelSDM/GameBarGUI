@@ -218,8 +218,6 @@
     <ClInclude Include="Overlay.xaml.h">
       <DependentUpon>Overlay.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="Sockets\Client.h" />
-    <ClInclude Include="Sockets\Sockets.h" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -308,8 +306,6 @@
     <ClCompile Include="Overlay.xaml.cpp">
       <DependentUpon>Overlay.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="Sockets\Sockets.cpp" />
-    <ClCompile Include="Sockets\Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

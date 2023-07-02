@@ -1,11 +1,10 @@
-﻿//#include "pch.h"
-#include "pch.h"
+﻿#include "pch.h"
 #include "Overlay.xaml.h"
 #include <TlHelp32.h>
 #include <thread>
 #include <string>
 #include "Input.h"
-#include "Sockets.h"
+
 
 using namespace Cheat;
 using namespace Platform;
@@ -121,7 +120,6 @@ void Overlay::canvasSwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI:
 	//lets use this it is way better for what we want
 	sdk::WindowWidth = (float)Window::Current->CoreWindow->Bounds.Width;
 	sdk::WindowHeight = (float)Window::Current->CoreWindow->Bounds.Height;
-	CreateSockets();
 
 
 	std::thread renderthread(RenderingThread);

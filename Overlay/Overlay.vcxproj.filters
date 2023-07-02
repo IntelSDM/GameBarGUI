@@ -13,15 +13,11 @@
     <ClCompile Include="App.xaml.cpp" />
     <ClCompile Include="Misc\Pch\pch.cpp" />
     <ClCompile Include="Misc\Input.cpp" />
-    <ClCompile Include="Sockets\Sockets.cpp" />
-    <ClCompile Include="Sockets\Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
     <ClInclude Include="Misc\Pch\pch.h" />
     <ClInclude Include="Misc\Input.h" />
-    <ClInclude Include="Sockets\Sockets.h" />
-    <ClInclude Include="Sockets\Client.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
