@@ -97,18 +97,7 @@ void GetKey()
 
 }
 
-void ListeningThread()
-{
 
-	/*
-	So we have a listening thread incase lets say the client disconnects and restarts.
-	In websockets you cant just see if a thread is closed
-	Also the while true is basically exitted, so accept clients is called and then its stuck there until a client connects
-	So no additional load is put on the cpu. Optimized stuff microsoft.
-	*/
-	
-	
-}
 
 void Overlay::canvasSwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
@@ -124,8 +113,6 @@ void Overlay::canvasSwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI:
 
 	std::thread renderthread(RenderingThread);
 	renderthread.detach();
-	std::thread listernerthread(ListeningThread);
-	listernerthread.detach();
 	//std::thread keytest(GetKey);
 	//keytest.detach();
 }
