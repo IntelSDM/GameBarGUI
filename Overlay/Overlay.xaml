@@ -1,0 +1,17 @@
+﻿<Page
+    x:Class="Cheat.Overlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <canvas:CanvasSwapChainPanel x:Name="canvasSwapChainPanel" Loaded="canvasSwapChainPanel_Loaded">
+            <CaptureElement/>
+        </canvas:CanvasSwapChainPanel>
+
+    </Grid>
+
+</Page>

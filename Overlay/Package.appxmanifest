@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+ xmlns:uap4="http://schemas.microsoft.com/appx/manifest/uap/windows10/4"
+ xmlns:uap2="http://schemas.microsoft.com/appx/manifest/uap/windows10/2"
+ xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10"
+ xmlns:uap6="http://schemas.microsoft.com/appx/manifest/uap/windows10/6"
+ IgnorableNamespaces="uap uap3 mp uap4 uap2 iot uap6">
+
+  <Identity
+    Name="overlay"
+    Publisher="CN=Cheat"
+    Version="1.0.27.0" />
+
+  <mp:PhoneIdentity PhoneProductId="0d4864f4-b4f5-48c2-a868-7d6275202a7b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>overlay</DisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="Cheat.App">
+      <uap:VisualElements
+        DisplayName="Overlay"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png"
+        BackgroundColor="transparent" Description="Overlay Program">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="overlay"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
+      </uap:VisualElements>
+      <Extensions>
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="microsoft.gameBarUIExtension"
+                             Id="Widget1"
+                             DisplayName="Overlay"
+                             Description="Overlay"
+                             PublicFolder="GameBar">
+            <uap3:Properties>
+              <GameBarWidget Type="Standard">
+                <HomeMenuVisible>true</HomeMenuVisible>
+                <PinningSupported>true</PinningSupported>
+		<Pinned>true</Pinned>
+                <Window>
+<Pinned>true</Pinned>
+                   <AllowForegroundTransparency>true</AllowForegroundTransparency>
+                  <Size>
+                    <Height>1047</Height>
+                    <Width>1920</Width>
+                    <MinHeight>1047</MinHeight>
+                    <MinWidth>1920</MinWidth>
+                    <MaxHeight>1047</MaxHeight>
+                    <MaxWidth>1920</MaxWidth>
+                  </Size>
+                  <ResizeSupported>
+                    <Horizontal>true</Horizontal>
+                    <Vertical>true</Vertical>
+                  </ResizeSupported>
+                </Window>
+              </GameBarWidget>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Extensions>
+    <!-- Enlighten COM on where to find Metadata Based Marshaling (MBM) data for the Game Bar private types 
+         <Path> is a required element (by VS) and has to point to a binary in the package, but it's not used when the class id is
+         00000355-0000-0000-C000-000000000046 (MBM). Due to that we just put the Microsoft.Gaming.XboxGameBar.winmd here. -->
+    <Extension Category="windows.activatableClass.proxyStub">
+      <ProxyStub ClassId="00000355-0000-0000-C000-000000000046">
+        <Path>Microsoft.Gaming.XboxGameBar.winmd</Path>
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetAuthHost" InterfaceId="DC263529-B12F-469E-BB35-B94069F5B15A" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetControlHost" InterfaceId="C309CAC7-8435-4082-8F37-784523747047" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetForegroundWorkerHost" InterfaceId="DDB52B57-FA83-420C-AFDE-6FA556E18B83" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetForegroundWorkerPrivate" InterfaceId="42BACDFC-BB28-4E71-99B4-24C034C7B7E0" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarNavigationKeyCombo" InterfaceId="5EEA3DBF-09BB-42A5-B491-CF561E33C172" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetActivatedEventArgsPrivate" InterfaceId="782535A7-9407-4572-BFCB-316B4086F102" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetHost" InterfaceId="5D12BC93-212B-4B9F-9091-76B73BF56525" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetHost2" InterfaceId="28717C8B-D8E8-47A8-AF47-A1D5263BAE9B" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetHost3" InterfaceId="3F5A3F12-C1E4-4942-B80D-3117BC948E29" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetHost4" InterfaceId="FA696D9E-2501-4B01-B26F-4BB85344740F" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetPrivate" InterfaceId="22ABA97F-FB0F-4439-9BDD-2C67B2D5AA8F" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetPrivate2" InterfaceId="B2F7DB8C-7540-48DA-9B46-4E60CE0D9DEB" />
+        <Interface Name="Microsoft.Gaming.XboxGameBar.Private.IXboxGameBarWidgetPrivate3" InterfaceId="4FB89FB6-7CB8-489D-8408-2269E6C733A1" />
+      </ProxyStub>
+    </Extension>
+  </Extensions>
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <Capability Name="codeGeneration"/>
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="allowElevation" />
+    <rescap:Capability Name="broadFileSystemAccess" />
+    <uap:Capability Name="voipCall"/>
+    <uap:Capability Name="videosLibrary"/>
+    <uap3:Capability Name="userNotificationListener"/>
+    <uap4:Capability Name="userDataTasks"/>
+    <uap:Capability Name="userAccountInformation"/>
+    <uap2:Capability Name="spatialPerception"/>
+    <iot:Capability Name="systemManagement"/>
+    <uap:Capability Name="sharedUserCertificates"/>
+    <uap:Capability Name="removableStorage"/>
+    <uap3:Capability Name="remoteSystem"/>
+    <Capability Name="privateNetworkClientServer"/>
+    <uap:Capability Name="picturesLibrary"/>
+    <uap2:Capability Name="phoneCallHistoryPublic"/>
+    <uap:Capability Name="phoneCall"/>
+    <uap4:Capability Name="offlineMapsManagement"/>
+    <uap:Capability Name="objects3D"/>
+    <uap:Capability Name="musicLibrary"/>
+    <iot:Capability Name="lowLevelDevices"/>
+    <Capability Name="internetClientServer"/>
+    <uap6:Capability Name="graphicsCapture"/>
+    <uap:Capability Name="enterpriseAuthentication"/>
+    <uap:Capability Name="contacts"/>
+    <uap:Capability Name="chat"/>
+    <uap:Capability Name="blockedChatMessages"/>
+    <uap3:Capability Name="backgroundMediaPlayback"/>
+    <uap:Capability Name="appointments"/>
+    <Capability Name="allJoyn"/>
+    <DeviceCapability Name="webcam"/>
+    <DeviceCapability Name="proximity"/>
+    <DeviceCapability Name="pointOfService"/>
+    <DeviceCapability Name="microphone"/>
+    <DeviceCapability Name="lowLevel"/>
+    <DeviceCapability Name="location"/>
+    <DeviceCapability Name="gazeInput"/>
+    <DeviceCapability Name="bluetooth"/>
+  </Capabilities>
+
+</Package>
