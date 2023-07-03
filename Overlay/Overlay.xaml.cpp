@@ -61,7 +61,32 @@ void Overlay::PointerMoved(Platform::Object^ sender, Windows::UI::Xaml::Input::P
 	Windows::Foundation::Point mp = e->GetCurrentPoint(nullptr)->Position;
 	MousePosition = {(long) mp.X,(long)mp.Y };
 }
-
+void Overlay::PointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
+{
+	// Check the state of the mouse buttons
+	Windows::UI::Input::PointerPoint^ pointer = e->GetCurrentPoint(nullptr);
+	auto button = pointer->Properties->PointerUpdateKind;
+	if (button == Windows::UI::Input::PointerUpdateKind::LeftButtonPressed)
+	{
+		UpdateKeyState(VK_LBUTTON, true);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::RightButtonPressed)
+	{
+		UpdateKeyState(VK_RBUTTON, true);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::MiddleButtonPressed)
+	{
+		UpdateKeyState(VK_MBUTTON, true);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::XButton1Pressed)
+	{
+		UpdateKeyState(VK_XBUTTON1, true);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::XButton2Pressed)
+	{
+		UpdateKeyState(VK_XBUTTON2, true);
+	}
+}
 
 //You can just pass the CanvasObject directly into this but I used it in other places also
 void RenderingThread()
@@ -103,7 +128,7 @@ void Overlay::SwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI::Xaml:
 	sdk::WindowWidth = (float)Window::Current->CoreWindow->Bounds.Width;
 	sdk::WindowHeight = (float)Window::Current->CoreWindow->Bounds.Height;
 
-	
+	SetInput();
 
 	std::thread renderthread(RenderingThread);
 	renderthread.detach();

@@ -103,7 +103,7 @@ bool IsMouseInRectangle(Vector2 pos, Vector2 Dimensions)
 // just fill the dictionaries
 void SetInput()
 {
-    for (int i = 0; i <= 285; i++) // 255 is for the ascii character set, expand it for utf8 unicode
+    for (int i = 0; i <= 1000; i++) // 255 is for the ascii character set, expand it for utf8 unicode
     {
         KeyStates[i] = KeyState::KeyDormant;
         KeyHeld[i] = false;
