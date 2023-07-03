@@ -100,3 +100,27 @@ bool IsMouseInRectangle(Vector2 pos, Vector2 Dimensions)
         MousePos.y < pos.y + Dimensions.y
         );
 }
+// just fill the dictionaries
+void SetInput()
+{
+    for (int i = 0; i <= 285; i++) // 255 is for the ascii character set, expand it for utf8 unicode
+    {
+        KeyStates[i] = KeyState::KeyDormant;
+        KeyHeld[i] = false;
+
+    }
+}
+float TriangleArea(Vector2 point1, Vector2 point2, Vector2 point3)
+{
+    return abs((point1.x * (point2.y - point3.y) + point2.x * (point3.y - point1.y) + point3.x * (point1.y - point2.y)) / 2.0);
+}
+bool IsMouseInTriangle(Vector2 point1, Vector2 point2, Vector2 point3)
+{
+    Vector2 pos{ (float)MousePos.x,(float)MousePos.y };
+    float a = TriangleArea(point1, point2, point3);
+    float a1 = TriangleArea(pos, point2, point3);
+    float a2 = TriangleArea(point1, pos, point3);
+    float a3 = TriangleArea(point1, point2, pos);
+
+    return(a == a1 + a2 + a3);
+}
