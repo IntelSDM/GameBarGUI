@@ -54,16 +54,13 @@ Overlay::Overlay()
 	titlebar->ButtonPressedBackgroundColor = Colors::Transparent;
 	titlebar->ButtonHoverBackgroundColor = Colors::Transparent;
 }
-POINT mousePosition;
+POINT MousePosition;
 void Overlay::PointerMoved(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
 	// Get the current mouse position
 	Windows::Foundation::Point mp = e->GetCurrentPoint(nullptr)->Position;
-	mousePosition = {(long) mp.X,(long)mp.Y };
-	// Use the mouse position as needed
-	// For example, you can display it in a TextBlock
+	MousePosition = {(long) mp.X,(long)mp.Y };
 }
-bool test123 = false;
 
 
 //You can just pass the CanvasObject directly into this but I used it in other places also
@@ -77,21 +74,17 @@ void RenderingThread()
 		ds->Clear(Colors::Transparent);
 		/* RENDER*/
 
-		std::string test = std::to_string(mousePosition.x) + "x" + std::to_string(mousePosition.y);
+		std::string test = std::to_string(MousePosition.x) + "x" + std::to_string(MousePosition.y);
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
 	
 		ds->DrawText(text, 0, 0, Colors::Red);
 
 		/*END OF RENDERING*/
-	//	ds->FillRectangle(0,0, sdk::WindowWidth, sdk::WindowHeight,Colors::White);
-
 		ds->Flush();
+		CanvasObject->SwapChain->Present();
 	
-	CanvasObject->SwapChain->Present();
-	
-	
-	// Unhook the mouse hook
+
 	
 	}
 }
