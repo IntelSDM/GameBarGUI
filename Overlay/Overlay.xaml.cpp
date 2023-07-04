@@ -112,19 +112,19 @@ void Overlay::PointerReleased(Platform::Object^ sender, Windows::UI::Xaml::Input
 	}
 }
 int ValTest;
-void Overlay::KeyDown(Platform::Object^ sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e)
+void Overlay::KeyDown(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::KeyEventArgs^ e)
 {
 	// Get the key that was pressed down
-	Windows::System::VirtualKey key = e->Key;
+	Windows::System::VirtualKey key = e->VirtualKey;
 	int keyvalue = static_cast<int>(key);
 	ValTest = 1;
 	UpdateKeyState(keyvalue, true);
 	
 }
-void Overlay::KeyUp(Platform::Object^ sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e)
+void Overlay::KeyUp(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::KeyEventArgs^ e)
 {
 	// Get the key that was released
-	Windows::System::VirtualKey key = e->Key;
+	Windows::System::VirtualKey key = e->VirtualKey;
 	int keyvalue = static_cast<int>(key);
 	ValTest = 1;
 	UpdateKeyState(keyvalue, false);
@@ -140,7 +140,7 @@ void RenderingThread()
 		ds->Clear(Colors::Transparent);
 		/* RENDER*/
 
-		std::string test = std::to_string(MousePosition.x) + "x" + std::to_string(MousePosition.y) +"|" + std::to_string(ValTest);
+		std::string test = std::to_string(MousePosition.x) + "x" + std::to_string(MousePosition.y) +"|" + std::to_string(IsKeyDown(VK_LSHIFT));
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
 	
@@ -168,6 +168,8 @@ void Overlay::SwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI::Xaml:
 	//lets use this it is way better for what we want
 	sdk::WindowWidth = (float)Window::Current->CoreWindow->Bounds.Width;
 	sdk::WindowHeight = (float)Window::Current->CoreWindow->Bounds.Height;
+	Windows::UI::Core::CoreWindow::GetForCurrentThread()->KeyDown += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::KeyEventArgs^>(this, &Overlay::KeyDown);
+	Windows::UI::Core::CoreWindow::GetForCurrentThread()->KeyUp += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::KeyEventArgs^>(this, &Overlay::KeyUp);
 
 	SetInput();
 
