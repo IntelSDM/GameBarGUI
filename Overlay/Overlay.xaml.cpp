@@ -140,7 +140,7 @@ void RenderingThread()
 		ds->Clear(Colors::Transparent);
 		/* RENDER*/
 
-		std::string test = std::to_string(MousePosition.x) + "x" + std::to_string(MousePosition.y) +"|" + std::to_string(IsKeyDown(VK_LSHIFT));
+		std::string test = std::to_string(MousePosition.x) + "x" + std::to_string(MousePosition.y) +"|" + std::to_string(IsKeyDown(VK_SHIFT));
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
 	
