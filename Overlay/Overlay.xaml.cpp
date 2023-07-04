@@ -1,8 +1,6 @@
 ﻿#include "pch.h"
 #include "Overlay.xaml.h"
-#include <TlHelp32.h>
-#include <thread>
-#include <string>
+
 #include "Input.h"
 
 
@@ -87,7 +85,50 @@ void Overlay::PointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input:
 		UpdateKeyState(VK_XBUTTON2, true);
 	}
 }
-
+void Overlay::PointerReleased(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
+{
+	// Check the state of the mouse buttons
+	Windows::UI::Input::PointerPoint^ pointer = e->GetCurrentPoint(nullptr);
+	auto button = pointer->Properties->PointerUpdateKind;
+	if (button == Windows::UI::Input::PointerUpdateKind::LeftButtonReleased)
+	{
+		UpdateKeyState(VK_LBUTTON, false);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::RightButtonReleased)
+	{
+		UpdateKeyState(VK_RBUTTON, false);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::MiddleButtonReleased)
+	{
+		UpdateKeyState(VK_MBUTTON, false);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::XButton1Released)
+	{
+		UpdateKeyState(VK_XBUTTON1, false);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::XButton2Released)
+	{
+		UpdateKeyState(VK_XBUTTON2, false);
+	}
+}
+int ValTest;
+void Overlay::KeyDown(Platform::Object^ sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e)
+{
+	// Get the key that was pressed down
+	Windows::System::VirtualKey key = e->Key;
+	int keyvalue = static_cast<int>(key);
+	ValTest = 1;
+	UpdateKeyState(keyvalue, true);
+	
+}
+void Overlay::KeyUp(Platform::Object^ sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e)
+{
+	// Get the key that was released
+	Windows::System::VirtualKey key = e->Key;
+	int keyvalue = static_cast<int>(key);
+	ValTest = 1;
+	UpdateKeyState(keyvalue, false);
+}
 //You can just pass the CanvasObject directly into this but I used it in other places also
 void RenderingThread()
 {
@@ -99,7 +140,7 @@ void RenderingThread()
 		ds->Clear(Colors::Transparent);
 		/* RENDER*/
 
-		std::string test = std::to_string(MousePosition.x) + "x" + std::to_string(MousePosition.y);
+		std::string test = std::to_string(MousePosition.x) + "x" + std::to_string(MousePosition.y) +"|" + std::to_string(ValTest);
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
 	
@@ -123,7 +164,7 @@ void Overlay::SwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI::Xaml:
 		(float)Window::Current->CoreWindow->Bounds.Height, 96);
 
 	CanvasObject = canvasSwapChainPanel;
-
+	CanvasObject->AllowFocusWhenDisabled = true;
 	//lets use this it is way better for what we want
 	sdk::WindowWidth = (float)Window::Current->CoreWindow->Bounds.Width;
 	sdk::WindowHeight = (float)Window::Current->CoreWindow->Bounds.Height;

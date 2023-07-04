@@ -2,6 +2,14 @@
 #include "input.h"
 const std::wstring ProcessTitle = L"Overlay";
 
+enum class KeyState
+{
+    KeyDormant = 0,
+    KeyInvoked = 1,
+    KeyActive = 2
+};
+
+
 std::map<int, bool> KeyHeld;
 std::map<int, KeyState> KeyStates;
 std::map<int, float> KeyTimes;
@@ -9,12 +17,6 @@ std::map<std::string, HCURSOR> Cursors = { {"Default", LoadCursor(NULL, IDC_ARRO
 HCURSOR CurrentCursor;
 POINT MousePos;
 
-enum class KeyState
-{
-    KeyDormant = 0,
-    KeyInvoked = 1,
-    KeyActive = 2
-};
 
 bool CanCollectInput()
 {

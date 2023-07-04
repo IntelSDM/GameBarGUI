@@ -28,5 +28,11 @@
 #include <WinSock2.h>
 #include <ws2tcpip.h>
 #include <list>
+#include <string>
+#include <map>
+#include <TlHelp32.h>
+#include <thread>
+
+
 #include "Vector.h"
 #include "App.xaml.h"
