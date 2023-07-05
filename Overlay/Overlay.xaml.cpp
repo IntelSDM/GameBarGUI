@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Overlay.xaml.h"
-
+#include "Graphics.h"
 #include "Input.h"
 
 
@@ -31,7 +31,7 @@ using namespace Windows::UI::ViewManagement;
 using namespace Windows::ApplicationModel::Core;
 
 Microsoft::Graphics::Canvas::UI::Xaml::CanvasSwapChainPanel^ CanvasObject;
-
+CanvasDrawingSession^ SwapChain;
 namespace sdk
 {
 	float WindowWidth;
@@ -117,7 +117,6 @@ void Overlay::KeyDown(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::
 	// Get the key that was pressed down
 	Windows::System::VirtualKey key = e->VirtualKey;
 	int keyvalue = static_cast<int>(key);
-	ValTest = 1;
 	UpdateKeyState(keyvalue, true);
 	
 }
@@ -126,28 +125,27 @@ void Overlay::KeyUp(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::Ke
 	// Get the key that was released
 	Windows::System::VirtualKey key = e->VirtualKey;
 	int keyvalue = static_cast<int>(key);
-	ValTest = 1;
 	UpdateKeyState(keyvalue, false);
 }
 //You can just pass the CanvasObject directly into this but I used it in other places also
 void RenderingThread()
 {
-	static auto ds = CanvasObject->SwapChain->CreateDrawingSession(Colors::Transparent);
+	SwapChain = CanvasObject->SwapChain->CreateDrawingSession(Colors::Transparent);
 
 	while (true) 
 	{
 		
-		ds->Clear(Colors::Transparent);
+		SwapChain->Clear(Colors::Transparent);
 		/* RENDER*/
 
 		std::string test = std::to_string(MousePosition.x) + "x" + std::to_string(MousePosition.y) +"|" + std::to_string(IsKeyDown(VK_SHIFT));
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
 	
-		ds->DrawText(text, 0, 0, Colors::Red);
+		SwapChain->DrawText(text, 0, 0, Colors::Red);
 
 		/*END OF RENDERING*/
-		ds->Flush();
+		SwapChain->Flush();
 		CanvasObject->SwapChain->Present();
 	
 
