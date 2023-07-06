@@ -1,5 +1,5 @@
 #include "pch.h"
-
+#include "Graphics.h"
 using namespace Windows::UI;
 using namespace Microsoft::Graphics::Canvas::UI::Xaml;
 using namespace Microsoft::Graphics::Canvas;
@@ -11,3 +11,4 @@ using namespace Windows::ApplicationModel::Core;
 using namespace Microsoft::Graphics::Canvas::UI::Xaml;
 using namespace Microsoft::Graphics::Canvas;
 using namespace Microsoft::Graphics::Canvas::Text;
+

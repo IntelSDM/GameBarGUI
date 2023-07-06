@@ -15,6 +15,7 @@
     <ClCompile Include="Misc\Input.cpp" />
     <ClCompile Include="Misc\Vector.cpp" />
     <ClCompile Include="Graphics\Drawing.cpp" />
+    <ClCompile Include="Graphics\Utility\Colour.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -22,6 +23,7 @@
     <ClInclude Include="Misc\Input.h" />
     <ClInclude Include="Misc\Vector.h" />
     <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\Utility\Colour.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
