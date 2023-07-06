@@ -1,17 +1,5 @@
 #include "pch.h"
 #include "Font.h"
-using namespace Windows::UI;
-using namespace Microsoft::Graphics::Canvas::UI::Xaml;
-using namespace Microsoft::Graphics::Canvas;
-using namespace Windows::Foundation;
-using namespace Windows::UI::Core;
-using namespace Windows::System;
-using namespace Windows::UI::ViewManagement;
-using namespace Windows::UI::Text;
-using namespace Windows::ApplicationModel::Core;
-using namespace Microsoft::Graphics::Canvas::UI::Xaml;
-using namespace Microsoft::Graphics::Canvas;
-using namespace Microsoft::Graphics::Canvas::Text;
 
 std::map<std::string, CanvasTextFormat^> Fonts;
 

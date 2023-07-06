@@ -8,4 +8,4 @@ enum Weight
 	SemiLight = 4
 };
 void CreateFont(std::string name, std::wstring font, int size, Weight weight);
-Microsoft::Graphics::Canvas::Text::CanvasTextFormat ^ GetFont(std::string name);
+CanvasTextFormat ^ GetFont(std::string name);
