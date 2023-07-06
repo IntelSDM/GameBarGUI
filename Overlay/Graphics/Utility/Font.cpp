@@ -41,3 +41,8 @@ void CreateFont(std::string name, std::wstring font, int size, Weight weight)
 	}
 	Fonts[name] = textformat;
 }
+
+CanvasTextFormat^ GetFont(std::string name)
+{
+	return Fonts[name];
+}
