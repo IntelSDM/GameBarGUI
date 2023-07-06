@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Graphics.h"
+#include "Drawing.h"
 using namespace Windows::UI;
 using namespace Microsoft::Graphics::Canvas::UI::Xaml;
 using namespace Microsoft::Graphics::Canvas;
