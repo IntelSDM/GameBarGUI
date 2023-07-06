@@ -217,8 +217,10 @@
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="Graphics\Drawing.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\Utility\Colour.h" />
+    <ClInclude Include="Graphics\Utility\Font.h" />
     <ClInclude Include="Misc\Input.h" />
     <ClInclude Include="Misc\Pch\pch.h" />
     <ClInclude Include="Misc\Vector.h" />
@@ -310,6 +312,7 @@
     </ClCompile>
     <ClCompile Include="Graphics\Drawing.cpp" />
     <ClCompile Include="Graphics\Utility\Colour.cpp" />
+    <ClCompile Include="Graphics\Utility\Font.cpp" />
     <ClCompile Include="Misc\Input.cpp" />
     <ClCompile Include="Misc\Pch\pch.cpp" />
     <ClCompile Include="Misc\Vector.cpp" />

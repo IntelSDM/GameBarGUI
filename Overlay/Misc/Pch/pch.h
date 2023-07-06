@@ -20,7 +20,9 @@
 #ifdef GetUserName
 #undef GetUserName
 #endif
-
+#ifdef CreateFont
+#undef CreateFont
+#endif
 #include <collection.h>
 #include <ppltasks.h>
 #include <windowsx.h>
@@ -36,3 +38,4 @@
 
 #include "Vector.h"
 #include "App.xaml.h"
+#include "Colour.h"

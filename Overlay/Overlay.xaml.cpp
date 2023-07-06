@@ -18,7 +18,7 @@ using namespace Windows::UI::Xaml::Navigation;
 using namespace Windows::UI;
 using namespace Microsoft::Graphics::Canvas::UI::Xaml;
 using namespace Microsoft::Graphics::Canvas;
-
+using namespace Windows::UI::Text;
 using namespace Microsoft::Graphics::Canvas;
 using namespace Microsoft::Graphics::Canvas::Text;
 using namespace Microsoft::Graphics::Canvas::UI::Xaml;
@@ -142,7 +142,7 @@ void RenderingThread()
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
 	
-		SwapChain->DrawText(text, 0, 0, Colors::Red);
+		SwapChain->DrawText(text, 0, 0, Colour(255,0,0,255));
 
 		/*END OF RENDERING*/
 		SwapChain->Flush();
