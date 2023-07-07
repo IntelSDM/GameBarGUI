@@ -109,7 +109,7 @@ void Overlay::KeyUp(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::Ke
 void RenderingThread()
 {
 	SwapChain = CanvasObject->SwapChain->CreateDrawingSession(Colors::Transparent);
-	CreateFont("verdana", L"Verdana", 12, Weight::Normal);
+	CreateFont("verdana", L"Verdana", 20, Weight::Normal);
 
 	while (true) 
 	{
@@ -121,7 +121,7 @@ void RenderingThread()
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
 		SwapChain->DrawText(text, 0, 0, Colour(255,0,0,255));
-		DrawText(10, 50, L"text", "verdana", 15, Colour(255, 0, 0, 255), FontAlignment::None);
+		DrawText(10, 50, L"text0", "verdana", 16, Colour(255, 0, 0, 255), FontAlignment::None);
 		/*END OF RENDERING*/
 		SwapChain->Flush();
 		CanvasObject->SwapChain->Present();

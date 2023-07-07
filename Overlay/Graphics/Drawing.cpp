@@ -38,5 +38,6 @@ void DrawText(int x, int y,std::wstring text,std::string font, int fontsize,Colo
         y -= ((layout->LayoutBounds.Height + modifier) / 2);
         break;
     }
+
 	SwapChain->DrawTextLayout(layout, (float)x, (float)y, colour);
 }
