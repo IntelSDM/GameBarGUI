@@ -5,12 +5,11 @@
 
 
 
-void Text(int x, int y,std::wstring text,std::string font, int fontsize,Color colour,FontAlignment alignment)
+void DrawText(int x, int y,std::wstring text,std::string font, int fontsize,Color colour,FontAlignment alignment)
 {
 	Platform::String^ platstring = ref new Platform::String(text.data());
 	CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain,platstring, GetFont(font),4096.0f,4096.0f);
 	layout->SetFontSize(0,text.length(),fontsize);
-	Point point(x, y);
 	float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
 
     switch (alignment)
@@ -39,7 +38,5 @@ void Text(int x, int y,std::wstring text,std::string font, int fontsize,Color co
         y -= ((layout->LayoutBounds.Height + modifier) / 2);
         break;
     }
-    point.X = x;
-    point.Y = y;
-	SwapChain->DrawTextLayout(layout, point, colour);
+	SwapChain->DrawTextLayout(layout, (float)x, (float)y, colour);
 }

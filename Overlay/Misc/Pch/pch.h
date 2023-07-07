@@ -23,6 +23,9 @@
 #ifdef CreateFont
 #undef CreateFont
 #endif
+#ifdef DrawText
+#undef DrawText
+#endif
 #include <collection.h>
 #include <ppltasks.h>
 #include <windowsx.h>
@@ -52,7 +55,7 @@ using namespace Microsoft::Graphics::Canvas;
 using namespace Microsoft::Graphics::Canvas::Text;
 using namespace Microsoft::Graphics::Canvas::UI::Xaml;
 using namespace Microsoft::Gaming::XboxGameBar;
-
+using namespace Windows::Foundation::Numerics;
 using namespace Windows::Foundation;
 using namespace Windows::UI::Core;
 using namespace Windows::System;

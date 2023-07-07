@@ -2,7 +2,8 @@
 #include "Overlay.xaml.h"
 #include "Graphics.h"
 #include "Input.h"
-
+#include "Font.h"
+#include "Drawing.h"
 
 using namespace Cheat;
 using namespace Platform;
@@ -108,6 +109,7 @@ void Overlay::KeyUp(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::Ke
 void RenderingThread()
 {
 	SwapChain = CanvasObject->SwapChain->CreateDrawingSession(Colors::Transparent);
+	CreateFont("verdana", L"Verdana", 12, Weight::Normal);
 
 	while (true) 
 	{
@@ -118,9 +120,8 @@ void RenderingThread()
 		std::string test = std::to_string(MousePosition.x) + "x" + std::to_string(MousePosition.y) +"|" + std::to_string(IsKeyDown(VK_SHIFT));
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
-	
 		SwapChain->DrawText(text, 0, 0, Colour(255,0,0,255));
-
+		DrawText(10, 50, L"text", "verdana", 15, Colour(255, 0, 0, 255), FontAlignment::None);
 		/*END OF RENDERING*/
 		SwapChain->Flush();
 		CanvasObject->SwapChain->Present();
