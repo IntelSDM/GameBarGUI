@@ -61,7 +61,8 @@ using namespace Windows::UI::Core;
 using namespace Windows::System;
 using namespace Windows::UI::ViewManagement;
 using namespace Windows::ApplicationModel::Core;
-
+using namespace Microsoft::Graphics::Canvas::Brushes;
+using namespace Microsoft::Graphics::Canvas::Geometry;
 
 #include "Vector.h"
 #include "App.xaml.h"

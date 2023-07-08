@@ -2,7 +2,7 @@
 #include "Graphics.h"
 #include "Drawing.h"
 #include "Font.h"
-
+#include <WindowsNumerics.h>
 
 
 void DrawText(int x, int y,std::wstring text,std::string font, int fontsize,Color colour,FontAlignment alignment)
@@ -84,13 +84,43 @@ void FilledRectangle(int x, int y, int width, int height, Color colour)
     Rect rect(x, y, width,height);
     SwapChain->FillRectangle(rect, colour);
 }
-
-void OutlineRectangle(int x, int y, int width, int height, Color colour)
+void ColourPicker(int x, int y, int width, int height, Color colour)
 {
-    Rect rect(x, y, width,height);
-    SwapChain->DrawRectangle(rect, colour);
-}
+    auto stops = ref new Platform::Array<CanvasGradientStop>(2);
+    stops[0] = { 0.00f, colour };
+    stops[1] = { 1.0f, Colors::Black };
 
+
+    auto brush = ref new CanvasLinearGradientBrush(SwapChain, stops);
+    brush->StartPoint =  float2(x + width, y);
+    brush->EndPoint =  float2(x, y + height);
+
+    SwapChain->FillRectangle(Rect(x, y, width, height), brush);
+
+}
+void ColourPickerSlider(int x, int y, int width, int height)
+{
+    auto stops = ref new Platform::Array<CanvasGradientStop>(7);
+    stops[0] = { 0.00f, Colour(255,0,0,255) };
+    stops[1] = { 0.16f, Colour(255,255,0,255) };
+    stops[2] = { 0.32f,  Colour(0,255,0,255) };
+    stops[3] = { 0.48f,  Colour(0,255,255,255) };
+    stops[4] = { 0.64f,  Colour(0,0,255,255) };
+    stops[5] = { 0.80f,  Colour(255,0,255,255) };
+    stops[6] = { 0.96f,  Colour(255,0,0,255) };
+
+    auto brush = ref new CanvasLinearGradientBrush(SwapChain, stops);
+    brush->StartPoint = float2((float)x, (float)y);
+    brush->EndPoint = float2((float)(x + width), (float)y);
+
+    SwapChain->FillRectangle(Rect(x, y, width, height), brush);
+
+}
+void OutlineRectangle(int x, int y, int width, int height, int thickness, Color colour)
+{
+    Rect rect(x, y, width, height);
+    SwapChain->DrawRectangle(rect,colour, thickness);
+}
 void FilledRoundedRectangle(int x, int y, int width, int height,int aax, int aay,Color colour)
 {
     Rect rect(x, y, width, height);
