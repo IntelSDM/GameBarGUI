@@ -126,6 +126,7 @@ void RenderingThread()
 		OutlineRoundedRectangle(150, 150, 50, 50, 5, 5, Colour(255, 0, 255, 255));
 		OutlineCircle(300, 300, 100, 1, Colour(0, 0, 0, 255));
 		ColourPicker(400, 400, 200, 200,Colour(255,0,0,255));
+		FilledTriangle(600, 150, 900, 150, 750, 300, Colour(0, 0, 255, 255));
 		/*END OF RENDERING*/
 		SwapChain->Flush();
 		CanvasObject->SwapChain->Present();

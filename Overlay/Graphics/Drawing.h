@@ -19,3 +19,4 @@ void OutlineCircle(int x, int y, int radius, int thickness, Color colour);
 void FillCircle(int x, int y, int radius, int thickness, Color colour);
 void ColourPicker(int x, int y, int width, int height, Color colour);
 void ColourPickerSlider(int x, int y, int width, int height);
+void FilledTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color colour);

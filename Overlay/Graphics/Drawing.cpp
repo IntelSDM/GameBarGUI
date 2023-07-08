@@ -141,3 +141,18 @@ void FillCircle(int x, int y, int radius, int thickness, Color colour)
 {
     SwapChain->FillCircle(x, y, (float)radius, colour);
 }
+void FilledTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color colour)
+{
+    Point p1(x1,y1);
+    Point p2(x2, y2);
+    Point p3(x3, y3);
+    
+    auto path = ref new CanvasPathBuilder(SwapChain->Device);
+
+    path->BeginFigure(p1);
+    path->AddLine(p2);
+    path->AddLine(p3);
+    path->EndFigure(CanvasFigureLoop::Closed);
+    auto geometry = CanvasGeometry::CreatePath(path);
+    SwapChain->FillGeometry(geometry, colour);
+}
