@@ -1,11 +1,18 @@
 #include "pch.h"
 #include "GUI.h"
 #include "Entity.h"
-
+#include "Form.h"
 EntityVector MenuEntity;
 void CreateGUI()
 {
 	MenuEntity = std::make_shared< Container >();
+	auto form = std::make_shared<Form >(300, 100, 480, 300, 2, 30, L"FORM", true);
+	{	
+	
+	}
+	MenuEntity->Push(form);
+	MenuEntity->Draw();
+	MenuEntity->Update();
 }
 void SetFormPriority()
 {
@@ -15,7 +22,7 @@ void SetFormPriority()
 		[](child a, child b) {return b->GetLastClick() < a->GetLastClick(); }
 	);
 }
-void Render()
+void RenderGUI()
 {
 	MenuEntity->Draw();
 	MenuEntity->GetContainer()[0]->Update(); // only allow stretching,dragging and other update stuff if it is the main form, prevents dragging and sizing the wrong forms.

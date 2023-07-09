@@ -4,7 +4,7 @@
 #include "Input.h"
 #include "Font.h"
 #include "Drawing.h"
-
+#include "GUI.h"
 using namespace Cheat;
 using namespace Platform;
 
@@ -109,8 +109,8 @@ void Overlay::KeyUp(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::Ke
 void RenderingThread()
 {
 	SwapChain = CanvasObject->SwapChain->CreateDrawingSession(Colors::Transparent);
-	CreateFont("verdana", L"Verdana", 20, Weight::Normal);
-
+	CreateFont("Verdana", L"Verdana", 20, Weight::Normal);
+	CreateGUI();
 	while (true) 
 	{
 		
@@ -121,12 +121,13 @@ void RenderingThread()
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
 		SwapChain->DrawText(text, 0, 0, Colour(255,0,0,255));
-		DrawText(10, 50, L"text0", "verdana", 16, Colour(255, 0, 0, 255), FontAlignment::None);
+		/*DrawText(10, 50, L"text0", "verdana", 16, Colour(255, 0, 0, 255), FontAlignment::None);
 		FilledRectangle(80, 80, 50, 50, Colour(0, 255, 0, 255));
 		OutlineRoundedRectangle(150, 150, 50, 50, 5, 5, Colour(255, 0, 255, 255));
 		OutlineCircle(300, 300, 100, 1, Colour(0, 0, 0, 255));
 		ColourPicker(400, 400, 200, 200,Colour(255,0,0,255));
-		FilledTriangle(600, 150, 900, 150, 750, 300, Colour(0, 0, 255, 255));
+		FilledTriangle(600, 150, 900, 150, 750, 300, Colour(0, 0, 255, 255));*/
+		RenderGUI();
 		/*END OF RENDERING*/
 		SwapChain->Flush();
 		CanvasObject->SwapChain->Present();
