@@ -118,15 +118,14 @@ void Form::Draw()
         SetCurrentCursor("Default");
     if (IsMouseInTriangle(StretchPoint1, StretchPoint2, StretchPoint3) && Form::CanStretch)
         SetCurrentCursor("Corner Drag");
-    if (Form::CanStretch)
-    {
-      
-    }
-
+  
     OutlineRectangle((Form::Pos.x - Form::Border.x / 2) + 1, (Form::Pos.y - Form::Border.x / 2) + 1, Form::Size.x + Form::Border.x - 1, Form::Size.y + Form::Border.x - 1, 1, Colour(140, 140, 140, 255)); // Draw Border
     FilledRectangle(Form::Pos.x, Form::Pos.y, Form::Size.x, Form::Size.y, Colour(40, 40, 40, 255));
     FilledRectangle(Form::Pos.x, Form::Pos.y, Form::Size.x, Form::Border.y, Colour(30, 30, 30, 255)); // header
     DrawText(Form::Pos.x + 5, Form::Pos.y + 5, Form::Name, "Verdana", 12, Colour(255, 255, 255, 255), None);
+    if (Form::CanStretch)
+        FilledTriangle(StretchPoint1.x, StretchPoint1.y, StretchPoint2.x, StretchPoint2.y, StretchPoint3.x, StretchPoint3.y, Colour(255, 0, 0));
+    
 
     Container::Draw();
 }

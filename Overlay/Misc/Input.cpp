@@ -112,17 +112,27 @@ void SetInput()
 
     }
 }
+
+
 float TriangleArea(Vector2 point1, Vector2 point2, Vector2 point3)
 {
-    return abs((point1.x * (point2.y - point3.y) + point2.x * (point3.y - point1.y) + point3.x * (point1.y - point2.y)) / 2.0);
+    return (point1.x - point3.x) * (point2.y - point3.y) - (point2.x - point3.x) * (point1.y - point3.y);
 }
 bool IsMouseInTriangle(Vector2 point1, Vector2 point2, Vector2 point3)
 {
-    Vector2 pos{ (float)MousePos.x,(float)MousePos.y };
-    float a = TriangleArea(point1, point2, point3);
-    float a1 = TriangleArea(pos, point2, point3);
-    float a2 = TriangleArea(point1, pos, point3);
-    float a3 = TriangleArea(point1, point2, pos);
+    float d1;
+    float d2;
+    float d3;
 
-    return(a == a1 + a2 + a3);
+    bool neg;
+    bool pos;
+
+    d1 = TriangleArea(MousePos, point1, point2);
+    d2 = TriangleArea(MousePos, point2, point3);
+    d3 = TriangleArea(MousePos, point3, point1);
+
+    neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+    pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+    return !(neg && pos);
 }

@@ -35,6 +35,8 @@ void Overlay::PointerMoved(Platform::Object^ sender, Windows::UI::Xaml::Input::P
 	// Get the current mouse position
 	Windows::Foundation::Point mp = e->GetCurrentPoint(nullptr)->Position;
 	MousePos = {(float) mp.X,(float)mp.Y };
+	if(CanCollectInput())
+	SetClassLongPtr(GetForegroundWindow() ,GCLP_HCURSOR,(LONG_PTR)GetCurrentCursor()); // set cursor
 }
 void Overlay::PointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
