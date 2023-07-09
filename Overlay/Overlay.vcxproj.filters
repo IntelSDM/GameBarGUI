@@ -17,6 +17,8 @@
     <ClCompile Include="Graphics\Drawing.cpp" />
     <ClCompile Include="Graphics\Utility\Colour.cpp" />
     <ClCompile Include="Graphics\Utility\Font.cpp" />
+    <ClCompile Include="Graphics\Start Up\GUI.cpp" />
+    <ClCompile Include="Graphics\Entities\Entity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -27,6 +29,8 @@
     <ClInclude Include="Graphics\Utility\Colour.h" />
     <ClInclude Include="Graphics\Drawing.h" />
     <ClInclude Include="Graphics\Utility\Font.h" />
+    <ClInclude Include="Graphics\Start Up\GUI.h" />
+    <ClInclude Include="Graphics\Entities\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">

@@ -149,7 +149,7 @@
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -157,7 +157,7 @@
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -166,7 +166,7 @@
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -177,7 +177,7 @@
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -189,7 +189,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Shell32.lib;winmm.lib;User32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -206,7 +206,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Gdi32.lib;Shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -218,7 +218,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="Graphics\Drawing.h" />
+    <ClInclude Include="Graphics\Entities\Entity.h" />
     <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\Start Up\GUI.h" />
     <ClInclude Include="Graphics\Utility\Colour.h" />
     <ClInclude Include="Graphics\Utility\Font.h" />
     <ClInclude Include="Misc\Input.h" />
@@ -311,6 +313,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="Graphics\Drawing.cpp" />
+    <ClCompile Include="Graphics\Entities\Entity.cpp" />
+    <ClCompile Include="Graphics\Start Up\GUI.cpp" />
     <ClCompile Include="Graphics\Utility\Colour.cpp" />
     <ClCompile Include="Graphics\Utility\Font.cpp" />
     <ClCompile Include="Misc\Input.cpp" />
