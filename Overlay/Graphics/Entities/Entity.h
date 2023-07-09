@@ -24,7 +24,7 @@ protected:
 	Vector2 ParentPos;
 	Vector2 ParentSize;
 
-	std::string Name;
+	std::wstring Name;
 
 	Entity* Instance = this;
 

@@ -26,7 +26,7 @@ protected:
 	void StretchAction();
 
 public:
-	Form(float x, float y, float w, float h, float borderwidth, float borderheight, std::string text, bool drag);
+	Form(float x, float y, float w, float h, float borderwidth, float borderheight, std::wstring text, bool drag);
 	void Draw();
 	void Update();
 };

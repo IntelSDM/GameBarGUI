@@ -6,7 +6,7 @@
 #include "input.h"
 #include "Entity.h"
 #include "GUI.h"
-Form::Form(float x, float y, float w, float h, float borderwidth, float borderheight, std::string text, bool stretch)
+Form::Form(float x, float y, float w, float h, float borderwidth, float borderheight, std::wstring text, bool stretch)
 {
     Form::Name = text;
     Form::Pos = { x, y };
@@ -134,7 +134,7 @@ void Form::Draw()
     FilledRectangle(Form::Pos.x, Form::Pos.y, Form::Size.x, Form::Size.y, Colour(40, 40, 40, 255));
     FilledRectangle(Form::Pos.x, Form::Pos.y, Form::Size.x, Form::Border.y, Colour(30, 30, 30, 255)); // header
 
-    Text(Form::Name, Form::Pos.x + 5, Form::Pos.y + 5, 12, "Verdana", Colour(255, 255, 255, 255), None);
+    DrawText(Form::Pos.x + 5, Form::Pos.y + 5, Form::Name, "Verdana",12, Colour(255, 255, 255, 255), None);
 
 
 #pragma region Minimize

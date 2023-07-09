@@ -137,9 +137,13 @@ void OutlineCircle(int x, int y, int radius,int thickness, Color colour)
 {
     SwapChain->DrawCircle(x,y,(float)radius,colour, thickness);
 }
-void FillCircle(int x, int y, int radius, int thickness, Color colour)
+void FilledCircle(int x, int y, int radius, int thickness, Color colour)
 {
     SwapChain->FillCircle(x, y, (float)radius, colour);
+}
+void FilledLine(int x1,int y1,int x2, int y2, int thickness, Color colour)
+{
+    SwapChain->DrawLine(x1, y1, x2, y2, colour, thickness);
 }
 void FilledTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color colour)
 {
