@@ -219,6 +219,7 @@
     </ClInclude>
     <ClInclude Include="Graphics\Drawing.h" />
     <ClInclude Include="Graphics\Entities\Entity.h" />
+    <ClInclude Include="Graphics\Entities\Form.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\Start Up\GUI.h" />
     <ClInclude Include="Graphics\Utility\Colour.h" />
@@ -314,6 +315,7 @@
     </ClCompile>
     <ClCompile Include="Graphics\Drawing.cpp" />
     <ClCompile Include="Graphics\Entities\Entity.cpp" />
+    <ClCompile Include="Graphics\Entities\Form.cpp" />
     <ClCompile Include="Graphics\Start Up\GUI.cpp" />
     <ClCompile Include="Graphics\Utility\Colour.cpp" />
     <ClCompile Include="Graphics\Utility\Font.cpp" />

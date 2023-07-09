@@ -1,7 +1,7 @@
 #pragma once
 
 extern POINT MousePos;
-extern 
+extern std::map<std::string, HCURSOR> Cursors;
 
 bool CanCollectInput();
 bool IsKeyDown(int key);
