@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Font.h"
-
+#include "graphics.h"
 std::map<std::string, CanvasTextFormat^> Fonts;
 
 void CreateFont(std::string name, std::wstring font, int size, Weight weight)
@@ -37,5 +37,15 @@ CanvasTextFormat^ GetFont(std::string name)
 
 void GetTextSize(const std::wstring text, int fontsize, float* const width, float* const height, std::string font)
 {
-
+	if (text.empty())
+		return;
+	if (!width && !height)
+		return;
+	
+	Platform::String^ platstring = ref new Platform::String(text.data());
+	CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), *width, *height);
+	layout->SetFontSize(0, text.length(), fontsize);
+	float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
+	*width = layout->LayoutBounds.Width + modifier;
+	*height = layout->LayoutBounds.Height;
 }
