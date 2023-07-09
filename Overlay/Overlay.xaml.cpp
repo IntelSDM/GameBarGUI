@@ -5,6 +5,7 @@
 #include "Font.h"
 #include "Drawing.h"
 #include "GUI.h"
+#include "TabController.h"
 using namespace Cheat;
 using namespace Platform;
 

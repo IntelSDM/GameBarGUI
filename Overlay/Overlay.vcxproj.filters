@@ -23,6 +23,9 @@
     <ClCompile Include="Graphics\Entities\Label.cpp" />
     <ClCompile Include="Graphics\Entities\Tab.cpp" />
     <ClCompile Include="Graphics\Entities\Toggle.cpp" />
+    <ClCompile Include="Graphics\Entities\Button.cpp" />
+    <ClCompile Include="Graphics\Entities\TextBox.cpp" />
+    <ClCompile Include="Graphics\Entities\TabController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -39,9 +42,10 @@
     <ClInclude Include="Graphics\Entities\Label.h" />
     <ClInclude Include="Graphics\Entities\Slider.h" />
     <ClInclude Include="Graphics\Entities\Tab.h" />
-    <ClInclude Include="Graphics\Entities\TabController.cpp" />
-    <ClInclude Include="Graphics\Entities\TabController.h" />
     <ClInclude Include="Graphics\Entities\Toggle.h" />
+    <ClInclude Include="Graphics\Entities\Button.h" />
+    <ClInclude Include="Graphics\Entities\TextBox.h" />
+    <ClInclude Include="Graphics\Entities\TabController.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">

@@ -3,7 +3,6 @@
 #include "Input.h"
 #include "Gui.h"
 #include "Drawing.h"
-
 Tab::Tab(std::wstring name, float x, float y, float width, float height, int* selectedtab = nullptr)
 {
 	Tab::Size = { width,height };
@@ -65,3 +64,4 @@ void Tab::Draw()
 		Container::Update();
 	}
 }
+

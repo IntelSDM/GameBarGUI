@@ -1,15 +1,58 @@
 #include "pch.h"
 #include "GUI.h"
-#include "Entity.h"
+#include "entity.h"
 #include "Form.h"
+#include "Tab.h"
+#include "Toggle.h"
+#include "Label.h"
+#include "Button.h"
+#include "TextBox.h"
+#include "Slider.h"
+#include "TabController.h"
 EntityVector MenuEntity;
+int SelectedTab;
 int TabCount;
+bool ToggleTest;
+bool ToggleTest1 = true;
+std::wstring TextBoxText = L"txtbox";
+int intvalue = 3;
+float floatvalue = 8.5f;
 void CreateGUI()
 {
 	MenuEntity = std::make_shared< Container >();
-	auto form = std::make_shared<Form >(300, 100, 600, 500, 2, 30, L"FORM", true);
-	{	
-	
+	// We use the makeshared function instead of declaring new variables because they are automatically disposed
+	auto form = std::make_shared<Form >(100, 100.0f, 480, 300, 2, 30, L"FORM", true);
+	{
+		auto tabcontroller = std::make_shared<TabController>();
+			form->Push(tabcontroller);
+		//std::string name, float x, float y, float width, float height, int* selectedtab = nullptr
+		auto tab = std::make_shared<Tab>(L"Tab1", 5, 25, 50, 20, &SelectedTab);
+		{
+			auto toggle = std::make_shared<Toggle>(10, 40, L"Toggle", &ToggleTest);
+			tab->Push(toggle);
+			auto toggle1 = std::make_shared<Toggle>(10, 60, L"Toggle", &ToggleTest1);
+			tab->Push(toggle1);
+			auto label = std::make_shared<Label>(L"Label", 10, 80);
+			tab->Push(label);
+			auto button = std::make_shared<Button>(10, 100, L"Button", []()
+				{
+					Beep(100, 100);
+				});
+			tab->Push(button);
+			auto textbox = std::make_shared<TextBox>(10, 150, L"Textbox", &TextBoxText);
+			tab->Push(textbox);
+			auto floatslider = std::make_shared<Slider<float>>(10, 190, L"Slider Float", L"", 0.0f, 10.0f, &floatvalue);
+			tab->Push(floatslider);
+			auto intslider = std::make_shared<Slider<int>>(10, 220, L"Slider Int", L"%", 0, 100, &intvalue);
+			tab->Push(intslider);
+		}
+		tabcontroller->Push(tab);
+		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 25, 50, 20, &SelectedTab);
+		tabcontroller->Push(tab1);
+		auto tab2 = std::make_shared<Tab>(L"Tab3", 115, 25, 50, 20, &SelectedTab);
+		tabcontroller->Push(tab2);
+		auto tab3 = std::make_shared<Tab>(L"Tab4", 170, 25, 50, 20, &SelectedTab);
+		tabcontroller->Push(tab3);
 	}
 	MenuEntity->Push(form);
 	MenuEntity->Draw();

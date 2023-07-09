@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "Drawing.h"
+#include "Input.h"
 // due to using templates in c++ classes it is illegal to use a c++ file so this will look rather odd to the other code.
 template <typename T>
 class Slider : public Entity
@@ -18,11 +19,11 @@ protected:
 
 	void ConvertValueToString()
 	{
-		OutputString = std::to_string(OutputValue);
-		size_t dotPosition = OutputString.find(".");
-		if (dotPosition != std::string::npos) {
-			if (OutputString.length() > dotPosition + 2) {
-				OutputString.resize(dotPosition + 3); // Truncate to two places after the decimal place
+		OutputString = std::to_wstring(OutputValue);
+		size_t dotpos = OutputString.find(L".");
+		if (dotpos != std::string::npos) {
+			if (OutputString.length() > dotpos + 2) {
+				OutputString.resize(dotpos + 3); // Truncate to two places after the decimal place
 			}
 		}
 	}
@@ -64,13 +65,13 @@ public:
 		if (!IsVisible())
 			return;
 
-		Text(Name + ": " + OutputString + Measurement, ParentPos.x + Pos.x, (ParentPos.y + Pos.y) - 5, 12, "Verdana", Colour(255, 255, 255, 255), None);
+		DrawText(ParentPos.x + Pos.x, (ParentPos.y + Pos.y) - 5, Name + L": " + OutputString + Measurement, "Verdana", 12,  Colour(255, 255, 255, 255), None);
 		OutlineRectangle(ParentPos.x + Pos.x - 1, ParentPos.y + (Pos.y + 15) - 1, Size.x + 2, Size.y + 2, 1, Colour(255, 255, 255, 255));
 		FilledRectangle(ParentPos.x + Pos.x, ParentPos.y + (Pos.y + 15), Size.x, Size.y, Colour(80, 80, 80, 255));
 		float ratio = (float)(*Value - (float)MinValue) / float(MaxValue - MinValue);
 		FilledRectangle(ParentPos.x + Pos.x, ParentPos.y + (Pos.y + 15), (int)Size.x * ratio, Size.y, Colour(255, 0, 0, 255));
 	}
-	Slider(int x, int y, std::string name, std::string measurement, T minvalue, T maxvalue, T* value) : Measurement(measurement), MaxValue(maxvalue), MinValue(minvalue), Value(value)
+	Slider(int x, int y, std::wstring name, std::wstring measurement, T minvalue, T maxvalue, T* value) : Measurement(measurement), MaxValue(maxvalue), MinValue(minvalue), Value(value)
 	{
 		Pos = { (float)x,(float)y };
 		Name = name;

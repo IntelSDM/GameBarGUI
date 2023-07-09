@@ -26,6 +26,9 @@
 #ifdef DrawText
 #undef DrawText
 #endif
+#ifdef Button
+#undef Button
+#endif
 #include <collection.h>
 #include <ppltasks.h>
 #include <windowsx.h>
@@ -41,7 +44,6 @@
 using namespace Windows::Foundation;
 using namespace Windows::Foundation::Collections;
 using namespace Windows::UI::Xaml;
-using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::UI::Xaml::Controls::Primitives;
 using namespace Windows::UI::Xaml::Data;
 using namespace Windows::UI::Xaml::Input;
