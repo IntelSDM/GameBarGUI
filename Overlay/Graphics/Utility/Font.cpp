@@ -34,3 +34,8 @@ CanvasTextFormat^ GetFont(std::string name)
 {
 	return Fonts[name];
 }
+
+void GetTextSize(const std::wstring text, int fontsize, float* const width, float* const height, std::string font)
+{
+
+}

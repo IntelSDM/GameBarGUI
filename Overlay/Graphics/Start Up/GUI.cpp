@@ -3,10 +3,11 @@
 #include "Entity.h"
 #include "Form.h"
 EntityVector MenuEntity;
+int TabCount;
 void CreateGUI()
 {
 	MenuEntity = std::make_shared< Container >();
-	auto form = std::make_shared<Form >(300, 100, 480, 300, 2, 30, L"FORM", true);
+	auto form = std::make_shared<Form >(300, 100, 600, 500, 2, 30, L"FORM", true);
 	{	
 	
 	}

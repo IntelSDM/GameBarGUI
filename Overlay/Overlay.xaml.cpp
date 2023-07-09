@@ -117,7 +117,7 @@ void RenderingThread()
 		
 		SwapChain->Clear(Colors::Transparent);
 		/* RENDER*/
-
+		SwapChain->Clear(Colors::Black);
 		std::string test = std::to_string(MousePos.x) + "x" + std::to_string(MousePos.y) +"|" + std::to_string(IsKeyClicked(VK_SHIFT));
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
