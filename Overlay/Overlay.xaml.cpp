@@ -30,12 +30,11 @@ Overlay::Overlay()
 	titlebar->ButtonPressedBackgroundColor = Colors::Transparent;
 	titlebar->ButtonHoverBackgroundColor = Colors::Transparent;
 }
-POINT MousePosition;
 void Overlay::PointerMoved(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
 	// Get the current mouse position
 	Windows::Foundation::Point mp = e->GetCurrentPoint(nullptr)->Position;
-	MousePosition = {(long) mp.X,(long)mp.Y };
+	MousePos = {(float) mp.X,(float)mp.Y };
 }
 void Overlay::PointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
@@ -117,7 +116,7 @@ void RenderingThread()
 		SwapChain->Clear(Colors::Transparent);
 		/* RENDER*/
 
-		std::string test = std::to_string(MousePosition.x) + "x" + std::to_string(MousePosition.y) +"|" + std::to_string(IsKeyDown(VK_SHIFT));
+		std::string test = std::to_string(MousePos.x) + "x" + std::to_string(MousePos.y) +"|" + std::to_string(IsKeyClicked(VK_SHIFT));
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
 		SwapChain->DrawText(text, 0, 0, Colour(255,0,0,255));

@@ -1,6 +1,6 @@
 #pragma once
 
-extern POINT MousePos;
+extern Vector2 MousePos;
 extern std::map<std::string, HCURSOR> Cursors;
 
 bool CanCollectInput();

@@ -16,7 +16,7 @@ protected:
 	Vector2 Border;
 	Vector2 TitleBar;
 
-	POINT Cursor;
+	Vector2 Cursor;
 
 	Vector2 StretchPoint1;
 	Vector2 StretchPoint2;

@@ -30,6 +30,7 @@ void Form::DragAction()
 {
     if (Form::Dragging && !IsKeyDown(VK_LBUTTON))
         Form::Dragging = false;
+   
     if (Form::Dragging)
     {
 
@@ -38,8 +39,7 @@ void Form::DragAction()
     }
     if (IsMouseInRectangle(Form::Pos, Form::TitleBar))
     {
-        if (IsMouseInRectangle(Form::Pos.x + (Form::Size.x) - 48, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 28) - (Form::Pos.x + (Form::Size.x) - 48), 19) || IsMouseInRectangle(Form::Pos.x + (Form::Size.x) - 25, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 15) - (Form::Pos.x + (Form::Size.x) - 36), 19))
-            return;
+        
         if (IsKeyClicked(VK_LBUTTON)) // This prevents a user holding down and hovering over the title bar to drag it. You need to actually click down.
             Form::Dragging = true;
 
@@ -99,10 +99,6 @@ void Form::Update()
         return;
     Form::DragAction();
     Form::StretchAction();
-    if (IsMouseInRectangle(Form::Pos.x + (Form::Size.x) - 48, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 28) - (Form::Pos.x + (Form::Size.x) - 48), 19) && (IsKeyClicked(VK_LBUTTON)))
-        ShowWindow(NULL, SW_MINIMIZE);
-    if (IsMouseInRectangle(Form::Pos.x + (Form::Size.x) - 25, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 15) - (Form::Pos.x + (Form::Size.x) - 36), 19) && IsKeyClicked(VK_LBUTTON))
-        exit(NULL);
 
     Container::Update();
 
@@ -124,60 +120,13 @@ void Form::Draw()
         SetCurrentCursor("Corner Drag");
     if (Form::CanStretch)
     {
-        // debug purposes
-      //  Text("1", StretchPoint1.x, StretchPoint1.y, 12, "Verdana",Colour(255, 0, 0, 255), Centre);
-       // Text("2", StretchPoint2.x, StretchPoint2.y, 12,"Verdana",Colour(255, 0, 0, 255), Centre);
-        //Text("3", StretchPoint3.x, StretchPoint3.y, 12, "Verdana", Colour(255, 0, 0, 255), Centre);
+      
     }
 
     OutlineRectangle((Form::Pos.x - Form::Border.x / 2) + 1, (Form::Pos.y - Form::Border.x / 2) + 1, Form::Size.x + Form::Border.x - 1, Form::Size.y + Form::Border.x - 1, 1, Colour(140, 140, 140, 255)); // Draw Border
     FilledRectangle(Form::Pos.x, Form::Pos.y, Form::Size.x, Form::Size.y, Colour(40, 40, 40, 255));
     FilledRectangle(Form::Pos.x, Form::Pos.y, Form::Size.x, Form::Border.y, Colour(30, 30, 30, 255)); // header
+    DrawText(Form::Pos.x + 5, Form::Pos.y + 5, Form::Name, "Verdana", 12, Colour(255, 255, 255, 255), None);
 
-    DrawText(Form::Pos.x + 5, Form::Pos.y + 5, Form::Name, "Verdana",12, Colour(255, 255, 255, 255), None);
-
-
-#pragma region Minimize
-    if (Form::CanMinimize)
-    {
-        if (IsMouseInRectangle(Form::Pos.x + (Form::Size.x) - 48, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 28) - (Form::Pos.x + (Form::Size.x) - 48), 19) && !IsKeyDown(VK_LBUTTON))
-        {
-            FilledRectangle(Form::Pos.x + (Form::Size.x) - 43, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 30) - (Form::Pos.x + (Form::Size.x) - 50), 19, Colour(80, 80, 80, 150));
-            FilledLine(Form::Pos.x + (Form::Size.x) - 39, Form::Pos.y + 10, Form::Pos.x + (Form::Size.x) - 27, Form::Pos.y + 10, 1, Colour(255, 255, 255, 255));
-        }
-        else if (IsMouseInRectangle(Form::Pos.x + (Form::Size.x) - 48, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 28) - (Form::Pos.x + (Form::Size.x) - 48), 19) && IsKeyDown(VK_LBUTTON))
-        {
-            FilledRectangle(Form::Pos.x + (Form::Size.x) - 43, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 30) - (Form::Pos.x + (Form::Size.x) - 50), 19, Colour(80, 80, 80, 150));
-            FilledLine(Form::Pos.x + (Form::Size.x) - 39, Form::Pos.y + 10, Form::Pos.x + (Form::Size.x) - 27, Form::Pos.y + 10, 1, Colour(255, 255, 255, 255));
-        }
-        else
-        {
-            FilledLine(Form::Pos.x + (Form::Size.x) - 39, Form::Pos.y + 10, Form::Pos.x + (Form::Size.x) - 27, Form::Pos.y + 10, 1, Colour(255, 255, 255, 255));
-        }
-    }
-#pragma endregion
-
-#pragma region Exit
-    if (Form::CanClose)
-    {
-        if (IsMouseInRectangle(Form::Pos.x + (Form::Size.x) - 25, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 15) - (Form::Pos.x + (Form::Size.x) - 36), 19) && !IsKeyDown(VK_LBUTTON))
-        {
-            FilledRectangle(Form::Pos.x + (Form::Size.x) - 23, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 10) - (Form::Pos.x + (Form::Size.x) - 33), 19, Colour(80, 80, 80, 100));
-            FilledLine(Form::Pos.x + (Form::Size.x) - 5, Form::Pos.y + 16, Form::Pos.x + (Form::Size.x) - 18, Form::Pos.y + 4, 1, Colour(255, 255, 255, 255));
-            FilledLine(Form::Pos.x + (Form::Size.x) - 18, Form::Pos.y + 16, Form::Pos.x + (Form::Size.x) - 5, Form::Pos.y + 4, 1, Colour(255, 255, 255, 255));
-        }
-        else if (IsMouseInRectangle(Form::Pos.x + (Form::Size.x) - 25, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 15) - (Form::Pos.x + (Form::Size.x) - 36), 19) && IsKeyDown(VK_LBUTTON))
-        {
-            FilledRectangle(Form::Pos.x + (Form::Size.x) - 23, Form::Pos.y, (Form::Pos.x + (Form::Size.x) - 10) - (Form::Pos.x + (Form::Size.x) - 33), 19, Colour(80, 80, 80, 150));
-            FilledLine(Form::Pos.x + (Form::Size.x) - 5, Form::Pos.y + 16, Form::Pos.x + (Form::Size.x) - 18, Form::Pos.y + 4, 1, Colour(255, 255, 255, 255));
-            FilledLine(Form::Pos.x + (Form::Size.x) - 18, Form::Pos.y + 16, Form::Pos.x + (Form::Size.x) - 5, Form::Pos.y + 4, 1, Colour(255, 255, 255, 255));
-        }
-        else
-        {
-            FilledLine(Form::Pos.x + (Form::Size.x) - 5, Form::Pos.y + 16, Form::Pos.x + (Form::Size.x) - 18, Form::Pos.y + 4, 1, Colour(255, 255, 255, 255));
-            FilledLine(Form::Pos.x + (Form::Size.x) - 18, Form::Pos.y + 16, Form::Pos.x + (Form::Size.x) - 5, Form::Pos.y + 4, 1, Colour(255, 255, 255, 255));
-        }
-    }
-#pragma endregion
     Container::Draw();
 }
