@@ -15,27 +15,27 @@ void DrawText(int x, int y,std::wstring text,std::string font, int fontsize,Colo
     switch (alignment)
     {
     case FontAlignment::Centre:
-        x -= ((layout->LayoutBounds.Width + modifier) / 2);
+        x -= ((layout->LayoutBounds.Width) / 2);
         break;
     case FontAlignment::Right:
-        x += ((layout->LayoutBounds.Width + modifier));
+        x += ((layout->LayoutBounds.Width));
         break;
     case FontAlignment::Left:
-        x -= ((layout->LayoutBounds.Width + modifier));
+        x -= ((layout->LayoutBounds.Width));
         break;
     case FontAlignment::None:
         break;
     case FontAlignment::CentreCentre:
-        x -= ((layout->LayoutBounds.Width + modifier) / 2);
-        y -= ((layout->LayoutBounds.Height + modifier) / 2);
+        x -= ((layout->LayoutBounds.Width) / 2);
+        y -= ((layout->LayoutBounds.Height) / 2);
         break;
     case FontAlignment::CentreLeft:
-        x -= ((layout->LayoutBounds.Width + modifier));
-        y += ((layout->LayoutBounds.Height + modifier) / 2);
+        x += ((layout->LayoutBounds.Width));
+        y -= ((layout->LayoutBounds.Height) / 2);
         break;
     case FontAlignment::CentreRight:
-        x += ((layout->LayoutBounds.Width + modifier));
-        y -= ((layout->LayoutBounds.Height + modifier) / 2);
+        x += (layout->LayoutBounds.Width);
+        y -= ((layout->LayoutBounds.Height) / 2);
         break;
     }
 
@@ -47,32 +47,32 @@ void DrawTextClipped(int x, int y,int width,int height, std::wstring text, std::
     Platform::String^ platstring = ref new Platform::String(text.data());
     CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), width, height);
     layout->SetFontSize(0, text.length(), fontsize);
-    float modifier = layout->DefaultFontSize / 2.8f; // metrics isn't ever correct
+    float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
 
     switch (alignment)
     {
     case FontAlignment::Centre:
-        x -= ((layout->LayoutBounds.Width + modifier) / 2);
+        x -= ((layout->LayoutBounds.Height + modifier) / 2);
         break;
     case FontAlignment::Right:
-        x += ((layout->LayoutBounds.Width + modifier));
+        x += ((layout->LayoutBounds.Height + modifier));
         break;
     case FontAlignment::Left:
-        x -= ((layout->LayoutBounds.Width + modifier));
+        x -= ((layout->LayoutBounds.Height + modifier));
         break;
     case FontAlignment::None:
         break;
     case FontAlignment::CentreCentre:
-        x -= ((layout->LayoutBounds.Width + modifier) / 2);
-        y -= ((layout->LayoutBounds.Height + modifier) / 2);
+        x -= ((layout->LayoutBounds.Height + modifier) / 2);
+        y -= ((layout->LayoutBounds.Width + modifier) / 2);
         break;
     case FontAlignment::CentreLeft:
-        x -= ((layout->LayoutBounds.Width + modifier));
-        y += ((layout->LayoutBounds.Height + modifier) / 2);
+        x += ((layout->LayoutBounds.Height + modifier));
+        y -= ((layout->LayoutBounds.Width + modifier) / 2);
         break;
     case FontAlignment::CentreRight:
-        x += ((layout->LayoutBounds.Width + modifier));
-        y -= ((layout->LayoutBounds.Height + modifier) / 2);
+        x += ((layout->LayoutBounds.Height + modifier));
+        y -= ((layout->LayoutBounds.Width + modifier) / 2);
         break;
     }
 

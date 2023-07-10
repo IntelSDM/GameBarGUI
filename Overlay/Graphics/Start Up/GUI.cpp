@@ -48,6 +48,10 @@ void CreateGUI()
 		}
 		tabcontroller->Push(tab);
 		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 25, 50, 20, &SelectedTab);
+		{
+			auto label = std::make_shared<Label>(L"Label", 10, 80);
+			tab1->Push(label);
+		}
 		tabcontroller->Push(tab1);
 		auto tab2 = std::make_shared<Tab>(L"Tab3", 115, 25, 50, 20, &SelectedTab);
 		tabcontroller->Push(tab2);
