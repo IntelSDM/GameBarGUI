@@ -47,7 +47,7 @@ void DrawTextClipped(int x, int y,int width,int height, std::wstring text, std::
     Platform::String^ platstring = ref new Platform::String(text.data());
     CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), width, height);
     layout->SetFontSize(0, text.length(), fontsize);
-    float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
+    float modifier = layout->DefaultFontSize / 2.8f; // metrics isn't ever correct
 
     switch (alignment)
     {
