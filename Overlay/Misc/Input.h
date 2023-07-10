@@ -2,6 +2,7 @@
 
 extern Vector2 MousePos;
 extern std::map<std::string, HCURSOR> Cursors;
+extern wchar_t Char;
 
 bool CanCollectInput();
 bool IsKeyDown(int key);

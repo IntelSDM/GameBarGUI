@@ -42,8 +42,8 @@ void TextBox::Update()
 	}
 	if (!TextBox::Blocked) // take input
 	{
-	//	WPARAM character = Char;
-		/*if (character == VK_BACK && (*TextBox::MainString).length() != 0) // backspace, wndproc doesn't seem to like us using iskeyclicked for backspace right now
+		WPARAM character = Char;
+		if (character == VK_BACK && (*TextBox::MainString).length() != 0) // backspace, wndproc doesn't seem to like us using iskeyclicked for backspace right now
 		{
 			(*TextBox::MainString).erase(std::prev((*TextBox::MainString).end()));
 			TextBox::VisibleString.erase(std::prev(TextBox::VisibleString.end()));
@@ -59,7 +59,7 @@ void TextBox::Update()
 		}
 		Char = NULL;
 
-		*/
+		
 		// make a system so if it is clicked and held that it will keep inputting the char
 		// control + A should select the entire field
 	}

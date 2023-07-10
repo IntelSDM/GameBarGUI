@@ -8,7 +8,7 @@
 #include "TabController.h"
 using namespace Cheat;
 using namespace Platform;
-
+using namespace Windows::UI::Core;
 Microsoft::Graphics::Canvas::UI::Xaml::CanvasSwapChainPanel^ CanvasObject;
 CanvasDrawingSession^ SwapChain;
 namespace sdk
@@ -31,82 +31,8 @@ Overlay::Overlay()
 	titlebar->ButtonPressedBackgroundColor = Colors::Transparent;
 	titlebar->ButtonHoverBackgroundColor = Colors::Transparent;
 }
-void Overlay::PointerMoved(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
-{
-	// Get the current mouse position
-	Windows::Foundation::Point mp = e->GetCurrentPoint(nullptr)->Position;
-	MousePos = {(float) mp.X,(float)mp.Y };
-	if(CanCollectInput())
-	SetClassLongPtr(GetForegroundWindow() ,GCLP_HCURSOR,(LONG_PTR)GetCurrentCursor()); // set cursor
-}
-void Overlay::PointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
-{
-	// Check the state of the mouse buttons
-	Windows::UI::Input::PointerPoint^ pointer = e->GetCurrentPoint(nullptr);
-	auto button = pointer->Properties->PointerUpdateKind;
-	if (button == Windows::UI::Input::PointerUpdateKind::LeftButtonPressed)
-	{
-		UpdateKeyState(VK_LBUTTON, true);
-	}
-	if (button == Windows::UI::Input::PointerUpdateKind::RightButtonPressed)
-	{
-		UpdateKeyState(VK_RBUTTON, true);
-	}
-	if (button == Windows::UI::Input::PointerUpdateKind::MiddleButtonPressed)
-	{
-		UpdateKeyState(VK_MBUTTON, true);
-	}
-	if (button == Windows::UI::Input::PointerUpdateKind::XButton1Pressed)
-	{
-		UpdateKeyState(VK_XBUTTON1, true);
-	}
-	if (button == Windows::UI::Input::PointerUpdateKind::XButton2Pressed)
-	{
-		UpdateKeyState(VK_XBUTTON2, true);
-	}
-}
-void Overlay::PointerReleased(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
-{
-	// Check the state of the mouse buttons
-	Windows::UI::Input::PointerPoint^ pointer = e->GetCurrentPoint(nullptr);
-	auto button = pointer->Properties->PointerUpdateKind;
-	if (button == Windows::UI::Input::PointerUpdateKind::LeftButtonReleased)
-	{
-		UpdateKeyState(VK_LBUTTON, false);
-	}
-	if (button == Windows::UI::Input::PointerUpdateKind::RightButtonReleased)
-	{
-		UpdateKeyState(VK_RBUTTON, false);
-	}
-	if (button == Windows::UI::Input::PointerUpdateKind::MiddleButtonReleased)
-	{
-		UpdateKeyState(VK_MBUTTON, false);
-	}
-	if (button == Windows::UI::Input::PointerUpdateKind::XButton1Released)
-	{
-		UpdateKeyState(VK_XBUTTON1, false);
-	}
-	if (button == Windows::UI::Input::PointerUpdateKind::XButton2Released)
-	{
-		UpdateKeyState(VK_XBUTTON2, false);
-	}
-}
-int ValTest;
-void Overlay::KeyDown(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::KeyEventArgs^ e)
-{
-	// Get the key that was pressed down
-	Windows::System::VirtualKey key = e->VirtualKey;
-	int keyvalue = static_cast<int>(key);
-	UpdateKeyState(keyvalue, true);
-	
-}
-void Overlay::KeyUp(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::KeyEventArgs^ e)
-{
-	// Get the key that was released
-	Windows::System::VirtualKey key = e->VirtualKey;
-	int keyvalue = static_cast<int>(key);
-	UpdateKeyState(keyvalue, false);
-}
+
+
 //You can just pass the CanvasObject directly into this but I used it in other places also
 void RenderingThread()
 {
@@ -139,9 +65,89 @@ void RenderingThread()
 	}
 }
 
+void Overlay::CharacterReceived(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::CharacterReceivedEventArgs^ e)
+{
+	// Get the character that was received
+	wchar_t character = e->KeyCode;
+	Char = character;
+}
 
-
-
+void Overlay::PointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e)
+{
+	// Get the current mouse position
+	Windows::Foundation::Point mp = e->CurrentPoint->Position;
+	MousePos = {(float) mp.X,(float)mp.Y };
+	if(CanCollectInput())
+	SetClassLongPtr(GetForegroundWindow() ,GCLP_HCURSOR,(LONG_PTR)GetCurrentCursor()); // set cursor
+}
+void Overlay::PointerPressed(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e)
+{
+	// Check the state of the mouse buttons
+	Windows::UI::Input::PointerPoint^ pointer = e->CurrentPoint;
+	auto button = pointer->Properties->PointerUpdateKind;
+	if (button == Windows::UI::Input::PointerUpdateKind::LeftButtonPressed)
+	{
+		UpdateKeyState(VK_LBUTTON, true);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::RightButtonPressed)
+	{
+		UpdateKeyState(VK_RBUTTON, true);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::MiddleButtonPressed)
+	{
+		UpdateKeyState(VK_MBUTTON, true);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::XButton1Pressed)
+	{
+		UpdateKeyState(VK_XBUTTON1, true);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::XButton2Pressed)
+	{
+		UpdateKeyState(VK_XBUTTON2, true);
+	}
+}
+void Overlay::PointerReleased(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ e)
+{
+	// Check the state of the mouse buttons
+	
+	Windows::UI::Input::PointerPoint^ pointer = e->CurrentPoint;
+	auto button = pointer->Properties->PointerUpdateKind;
+	if (button == Windows::UI::Input::PointerUpdateKind::LeftButtonReleased)
+	{
+		UpdateKeyState(VK_LBUTTON, false);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::RightButtonReleased)
+	{
+		UpdateKeyState(VK_RBUTTON, false);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::MiddleButtonReleased)
+	{
+		UpdateKeyState(VK_MBUTTON, false);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::XButton1Released)
+	{
+		UpdateKeyState(VK_XBUTTON1, false);
+	}
+	if (button == Windows::UI::Input::PointerUpdateKind::XButton2Released)
+	{
+		UpdateKeyState(VK_XBUTTON2, false);
+	}
+}
+void Overlay::KeyDown(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::KeyEventArgs^ e)
+{
+	// Get the key that was pressed down
+	Windows::System::VirtualKey key = e->VirtualKey;
+	int keyvalue = static_cast<int>(key);
+	UpdateKeyState(keyvalue, true);
+	
+}
+void Overlay::KeyUp(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::KeyEventArgs^ e)
+{
+	// Get the key that was released
+	Windows::System::VirtualKey key = e->VirtualKey;
+	int keyvalue = static_cast<int>(key);
+	UpdateKeyState(keyvalue, false);
+}
 void Overlay::SwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	canvasSwapChainPanel->SwapChain = ref new CanvasSwapChain(CanvasDevice::GetSharedDevice(), (float)Window::Current->CoreWindow->Bounds.Width, 
@@ -152,9 +158,13 @@ void Overlay::SwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI::Xaml:
 	//lets use this it is way better for what we want
 	sdk::WindowWidth = (float)Window::Current->CoreWindow->Bounds.Width;
 	sdk::WindowHeight = (float)Window::Current->CoreWindow->Bounds.Height;
+
+	Windows::UI::Core::CoreWindow::GetForCurrentThread()->CharacterReceived += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::CharacterReceivedEventArgs^>(this, &Overlay::CharacterReceived);
+	Windows::UI::Core::CoreWindow::GetForCurrentThread()->PointerMoved +=ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::PointerEventArgs^>(this, &Overlay::PointerMoved);
+	Windows::UI::Core::CoreWindow::GetForCurrentThread()->PointerMoved += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::PointerEventArgs^>(this, &Overlay::PointerPressed);
+	Windows::UI::Core::CoreWindow::GetForCurrentThread()->PointerMoved += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::PointerEventArgs^>(this, &Overlay::PointerReleased);
 	Windows::UI::Core::CoreWindow::GetForCurrentThread()->KeyDown += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::KeyEventArgs^>(this, &Overlay::KeyDown);
 	Windows::UI::Core::CoreWindow::GetForCurrentThread()->KeyUp += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::KeyEventArgs^>(this, &Overlay::KeyUp);
-
 	SetInput();
 
 	std::thread renderthread(RenderingThread);

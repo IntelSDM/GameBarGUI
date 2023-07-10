@@ -16,7 +16,7 @@ std::map<int, float> KeyTimes;
 std::map<std::string, HCURSOR> Cursors = { {"Default", LoadCursor(NULL, IDC_ARROW)},{"Hand", LoadCursor(NULL, IDC_HAND)},{"Corner Drag", LoadCursor(NULL, IDC_SIZENWSE)},{"Up Down Drag", LoadCursor(NULL, IDC_SIZENS)},{"Side To Side Drag", LoadCursor(NULL, IDC_SIZEWE)} };
 HCURSOR CurrentCursor;
 Vector2 MousePos;
-
+wchar_t Char;
 
 bool CanCollectInput()
 {
