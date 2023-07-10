@@ -161,8 +161,8 @@ void Overlay::SwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI::Xaml:
 
 	Windows::UI::Core::CoreWindow::GetForCurrentThread()->CharacterReceived += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::CharacterReceivedEventArgs^>(this, &Overlay::CharacterReceived);
 	Windows::UI::Core::CoreWindow::GetForCurrentThread()->PointerMoved +=ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::PointerEventArgs^>(this, &Overlay::PointerMoved);
-	Windows::UI::Core::CoreWindow::GetForCurrentThread()->PointerMoved += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::PointerEventArgs^>(this, &Overlay::PointerPressed);
-	Windows::UI::Core::CoreWindow::GetForCurrentThread()->PointerMoved += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::PointerEventArgs^>(this, &Overlay::PointerReleased);
+	Windows::UI::Core::CoreWindow::GetForCurrentThread()->PointerPressed += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::PointerEventArgs^>(this, &Overlay::PointerPressed);
+	Windows::UI::Core::CoreWindow::GetForCurrentThread()->PointerReleased += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::PointerEventArgs^>(this, &Overlay::PointerReleased);
 	Windows::UI::Core::CoreWindow::GetForCurrentThread()->KeyDown += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::KeyEventArgs^>(this, &Overlay::KeyDown);
 	Windows::UI::Core::CoreWindow::GetForCurrentThread()->KeyUp += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::KeyEventArgs^>(this, &Overlay::KeyUp);
 	SetInput();
