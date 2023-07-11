@@ -3,6 +3,9 @@
 #include "Input.h"
 #include "Drawing.h"
 #include "Font.h"
+#include "Graphics.h"
+
+
 /*
 bool for input which is set to true when clicked.
 take each key clicked and then translate it into the char
@@ -129,7 +132,6 @@ void TextBox::Draw()
 	if (!TextBox::IsVisible())
 		return;
 	
-
 	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x - 1, TextBox::Pos.y + +TextBox::ParentPos.y - 1, TextBox::Size.x + 2, TextBox::Size.y + 2, 4, 4, Colour(200, 200, 200, 255));
 	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x, TextBox::Pos.y + +TextBox::ParentPos.y, TextBox::Size.x, TextBox::Size.y, 4, 4, Colour(80, 80, 80, 255));
 	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + (TextBox::Size.x / 2), TextBox::ParentPos.y + TextBox::Pos.y - ((TextBox::Size.y / 2) - 1), TextBox::Name, "Verdana", 12, Colour(255, 255, 255, 255), CentreCentre); // Title
@@ -140,7 +142,7 @@ void TextBox::Draw()
 	float easedtime = InOutSine(time);
 	if (!TextBox::Blocked && std::fmod(elapsed.count(), TextBox::AnimationInterval) < TextBox::AnimationInterval / 2)
 	{
-		float alpha = 180.0f * (1.0f - easedtime * 2.0f);
+		float alpha = 255.0f * (1.0f - easedtime * 2.0f);
 		FilledLine(TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + TextBox::Size.y - 3, TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + 3, 1, Colour(255, 255, 255, static_cast<unsigned int>(alpha)));
 	}
 }

@@ -38,10 +38,50 @@ void DrawText(int x, int y,std::wstring text,std::string font, int fontsize,Colo
         y -= ((layout->LayoutBounds.Height) / 2);
         break;
     }
-
 	SwapChain->DrawTextLayout(layout, (float)x, (float)y, colour);
 }
 
+void DrawTextSprite(int x, int y, std::wstring text, std::string font, int fontsize, Color colour, FontAlignment alignment)
+{
+    Platform::String^ platstring = ref new Platform::String(text.data());
+    CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), 4096.0f, 4096.0f);
+    layout->SetFontSize(0, text.length(), fontsize);
+    float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
+
+    switch (alignment)
+    {
+    case FontAlignment::Centre:
+        x -= ((layout->LayoutBounds.Width) / 2);
+        break;
+    case FontAlignment::Right:
+        x += ((layout->LayoutBounds.Width));
+        break;
+    case FontAlignment::Left:
+        x -= ((layout->LayoutBounds.Width));
+        break;
+    case FontAlignment::None:
+        break;
+    case FontAlignment::CentreCentre:
+        x -= ((layout->LayoutBounds.Width) / 2);
+        y -= ((layout->LayoutBounds.Height) / 2);
+        break;
+    case FontAlignment::CentreLeft:
+        x += ((layout->LayoutBounds.Width));
+        y -= ((layout->LayoutBounds.Height) / 2);
+        break;
+    case FontAlignment::CentreRight:
+        x += (layout->LayoutBounds.Width);
+        y -= ((layout->LayoutBounds.Height) / 2);
+        break;
+    }
+    CanvasRenderTarget^ rendertarget = ref new CanvasRenderTarget(SwapChain, layout->LayoutBounds.Width, layout->LayoutBounds.Height, SwapChain->Dpi);
+    CanvasDrawingSession^ drawingsession = rendertarget->CreateDrawingSession();
+    drawingsession->Clear(Windows::UI::Colors::Transparent);
+    drawingsession->DrawTextLayout(layout, 0.0f, 0.0f, colour);
+    delete drawingsession;
+
+    SwapChain->DrawImage(rendertarget, x, y);
+}
 void DrawTextClipped(int x, int y,int width,int height, std::wstring text, std::string font, int fontsize, Color colour, FontAlignment alignment)
 {
     Platform::String^ platstring = ref new Platform::String(text.data());
@@ -79,11 +119,65 @@ void DrawTextClipped(int x, int y,int width,int height, std::wstring text, std::
 
     SwapChain->DrawTextLayout(layout, (float)x, (float)y, colour);
 }
+void DrawTextClippedSprite(int x, int y, int width, int height, std::wstring text, std::string font, int fontsize, Color colour, FontAlignment alignment)
+{
+    Platform::String^ platstring = ref new Platform::String(text.data());
+    CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), width, height);
+    layout->SetFontSize(0, text.length(), fontsize);
+    float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
 
+    switch (alignment)
+    {
+    case FontAlignment::Centre:
+        x -= ((layout->LayoutBounds.Width) / 2);
+        break;
+    case FontAlignment::Right:
+        x += ((layout->LayoutBounds.Width));
+        break;
+    case FontAlignment::Left:
+        x -= ((layout->LayoutBounds.Width));
+        break;
+    case FontAlignment::None:
+        break;
+    case FontAlignment::CentreCentre:
+        x -= ((layout->LayoutBounds.Width) / 2);
+        y -= ((layout->LayoutBounds.Height) / 2);
+        break;
+    case FontAlignment::CentreLeft:
+        x += ((layout->LayoutBounds.Width));
+        y -= ((layout->LayoutBounds.Height) / 2);
+        break;
+    case FontAlignment::CentreRight:
+        x += (layout->LayoutBounds.Width);
+        y -= ((layout->LayoutBounds.Height) / 2);
+        break;
+    }
+
+
+    CanvasRenderTarget^ rendertarget = ref new CanvasRenderTarget(SwapChain, layout->LayoutBounds.Width, layout->LayoutBounds.Height, SwapChain->Dpi);
+    CanvasDrawingSession^ drawingsession = rendertarget->CreateDrawingSession();
+    drawingsession->Clear(Windows::UI::Colors::Transparent);
+    drawingsession->DrawTextLayout(layout, 0.0f, 0.0f, colour);
+    delete drawingsession;
+
+    SwapChain->DrawImage(rendertarget, x, y);
+}
 void FilledRectangle(int x, int y, int width, int height, Color colour)
 {
     Rect rect(x, y, width,height);
     SwapChain->FillRectangle(rect, colour);
+}
+void FilledRectangleSprite(int x, int y, int width, int height, Color colour)
+{
+    Rect rect(x, y, width, height);
+
+    CanvasRenderTarget^ rendertarget = ref new CanvasRenderTarget(SwapChain, width, height, SwapChain->Dpi);
+    CanvasDrawingSession^ drawingsession = rendertarget->CreateDrawingSession();
+    drawingsession->Clear(Windows::UI::Colors::Transparent);
+    drawingsession->FillRectangle(rect, colour);
+    delete drawingsession;
+
+    SwapChain->DrawImage(rendertarget, x, y);
 }
 void ColourPicker(int x, int y, int width, int height, Color colour)
 {
