@@ -14,7 +14,7 @@ int SelectedTab;
 int TabCount;
 bool ToggleTest;
 bool ToggleTest1 = true;
-std::wstring TextBoxText = L"txtboxdsgdsdshchgkh";
+std::wstring TextBoxText = L"txtboxdsgdsdshchgkhdsgsdgsdgdsgdsggsdWWWWW";
 int intvalue = 3;
 float floatvalue = 8.5f;
 void CreateGUI()

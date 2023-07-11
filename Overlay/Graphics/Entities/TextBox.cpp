@@ -19,20 +19,22 @@ TextBox::TextBox(float x, float y, std::wstring text, std::wstring* data = nullp
 	TextBox::Blocked = false;
 	TextBox::MainString = data;
 	TextBox::VisiblePointerEnd = MainString->length();
-	TextBox::VisiblePointerStart = TextBox::BeginPointerValue(0);
+	TextBox::SetStartIndex(); // this sets start value
 	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart,TextBox::VisiblePointerEnd);
 
 }
-int TextBox::BeginPointerValue(int value)
+void TextBox::SetStartIndex()
 {
-	float width = 0;
-	float height = 0;
-	GetTextSize(MainString->substr(value, TextBox::VisiblePointerEnd), 11, &width, &height, "Verdana");
-	if (width > TextBox::Size.x - 6) // too wide, last character is the best character
-		return --value;
-	if (value == TextBox::VisiblePointerEnd) // value isn't long enough to exceeed textbox width
-		return 0;
-	return TextBox::BeginPointerValue(++value);
+	// Sets the value to be the right most character at the end.
+	TextBox::VisiblePointerStart = 0;
+	TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+	while (TextBox::TextWidth > TextBox::Size.x - 6)
+	{
+		TextBox::VisiblePointerStart++; // update position
+		TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
+
+	}
+
 }
 
 
