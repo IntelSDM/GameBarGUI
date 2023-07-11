@@ -46,7 +46,7 @@ void UpdateKeyState(int key, bool down)
 {
     if (key < 0 || key >= KeyStates.size())
         return;
-    KeyTimes[key] = clock() * 0.001f;
+    KeyTimes[key] = clock() * 0.00001f;
     if (KeyHeld[key] && !down)
         KeyStates[key] = KeyState::KeyDormant;
 
@@ -77,8 +77,11 @@ bool IsKeyClicked(int key)
     if (key < 0 || key >= KeyStates.size())
         return false;
     // Check if the click time is below the current time by 0.05 seconds and is invoked, Kinda messy but works well.
-    if (KeyStates[key] == KeyState::KeyInvoked && (KeyTimes[key]) >= (clock() * 0.001f) - 0.05f)
+    if (KeyStates[key] == KeyState::KeyInvoked && (KeyTimes[key]) <= clock() * 0.00001f)
+    {
+        KeyTimes[key] = clock() * 0.00001f;
         return true;
+    }
     else
         return false;
 }

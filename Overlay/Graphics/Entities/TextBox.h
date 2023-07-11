@@ -7,9 +7,8 @@ protected:
     int LastAnimationTime = 0;
     int AnimationDuration = 1;
 
-    int SelectionStart = 0;
-    int SelectionEnd = 0;
-    int SlidingValue = 0;
+    int SelectedPoint;
+    float SelectedPosition;
 
     int VisiblePointerStart;
     int  VisiblePointerEnd;

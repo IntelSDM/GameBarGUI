@@ -21,7 +21,8 @@ TextBox::TextBox(float x, float y, std::wstring text, std::wstring* data = nullp
 	TextBox::VisiblePointerEnd = MainString->length();
 	TextBox::SetStartIndex(); // this sets start value
 	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart,TextBox::VisiblePointerEnd);
-
+	TextBox::SelectedPoint = VisiblePointerEnd;
+	TextBox::SelectedPosition = GetTextWidth(TextBox::VisibleString.substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
 }
 void TextBox::SetStartIndex()
 {
@@ -57,6 +58,27 @@ void TextBox::Update()
 	{
 		TextBox::Blocked = true; // prevent 2 being active at the same time unless they are somehow fucking merged
 	}
+	if (IsKeyClicked(VK_RIGHT))
+	{
+		if (TextBox::SelectedPoint != TextBox::VisiblePointerEnd && TextBox::LastClick < (clock() * 0.00001f))
+		{
+			TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
+			TextBox::SelectedPoint++;
+		}
+		TextBox::SelectedPosition = GetTextWidth(TextBox::VisibleString.substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
+		
+	}
+	if (IsKeyClicked(VK_LEFT))
+	{
+
+		if (TextBox::SelectedPoint != TextBox::VisiblePointerStart && TextBox::LastClick < (clock() * 0.00001f)) 
+		{
+			TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
+			TextBox::SelectedPoint--;
+		}
+		TextBox::SelectedPosition = GetTextWidth(TextBox::VisibleString.substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
+		TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
+	}
 	if (!TextBox::Blocked) // take input
 	{
 		WPARAM character = Char;
@@ -68,7 +90,11 @@ void TextBox::Update()
 			if the pointer end != start??
 			*/
 			if (TextBox::VisiblePointerStart != 0 && GetTextWidth(MainString->substr(--TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana") < TextBox::Size.x - 6)
+			{
 				TextBox::VisiblePointerStart--;
+				
+			}
+			TextBox::SelectedPosition = GetTextWidth(TextBox::VisibleString.substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
 		}
 		if (character == VK_RETURN)
 		{
@@ -79,12 +105,14 @@ void TextBox::Update()
 			(*TextBox::MainString) += Char;
 			TextBox::VisiblePointerEnd++;
 			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+		
 			while (TextBox::TextWidth > TextBox::Size.x - 6)
 			{
 				TextBox::VisiblePointerStart++; // update position
 				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
 
 			}
+			TextBox::SelectedPosition = GetTextWidth(TextBox::VisibleString.substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
 		}
 		Char = NULL;
 
@@ -112,6 +140,6 @@ void TextBox::Draw()
 	if (!TextBox::Blocked)
 	{
 
-		FilledLine(TextBox::Pos.x + TextBox::ParentPos.x + TextBox::TextWidth, TextBox::Pos.y + TextBox::ParentPos.y + TextBox::Size.y - 3, TextBox::Pos.x + TextBox::ParentPos.x + TextBox::TextWidth, TextBox::Pos.y + TextBox::ParentPos.y + 3, 1, Colour(135, 135, 135, 180));
+		FilledLine(TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + TextBox::Size.y - 3, TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + 3, 1, Colour(135, 135, 135, 180));
 	}
 }
