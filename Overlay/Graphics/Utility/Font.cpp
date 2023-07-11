@@ -43,10 +43,36 @@ void GetTextSize(const std::wstring text, int fontsize, float* const width, floa
 		return;
 	
 	Platform::String^ platstring = ref new Platform::String(text.data());
-	CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), *width, *height);
+	CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), 4096, 4096);
 	layout->SetFontSize(0, text.length(), fontsize);
 	float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
 	// for some reason width is returning what height should be and height is returning a stupid value thats like real width *2
 	*width = layout->LayoutBounds.Height;
 	*height = layout->LayoutBounds.Width + modifier;
+
+}
+float GetTextWidth(std::wstring text, int fontsize, std::string font)
+{
+	if (text.empty())
+		return 0.0f;
+	
+
+	Platform::String^ platstring = ref new Platform::String(text.data());
+	CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), 4096, 4096);
+	layout->SetFontSize(0, text.length(), fontsize);
+	float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
+	return layout->LayoutBounds.Width;
+}
+float GetTextHeight(std::wstring text, int fontsize, std::string font)
+{
+	if (text.empty())
+		return 0.0f;
+
+	Platform::String^ platstring = ref new Platform::String(text.data());
+	CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), 4096, 4096);
+	layout->SetFontSize(0, text.length(), fontsize);
+	float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
+	return layout->LayoutBounds.Height;
+
+
 }

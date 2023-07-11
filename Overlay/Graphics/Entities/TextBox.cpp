@@ -43,9 +43,8 @@ void TextBox::Update()
 	if (!TextBox::IsVisible())
 		return;
 
-	// probably shouldn't be here for optimization reasons but this is a small project, you don't want to keep making templates each frame for each textbox. i will fix this in the actual gui. 
-	GetTextSize(VisibleString, 11, &TextWidth, &TextHeight, "Verdana");
-	TextWidth = TextHeight / 2; // for some odd reason text width and height are messed up.  height is width *2 and width appears to be height. No idea whats going on there.
+	TextBox::TextWidth = GetTextWidth(VisibleString, 11, "Verdana");
+	TextBox::TextHeight = GetTextHeight(VisibleString, 11, "Verdana");
 	TextBox::ParentPos = TextBox::Parent->GetParent()->GetPos();
 	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
 	{
@@ -89,8 +88,7 @@ void TextBox::Update()
 		// trim visible text
 		TextBox::VisibleString.erase(TextBox::VisibleString.begin());
 	}
-//	if (TextBox::VisibleString.length() == 0 && (*TextBox::MainString).length() != 0) // this is a temporary fix so when you delete all of the visible string it lets you go back through the main string
-	//	TextBox::VisibleString = *TextBox::MainString;
+
 }
 
 void TextBox::Draw()
