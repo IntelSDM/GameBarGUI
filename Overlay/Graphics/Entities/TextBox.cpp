@@ -58,10 +58,15 @@ void TextBox::Update()
 	if (!TextBox::Blocked) // take input
 	{
 		WPARAM character = Char;
-		if (character == VK_BACK && (*TextBox::MainString).length() != 0) // backspace, wndproc doesn't seem to like us using iskeyclicked for backspace right now
+		if (character == VK_BACK && (*TextBox::MainString).length() != 0 && TextBox::VisiblePointerEnd !=0) // backspace, wndproc doesn't seem to like us using iskeyclicked for backspace right now
 		{
 			(*TextBox::MainString).erase(std::prev((*TextBox::MainString).end()));
-			
+			TextBox::VisiblePointerEnd--;
+			/*
+			if the pointer end != start??
+			*/
+			if (TextBox::VisiblePointerStart != 0 && GetTextWidth(MainString->substr(--TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana") < TextBox::Size.x - 6)
+				TextBox::VisiblePointerStart--;
 		}
 		if (character == VK_RETURN)
 		{
