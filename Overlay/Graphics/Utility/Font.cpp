@@ -61,7 +61,7 @@ float GetTextWidth(std::wstring text, int fontsize, std::string font)
 	CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), 4096, 4096);
 	layout->SetFontSize(0, text.length(), fontsize);
 	float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
-	return layout->LayoutBounds.Width;
+	return layout->LayoutBounds.Width + modifier;
 }
 float GetTextHeight(std::wstring text, int fontsize, std::string font)
 {
@@ -71,7 +71,7 @@ float GetTextHeight(std::wstring text, int fontsize, std::string font)
 	Platform::String^ platstring = ref new Platform::String(text.data());
 	CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), 4096, 4096);
 	layout->SetFontSize(0, text.length(), fontsize);
-	float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
+	float modifier = layout->DefaultFontSize / 4.0f;
 	return layout->LayoutBounds.Height;
 
 

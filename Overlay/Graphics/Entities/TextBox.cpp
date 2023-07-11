@@ -46,9 +46,9 @@ void TextBox::Update()
 	TextBox::TextWidth = GetTextWidth(VisibleString, 11, "Verdana");
 	TextBox::TextHeight = GetTextHeight(VisibleString, 11, "Verdana");
 	TextBox::ParentPos = TextBox::Parent->GetParent()->GetPos();
+	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd);
 	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
 	{
-		//	Char = NULL;
 		TextBox::Blocked = false;
 	}
 	else if (IsKeyClicked(VK_LBUTTON) && !IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && !TextBox::Blocked)
@@ -61,11 +61,7 @@ void TextBox::Update()
 		if (character == VK_BACK && (*TextBox::MainString).length() != 0) // backspace, wndproc doesn't seem to like us using iskeyclicked for backspace right now
 		{
 			(*TextBox::MainString).erase(std::prev((*TextBox::MainString).end()));
-			TextBox::VisibleString.erase(std::prev(TextBox::VisibleString.end()));
-			if (TextBox::VisibleString.length() != TextBox::MainString->length())
-			{
-
-			}
+			
 		}
 		if (character == VK_RETURN)
 		{
@@ -74,7 +70,14 @@ void TextBox::Update()
 		if (Char < 255 && Char != NULL && Char != VK_BACK && Char != VK_RETURN)
 		{
 			(*TextBox::MainString) += Char;
-			TextBox::VisibleString += Char;
+			TextBox::VisiblePointerEnd++;
+			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+			while (TextBox::TextWidth > TextBox::Size.x - 6)
+			{
+				TextBox::VisiblePointerStart++; // update position
+				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
+
+			}
 		}
 		Char = NULL;
 
@@ -82,12 +85,7 @@ void TextBox::Update()
 		// make a system so if it is clicked and held that it will keep inputting the char
 		// control + A should select the entire field
 	}
-	
-	if (TextBox::TextWidth > TextBox::Size.x - 3) // textsize isn't too accurate
-	{
-		// trim visible text
-		TextBox::VisibleString.erase(TextBox::VisibleString.begin());
-	}
+
 
 }
 
