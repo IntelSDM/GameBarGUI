@@ -46,7 +46,7 @@ void GetTextSize(const std::wstring text, int fontsize, float* const width, floa
 	CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), *width, *height);
 	layout->SetFontSize(0, text.length(), fontsize);
 	float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
-	// yeah the height and width are the wrong way round. no idea why
+	// for some reason width is returning what height should be and height is returning a stupid value thats like real width *2
 	*width = layout->LayoutBounds.Height;
 	*height = layout->LayoutBounds.Width + modifier;
 }

@@ -11,6 +11,10 @@ protected:
     int SelectionEnd = 0;
     int SlidingValue = 0;
 
+    int VisiblePointerStart;
+    int  VisiblePointerEnd;
+    int BeginPointerValue(int value);
+    int EndPointerValue(int value);
     Vector2 Pos;
     Vector2 Size;
     Vector2 ParentPos;

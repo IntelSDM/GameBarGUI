@@ -18,20 +18,23 @@ TextBox::TextBox(float x, float y, std::wstring text, std::wstring* data = nullp
 	TextBox::Name = text;
 	TextBox::Blocked = false;
 	TextBox::MainString = data;
-	TextBox::VisibleString = *MainString;
+	TextBox::VisiblePointerEnd = MainString->length();
+	TextBox::VisiblePointerStart = TextBox::BeginPointerValue(0);
+	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart,TextBox::VisiblePointerEnd);
+
+}
+int TextBox::BeginPointerValue(int value)
+{
+	float width = 0;
+	float height = 0;
+	GetTextSize(MainString->substr(value, TextBox::VisiblePointerEnd), 11, &width, &height, "Verdana");
+	if (width > TextBox::Size.x - 6) // too wide, last character is the best character
+		return --value;
+	if (value == TextBox::VisiblePointerEnd) // value isn't long enough to exceeed textbox width
+		return 0;
+	return TextBox::BeginPointerValue(++value);
 }
 
-bool TextBox::IsKeyAcceptable()
-{
-	// add blacklisted keys here
-	std::list<int> blacklistedkeys = {VK_TAB};
-	for (int i : blacklistedkeys)
-	{
-		if (IsKeyClicked(i))
-			return false;
-	}
-	return true;
-}
 
 void TextBox::Update()
 {
@@ -40,10 +43,13 @@ void TextBox::Update()
 	if (!TextBox::IsVisible())
 		return;
 
+	// probably shouldn't be here for optimization reasons but this is a small project, you don't want to keep making templates each frame for each textbox. i will fix this in the actual gui. 
+	GetTextSize(VisibleString, 11, &TextWidth, &TextHeight, "Verdana");
+	TextWidth = TextHeight / 2; // for some odd reason text width and height are messed up.  height is width *2 and width appears to be height. No idea whats going on there.
 	TextBox::ParentPos = TextBox::Parent->GetParent()->GetPos();
 	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
 	{
-	//	Char = NULL;
+		//	Char = NULL;
 		TextBox::Blocked = false;
 	}
 	else if (IsKeyClicked(VK_LBUTTON) && !IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && !TextBox::Blocked)
@@ -57,42 +63,34 @@ void TextBox::Update()
 		{
 			(*TextBox::MainString).erase(std::prev((*TextBox::MainString).end()));
 			TextBox::VisibleString.erase(std::prev(TextBox::VisibleString.end()));
+			if (TextBox::VisibleString.length() != TextBox::MainString->length())
+			{
+
+			}
 		}
 		if (character == VK_RETURN)
 		{
 			TextBox::Blocked = true;
 		}
-		if (Char < 255 && Char != NULL && Char != VK_BACK && Char != VK_RETURN && IsKeyAcceptable())
+		if (Char < 255 && Char != NULL && Char != VK_BACK && Char != VK_RETURN)
 		{
 			(*TextBox::MainString) += Char;
 			TextBox::VisibleString += Char;
 		}
 		Char = NULL;
 
-		
-		if (!IsKeyDown(VK_LBUTTON))
-			Held = false;
-		if (IsMouseInRectangle(ParentPos.x + Pos.x - 2, ParentPos.y + (Pos.y + 15) - 2, Size.x + 3, Size.y + 3) && IsKeyClicked(VK_LBUTTON))
-		{
-			Held = true;
-		}
-		if (Held)
-		{
-			SetBlockedSiblings(true); // make sure no clicks go through when holding.
-			const float clamp = std::clamp<float>((float)MousePos.x - (float)(Pos.x + ParentPos.x), 0.00f, (float)Size.x);
-			const float ratio = clamp / Size.x;
-			SlidingValue = 0 + (100 - 0) * ratio;
-		}
+
+		// make a system so if it is clicked and held that it will keep inputting the char
+		// control + A should select the entire field
 	}
-	// probably shouldn't be here for optimization reasons but this is a small project, you don't want to keep making templates each frame for each textbox. i will fix this in the actual gui. 
-	GetTextSize(VisibleString, 11, &TextWidth, &TextHeight, "Verdana");
+	
 	if (TextBox::TextWidth > TextBox::Size.x - 3) // textsize isn't too accurate
 	{
 		// trim visible text
 		TextBox::VisibleString.erase(TextBox::VisibleString.begin());
 	}
-	if (TextBox::VisibleString.length() == 0 && (*TextBox::MainString).length() != 0) // this is a temporary fix so when you delete all of the visible string it lets you go back through the main string
-		TextBox::VisibleString = *TextBox::MainString;
+//	if (TextBox::VisibleString.length() == 0 && (*TextBox::MainString).length() != 0) // this is a temporary fix so when you delete all of the visible string it lets you go back through the main string
+	//	TextBox::VisibleString = *TextBox::MainString;
 }
 
 void TextBox::Draw()
@@ -103,17 +101,14 @@ void TextBox::Draw()
 		return;
 
 
-	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x - 1, TextBox::Pos.y + +TextBox::ParentPos.y - 1, TextBox::Size.x + 2, TextBox::Size.y + 2, 4,4, Colour(200, 200, 200, 255));
-	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x, TextBox::Pos.y + +TextBox::ParentPos.y, TextBox::Size.x, TextBox::Size.y, 4,4, Colour(80, 80, 80, 255));
-	DrawText( TextBox::ParentPos.x + TextBox::Pos.x + (TextBox::Size.x / 2), TextBox::ParentPos.y + TextBox::Pos.y - ((TextBox::Size.y / 2) - 1), TextBox::Name, "Verdana", 12,  Colour(255, 255, 255, 255), CentreCentre); // Title
-	DrawTextClipped( TextBox::ParentPos.x + TextBox::Pos.x + 3, (TextBox::ParentPos.y + TextBox::Pos.y) + (TextBox::Size.y / 4), TextBox::Size.x, TextBox::Size.y, TextBox::VisibleString, "Verdana", 11,  Colour(255, 255, 255, 255), None); // Text
-	float visiblewidth = 0;
-	float visibleheight = 0;
-	GetTextSize(VisibleString, 11, &visiblewidth, &visibleheight, "Verdana");
-	float ratio = (float)(SlidingValue - (float)0) / float(100 - 0);
-	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x, TextBox::Pos.y + +TextBox::ParentPos.y, (TextBox::Pos.x + visiblewidth) * ratio, TextBox::Size.y, 4, 4, Colour(0, 150, 255, 100));
+	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x - 1, TextBox::Pos.y + +TextBox::ParentPos.y - 1, TextBox::Size.x + 2, TextBox::Size.y + 2, 4, 4, Colour(200, 200, 200, 255));
+	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x, TextBox::Pos.y + +TextBox::ParentPos.y, TextBox::Size.x, TextBox::Size.y, 4, 4, Colour(80, 80, 80, 255));
+	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + (TextBox::Size.x / 2), TextBox::ParentPos.y + TextBox::Pos.y - ((TextBox::Size.y / 2) - 1), TextBox::Name, "Verdana", 12, Colour(255, 255, 255, 255), CentreCentre); // Title
+	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + 3, (TextBox::ParentPos.y + TextBox::Pos.y) + (TextBox::Size.y / 4), TextBox::VisibleString, "Verdana", 11, Colour(255, 255, 255, 255), None); // Text
+
 	if (!TextBox::Blocked)
 	{
-		FilledLine(TextBox::Pos.x + TextBox::ParentPos.x + TextBox::TextWidth + 3, TextBox::Pos.y + TextBox::ParentPos.y + TextBox::Size.y - 3, TextBox::Pos.x + TextBox::ParentPos.x + TextBox::TextWidth + 3, TextBox::Pos.y + TextBox::ParentPos.y + 3, 1, Colour(135, 135, 135, 180));
+
+		FilledLine(TextBox::Pos.x + TextBox::ParentPos.x + TextBox::TextWidth, TextBox::Pos.y + TextBox::ParentPos.y + TextBox::Size.y - 3, TextBox::Pos.x + TextBox::ParentPos.x + TextBox::TextWidth, TextBox::Pos.y + TextBox::ParentPos.y + 3, 1, Colour(135, 135, 135, 180));
 	}
 }

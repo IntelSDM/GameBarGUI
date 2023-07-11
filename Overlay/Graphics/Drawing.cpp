@@ -52,29 +52,30 @@ void DrawTextClipped(int x, int y,int width,int height, std::wstring text, std::
     switch (alignment)
     {
     case FontAlignment::Centre:
-        x -= ((layout->LayoutBounds.Height + modifier) / 2);
+        x -= ((layout->LayoutBounds.Width) / 2);
         break;
     case FontAlignment::Right:
-        x += ((layout->LayoutBounds.Height + modifier));
+        x += ((layout->LayoutBounds.Width));
         break;
     case FontAlignment::Left:
-        x -= ((layout->LayoutBounds.Height + modifier));
+        x -= ((layout->LayoutBounds.Width));
         break;
     case FontAlignment::None:
         break;
     case FontAlignment::CentreCentre:
-        x -= ((layout->LayoutBounds.Height + modifier) / 2);
-        y -= ((layout->LayoutBounds.Width + modifier) / 2);
+        x -= ((layout->LayoutBounds.Width) / 2);
+        y -= ((layout->LayoutBounds.Height) / 2);
         break;
     case FontAlignment::CentreLeft:
-        x += ((layout->LayoutBounds.Height + modifier));
-        y -= ((layout->LayoutBounds.Width + modifier) / 2);
+        x += ((layout->LayoutBounds.Width));
+        y -= ((layout->LayoutBounds.Height) / 2);
         break;
     case FontAlignment::CentreRight:
-        x += ((layout->LayoutBounds.Height + modifier));
-        y -= ((layout->LayoutBounds.Width + modifier) / 2);
+        x += (layout->LayoutBounds.Width);
+        y -= ((layout->LayoutBounds.Height) / 2);
         break;
     }
+
 
     SwapChain->DrawTextLayout(layout, (float)x, (float)y, colour);
 }
