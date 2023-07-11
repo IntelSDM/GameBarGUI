@@ -60,9 +60,9 @@ void TextBox::Update()
 	}
 	if (IsKeyClicked(VK_RIGHT))
 	{
-		if (TextBox::SelectedPoint != TextBox::VisiblePointerEnd && TextBox::LastClick < (clock() * 0.00001f))
+		if (TextBox::SelectedPoint != TextBox::VisiblePointerEnd)
 		{
-			TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
+		
 			TextBox::SelectedPoint++;
 		}
 		TextBox::SelectedPosition = GetTextWidth(TextBox::VisibleString.substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
@@ -71,13 +71,11 @@ void TextBox::Update()
 	if (IsKeyClicked(VK_LEFT))
 	{
 
-		if (TextBox::SelectedPoint != TextBox::VisiblePointerStart && TextBox::LastClick < (clock() * 0.00001f)) 
+		if (TextBox::SelectedPoint != TextBox::VisiblePointerStart) 
 		{
-			TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
 			TextBox::SelectedPoint--;
 		}
 		TextBox::SelectedPosition = GetTextWidth(TextBox::VisibleString.substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
-		TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
 	}
 	if (!TextBox::Blocked) // take input
 	{
@@ -130,16 +128,19 @@ void TextBox::Draw()
 		TextBox::SetVisible(false);
 	if (!TextBox::IsVisible())
 		return;
-
+	
 
 	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x - 1, TextBox::Pos.y + +TextBox::ParentPos.y - 1, TextBox::Size.x + 2, TextBox::Size.y + 2, 4, 4, Colour(200, 200, 200, 255));
 	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x, TextBox::Pos.y + +TextBox::ParentPos.y, TextBox::Size.x, TextBox::Size.y, 4, 4, Colour(80, 80, 80, 255));
 	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + (TextBox::Size.x / 2), TextBox::ParentPos.y + TextBox::Pos.y - ((TextBox::Size.y / 2) - 1), TextBox::Name, "Verdana", 12, Colour(255, 255, 255, 255), CentreCentre); // Title
 	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + 3, (TextBox::ParentPos.y + TextBox::Pos.y) + (TextBox::Size.y / 4), TextBox::VisibleString, "Verdana", 11, Colour(255, 255, 255, 255), None); // Text
 
-	if (!TextBox::Blocked)
+	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - TextBox::AnimationStart;
+	float time = std::fmodf(elapsed.count(), TextBox::AnimationInterval) / TextBox::AnimationInterval;
+	float easedtime = InOutSine(time);
+	if (!TextBox::Blocked && std::fmod(elapsed.count(), TextBox::AnimationInterval) < TextBox::AnimationInterval / 2)
 	{
-
-		FilledLine(TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + TextBox::Size.y - 3, TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + 3, 1, Colour(135, 135, 135, 180));
+		float alpha = 180.0f * (1.0f - easedtime * 2.0f);
+		FilledLine(TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + TextBox::Size.y - 3, TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + 3, 1, Colour(255, 255, 255, static_cast<unsigned int>(alpha)));
 	}
 }

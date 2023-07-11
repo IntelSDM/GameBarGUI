@@ -229,6 +229,7 @@
     <ClInclude Include="Graphics\Entities\Toggle.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\Start Up\GUI.h" />
+    <ClInclude Include="Graphics\Utility\Animation.h" />
     <ClInclude Include="Graphics\Utility\Colour.h" />
     <ClInclude Include="Graphics\Utility\Font.h" />
     <ClInclude Include="Misc\Input.h" />
@@ -330,6 +331,7 @@
     <ClCompile Include="Graphics\Entities\TextBox.cpp" />
     <ClCompile Include="Graphics\Entities\Toggle.cpp" />
     <ClCompile Include="Graphics\Start Up\GUI.cpp" />
+    <ClCompile Include="Graphics\Utility\Animation.cpp" />
     <ClCompile Include="Graphics\Utility\Colour.cpp" />
     <ClCompile Include="Graphics\Utility\Font.cpp" />
     <ClCompile Include="Misc\Input.cpp" />

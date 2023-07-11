@@ -4,8 +4,8 @@ class TextBox : public Entity
 {
 protected:
 
-    int LastAnimationTime = 0;
-    int AnimationDuration = 1;
+    std::chrono::time_point<std::chrono::high_resolution_clock> AnimationStart;
+    float AnimationInterval = 0.9f;
 
     int SelectedPoint;
     float SelectedPosition;

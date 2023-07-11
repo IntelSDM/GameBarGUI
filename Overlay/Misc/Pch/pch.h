@@ -69,3 +69,4 @@ using namespace Microsoft::Graphics::Canvas::Geometry;
 #include "Vector.h"
 #include "App.xaml.h"
 #include "Colour.h"
+#include "Animation.h"
