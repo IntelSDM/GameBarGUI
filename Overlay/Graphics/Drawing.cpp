@@ -217,6 +217,11 @@ void FilledRectangle(int x, int y, int width, int height, Color colour)
     Rect rect(x, y, width,height);
     SwapChain->FillRectangle(rect, colour);
 }
+void FilledRectangleOnSpriteBatch(int x, int y, int width, int height, Color colour)
+{
+    Rect rect(x, y, width, height);
+    DrawingSession->FillRectangle(rect, colour);
+}
 void FilledRectangleSprite(int x, int y, int width, int height, Color colour)
 {
     Rect rect(x, y, width, height);
@@ -229,6 +234,7 @@ void FilledRectangleSprite(int x, int y, int width, int height, Color colour)
 
     SwapChain->DrawImage(rendertarget, x, y);
 }
+
 void ColourPicker(int x, int y, int width, int height, Color colour)
 {
     auto stops = ref new Platform::Array<CanvasGradientStop>(2);
@@ -241,6 +247,20 @@ void ColourPicker(int x, int y, int width, int height, Color colour)
     brush->EndPoint =  float2(x, y + height);
 
     SwapChain->FillRectangle(Rect(x, y, width, height), brush);
+
+}
+void ColourPickerOnSpriteBatch(int x, int y, int width, int height, Color colour)
+{
+    auto stops = ref new Platform::Array<CanvasGradientStop>(2);
+    stops[0] = { 0.00f, colour };
+    stops[1] = { 1.0f, Colors::Black };
+
+
+    auto brush = ref new CanvasLinearGradientBrush(SwapChain, stops);
+    brush->StartPoint = float2(x + width, y);
+    brush->EndPoint = float2(x, y + height);
+
+    DrawingSession->FillRectangle(Rect(x, y, width, height), brush);
 
 }
 void ColourPickerSlider(int x, int y, int width, int height)
@@ -261,34 +281,77 @@ void ColourPickerSlider(int x, int y, int width, int height)
     SwapChain->FillRectangle(Rect(x, y, width, height), brush);
 
 }
+void ColourPickerSliderOnSpriteBatch(int x, int y, int width, int height)
+{
+    auto stops = ref new Platform::Array<CanvasGradientStop>(7);
+    stops[0] = { 0.00f, Colour(255,0,0,255) };
+    stops[1] = { 0.16f, Colour(255,255,0,255) };
+    stops[2] = { 0.32f,  Colour(0,255,0,255) };
+    stops[3] = { 0.48f,  Colour(0,255,255,255) };
+    stops[4] = { 0.64f,  Colour(0,0,255,255) };
+    stops[5] = { 0.80f,  Colour(255,0,255,255) };
+    stops[6] = { 0.96f,  Colour(255,0,0,255) };
+
+    auto brush = ref new CanvasLinearGradientBrush(SwapChain, stops);
+    brush->StartPoint = float2((float)x, (float)y);
+    brush->EndPoint = float2((float)(x + width), (float)y);
+
+    DrawingSession->FillRectangle(Rect(x, y, width, height), brush);
+
+}
 void OutlineRectangle(int x, int y, int width, int height, int thickness, Color colour)
 {
     Rect rect(x, y, width, height);
     SwapChain->DrawRectangle(rect,colour, thickness);
+}
+void OutlineRectangleOnSpriteBatch(int x, int y, int width, int height, int thickness, Color colour)
+{
+    Rect rect(x, y, width, height);
+    DrawingSession->DrawRectangle(rect, colour, thickness);
 }
 void FilledRoundedRectangle(int x, int y, int width, int height,int aax, int aay,Color colour)
 {
     Rect rect(x, y, width, height);
     SwapChain->FillRoundedRectangle(rect,aax,aay, colour);
 }
-
+void FilledRoundedRectangleOnSpriteBatch(int x, int y, int width, int height, int aax, int aay, Color colour)
+{
+    Rect rect(x, y, width, height);
+    DrawingSession->FillRoundedRectangle(rect, aax, aay, colour);
+}
 void OutlineRoundedRectangle(int x, int y, int width, int height, int aax, int aay,Color colour)
 {
     Rect rect(x, y,width,height);
     SwapChain->DrawRoundedRectangle(rect,aax,aay, colour);
 }
-
+void OutlineRoundedRectangleOnSpriteBatch(int x, int y, int width, int height, int aax, int aay, Color colour)
+{
+    Rect rect(x, y, width, height);
+    DrawingSession->DrawRoundedRectangle(rect, aax, aay, colour);
+}
 void OutlineCircle(int x, int y, int radius,int thickness, Color colour)
 {
     SwapChain->DrawCircle(x,y,(float)radius,colour, thickness);
+}
+void OutlineCircleOnSpriteBatch(int x, int y, int radius, int thickness, Color colour)
+{
+    DrawingSession->DrawCircle(x, y, (float)radius, colour, thickness);
 }
 void FilledCircle(int x, int y, int radius, int thickness, Color colour)
 {
     SwapChain->FillCircle(x, y, (float)radius, colour);
 }
+void FilledCircleOnSpriteBatch(int x, int y, int radius, int thickness, Color colour)
+{
+    DrawingSession->FillCircle(x, y, (float)radius, colour);
+}
 void FilledLine(int x1,int y1,int x2, int y2, int thickness, Color colour)
 {
     SwapChain->DrawLine(x1,y1,x2,y2,colour,thickness);
+}
+void FilledLineOnSpriteBatch(int x1, int y1, int x2, int y2, int thickness, Color colour)
+{
+    DrawingSession->DrawLine(x1, y1, x2, y2, colour, thickness);
 }
 void FilledTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color colour)
 {
@@ -304,4 +367,19 @@ void FilledTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color colour
     path->EndFigure(CanvasFigureLoop::Closed);
     auto geometry = CanvasGeometry::CreatePath(path);
     SwapChain->FillGeometry(geometry, colour);
+}
+void FilledTriangleOnSpriteBatch(int x1, int y1, int x2, int y2, int x3, int y3, Color colour)
+{
+    Point p1(x1, y1);
+    Point p2(x2, y2);
+    Point p3(x3, y3);
+
+    auto path = ref new CanvasPathBuilder(SwapChain->Device);
+
+    path->BeginFigure(p1);
+    path->AddLine(p2);
+    path->AddLine(p3);
+    path->EndFigure(CanvasFigureLoop::Closed);
+    auto geometry = CanvasGeometry::CreatePath(path);
+    DrawingSession->FillGeometry(geometry, colour);
 }

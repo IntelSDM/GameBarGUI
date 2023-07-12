@@ -21,6 +21,18 @@ void ColourPicker(int x, int y, int width, int height, Color colour);
 void ColourPickerSlider(int x, int y, int width, int height);
 void FilledTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Color colour);
 void FilledLine(int x1, int y1, int x2, int y2, int thickness, Color colour);
+
+
+void FilledRectangleOnSpriteBatch(int x, int y, int width, int height, Color colour);
+void OutlineRectangleOnSpriteBatch(int x, int y, int width, int height, int thickness, Color colour);
+void FilledRoundedRectangleOnSpriteBatch(int x, int y, int width, int height, int aax, int aay, Color colour);
+void OutlineRoundedRectangleOnSpriteBatch(int x, int y, int width, int height, int aax, int aay, Color colour);
+void OutlineCircleOnSpriteBatch(int x, int y, int radius, int thickness, Color colour);
+void FilledCircleOnSpriteBatch(int x, int y, int radius, int thickness, Color colour);
+void ColourPickerOnSpriteBatch(int x, int y, int width, int height, Color colour);
+void ColourPickerSliderOnSpriteBatch(int x, int y, int width, int height);
+void FilledTriangleOnSpriteBatch(int x1, int y1, int x2, int y2, int x3, int y3, Color colour);
+void FilledLineOnSpriteBatch(int x1, int y1, int x2, int y2, int thickness, Color colour);
 void DrawTextOnSpriteBatch(int x, int y, std::wstring text, std::string font, int fontsize, Color colour, FontAlignment alignment);
 void PackSpriteSession();
 void SetDrawingSession();
