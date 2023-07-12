@@ -24,7 +24,7 @@ TextBox::TextBox(float x, float y, std::wstring text, std::wstring* data = nullp
 	TextBox::VisiblePointerEnd = MainString->length();
 	TextBox::SetStartIndex(); // this sets start value
 	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart,TextBox::VisiblePointerEnd);
-	TextBox::SelectedPoint = VisiblePointerEnd;
+	TextBox::SelectedPoint = VisiblePointerEnd - TextBox::VisiblePointerStart;
 	TextBox::SelectedPosition = GetTextWidth(TextBox::MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
 }
 void TextBox::SetStartIndex()
@@ -73,10 +73,17 @@ void TextBox::Update()
 		{
 			TextBox::SelectedPoint--;
 			TextBox::VisiblePointerStart--;
+			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
 			// if the value exceeds the textbox bounds decrement the ending
-			while (TextBox::TextWidth > TextBox::Size.x - 6)
+			while (TextBox::TextWidth > TextBox::Size.x - 6 && TextBox::VisiblePointerStart !=0)
 			{
 				TextBox::VisiblePointerEnd--; 
+				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
+			}
+			while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::MainString->length() > TextBox::VisiblePointerEnd && TextBox::VisiblePointerStart == 0)
+			{
+				TextBox::VisiblePointerEnd++; // update position
+				TextBox::SelectedPoint++;
 				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
 			}
 		}
@@ -90,6 +97,7 @@ void TextBox::Update()
 		{
 			TextBox::SelectedPoint++;
 			TextBox::VisiblePointerEnd++;
+			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
 			// decrement start
 			while (TextBox::TextWidth > TextBox::Size.x - 6)
 			{
@@ -104,13 +112,30 @@ void TextBox::Update()
 		WPARAM character = Char;
 		if (character == VK_BACK && (*TextBox::MainString).length() != 0 && TextBox::VisiblePointerEnd != 0) // backspace, wndproc doesn't seem to like us using iskeyclicked for backspace right now
 		{
-			(*TextBox::MainString).erase(std::prev((*TextBox::MainString).end()));
-			TextBox::VisiblePointerEnd--;
-			TextBox::SelectedPoint--;
+			
+			if (TextBox::SelectedPoint == TextBox::VisiblePointerEnd)
+			{
+				(*TextBox::MainString).erase(std::prev((*TextBox::MainString).end()));
+				TextBox::VisiblePointerEnd--;
+				TextBox::SelectedPoint--;
+			}
+			else
+			{
+				TextBox::MainString->erase(TextBox::SelectedPoint - 1,1);
+				TextBox::SelectedPoint--;
+				TextBox::VisiblePointerEnd--;
+			}
 			
 			if (TextBox::VisiblePointerStart != 0 && GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana") < TextBox::Size.x - 6)
 			{
 				TextBox::VisiblePointerStart--;
+			}
+			// detect if there is any other text that we might need to add so our string doesn't randomly get cut off
+			while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::MainString->length() > TextBox::VisiblePointerEnd)
+			{
+				TextBox::VisiblePointerEnd++; // update position
+				TextBox::SelectedPoint++;
+				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
 			}
 		}
 		if (character == VK_RETURN)
@@ -119,9 +144,10 @@ void TextBox::Update()
 		}
 		if (Char < 255 && Char != NULL && Char != VK_BACK && Char != VK_RETURN)
 		{
-			(*TextBox::MainString) += Char;
+		//	(*TextBox::MainString) += Char;
 			TextBox::VisiblePointerEnd++;
 			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+			MainString->insert(TextBox::SelectedPoint,1 ,Char);
 			TextBox::SelectedPoint++;
 			while (TextBox::TextWidth > TextBox::Size.x - 6)
 			{
@@ -140,7 +166,7 @@ void TextBox::Update()
 			// if last position is closer return last position.
 			float lastdistance = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
 			int instance = 0;
-			for (int i = 0; i < TextBox::VisibleString.length(); i++)
+			for (int i = TextBox::VisiblePointerStart; i <= TextBox::VisiblePointerEnd; i++)
 			{
 				float width = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, i), 11, "Verdana");
 				float distance = std::abs(relativemousepos.x - width);
@@ -162,7 +188,7 @@ void TextBox::Update()
 		{
 			TextBox::SelectedPoint = TextBox::VisiblePointerEnd;
 		}
-		TextBox::SelectedPosition = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
+		TextBox::SelectedPosition = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint - TextBox::VisiblePointerStart), 11, "Verdana");
 	}
 
 
