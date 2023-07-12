@@ -5,17 +5,15 @@
 #include "Font.h"
 #include "Drawing.h"
 #include "GUI.h"
-#include "TabController.h"
+#include "Graphics.h"
 using namespace Cheat;
 using namespace Platform;
 using namespace Windows::UI::Core;
 Microsoft::Graphics::Canvas::UI::Xaml::CanvasSwapChainPanel^ CanvasObject;
 CanvasDrawingSession^ SwapChain;
-namespace sdk
-{
-	float WindowWidth;
-	float WindowHeight;
-}
+int WindowWidth;
+int WindowHeight;
+
 
 
 Overlay::Overlay()
@@ -44,7 +42,7 @@ void RenderingThread()
 		
 		SwapChain->Clear(Colors::Transparent);
 		/* RENDER*/
-		SwapChain->Clear(Colors::Black);
+	//	SwapChain->Clear(Colors::Black);
 		std::string test = std::to_string(MousePos.x) + "x" + std::to_string(MousePos.y) +"|" + std::to_string(IsKeyClicked(VK_SHIFT));
 		std::wstring wideText(test.begin(), test.end());
 		Platform::String^ text = ref new Platform::String(wideText.c_str());
@@ -157,9 +155,9 @@ void Overlay::SwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI::Xaml:
 	CanvasObject = canvasSwapChainPanel;
 	CanvasObject->AllowFocusWhenDisabled = true;
 	//lets use this it is way better for what we want
-	sdk::WindowWidth = (float)Window::Current->CoreWindow->Bounds.Width;
-	sdk::WindowHeight = (float)Window::Current->CoreWindow->Bounds.Height;
 
+	WindowWidth = Window::Current->CoreWindow->Bounds.Width;;
+	WindowHeight = Window::Current->CoreWindow->Bounds.Height;
 	Windows::UI::Core::CoreWindow::GetForCurrentThread()->CharacterReceived += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::CharacterReceivedEventArgs^>(this, &Overlay::CharacterReceived);
 	Windows::UI::Core::CoreWindow::GetForCurrentThread()->PointerMoved +=ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::PointerEventArgs^>(this, &Overlay::PointerMoved);
 	Windows::UI::Core::CoreWindow::GetForCurrentThread()->PointerPressed += ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::PointerEventArgs^>(this, &Overlay::PointerPressed);

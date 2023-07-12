@@ -3,8 +3,58 @@
 #include "Drawing.h"
 #include "Font.h"
 #include <WindowsNumerics.h>
+CanvasDrawingSession^ DrawingSession;
+CanvasRenderTarget^ RenderTarget;
+void SetDrawingSession()
+{
+   RenderTarget = ref new CanvasRenderTarget(SwapChain, WindowWidth, WindowHeight, SwapChain->Dpi);
+    DrawingSession = RenderTarget->CreateDrawingSession();
+    DrawingSession->Clear(Windows::UI::Colors::Transparent);
+}
 
+void PackSpriteSession()
+{
+    SwapChain->DrawImage(RenderTarget);
+    // clear these
+    delete RenderTarget;
+    delete DrawingSession;
+    }
+// this draws text on the main sprite batch
+void DrawTextOnSpriteBatch(int x, int y, std::wstring text, std::string font, int fontsize, Color colour, FontAlignment alignment)
+{
+    Platform::String^ platstring = ref new Platform::String(text.data());
+    CanvasTextLayout^ layout = ref new CanvasTextLayout(SwapChain, platstring, GetFont(font), 4096.0f, 4096.0f);
+    layout->SetFontSize(0, text.length(), fontsize);
+    float modifier = layout->DefaultFontSize / 4.0f; // metrics isn't ever correct
 
+    switch (alignment)
+    {
+    case FontAlignment::Centre:
+        x -= ((layout->LayoutBounds.Width) / 2);
+        break;
+    case FontAlignment::Right:
+        x += ((layout->LayoutBounds.Width));
+        break;
+    case FontAlignment::Left:
+        x -= ((layout->LayoutBounds.Width));
+        break;
+    case FontAlignment::None:
+        break;
+    case FontAlignment::CentreCentre:
+        x -= ((layout->LayoutBounds.Width) / 2);
+        y -= ((layout->LayoutBounds.Height) / 2);
+        break;
+    case FontAlignment::CentreLeft:
+        x += ((layout->LayoutBounds.Width));
+        y -= ((layout->LayoutBounds.Height) / 2);
+        break;
+    case FontAlignment::CentreRight:
+        x += (layout->LayoutBounds.Width);
+        y -= ((layout->LayoutBounds.Height) / 2);
+        break;
+    }
+    DrawingSession->DrawTextLayout(layout, (float)x, (float)y, colour);
+}
 void DrawText(int x, int y,std::wstring text,std::string font, int fontsize,Color colour,FontAlignment alignment)
 {
 	Platform::String^ platstring = ref new Platform::String(text.data());
@@ -40,7 +90,7 @@ void DrawText(int x, int y,std::wstring text,std::string font, int fontsize,Colo
     }
 	SwapChain->DrawTextLayout(layout, (float)x, (float)y, colour);
 }
-
+// this draws text on its own sprite batch
 void DrawTextSprite(int x, int y, std::wstring text, std::string font, int fontsize, Color colour, FontAlignment alignment)
 {
     Platform::String^ platstring = ref new Platform::String(text.data());
