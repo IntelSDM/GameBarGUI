@@ -110,7 +110,7 @@ void TextBox::Update()
 	if (!TextBox::Blocked) // take input
 	{
 		WPARAM character = Char;
-		if (character == VK_BACK && (*TextBox::MainString).length() != 0 && TextBox::VisiblePointerEnd != 0) // backspace, wndproc doesn't seem to like us using iskeyclicked for backspace right now
+		if (character == VK_BACK && (*TextBox::MainString).length() != 0 && TextBox::VisiblePointerEnd != 0 && SelectedPoint != 0) // backspace, wndproc doesn't seem to like us using iskeyclicked for backspace right now
 		{
 			
 			if (TextBox::SelectedPoint == TextBox::VisiblePointerEnd)
@@ -168,7 +168,7 @@ void TextBox::Update()
 			int instance = 0;
 			for (int i = TextBox::VisiblePointerStart; i <= TextBox::VisiblePointerEnd; i++)
 			{
-				float width = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, i), 11, "Verdana");
+				float width = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, i - TextBox::VisiblePointerStart), 11, "Verdana");
 				float distance = std::abs(relativemousepos.x - width);
 				if (distance > lastdistance)
 				{
