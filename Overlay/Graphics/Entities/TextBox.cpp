@@ -130,6 +130,32 @@ void TextBox::Update()
 			}
 		}
 		Char = NULL;
+		
+		if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
+		{
+			Vector2 relativemousepos = { MousePos.x - (TextBox::Pos.x + TextBox::ParentPos.x),MousePos.y - (TextBox::Pos.y + TextBox::ParentPos.y) };
+			// get width
+			// get last position
+			// is last position closer or this one?
+			// if last position is closer return last position.
+			float lastdistance = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+			int instance = 0;
+			for (int i = 0; i < TextBox::VisibleString.length(); i++)
+			{
+				float width = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, i), 11, "Verdana");
+				float distance = std::abs(relativemousepos.x - width);
+				if (distance > lastdistance)
+				{
+					instance = --i;
+					break;
+				}
+				lastdistance = distance;
+				instance = i;
+			}
+			if (instance == -1)
+				instance = TextBox::VisiblePointerEnd;
+			TextBox::SelectedPoint = instance;
+		}
 
 		// Update the selected point if it is out of bounds
 		if (TextBox::SelectedPoint > TextBox::VisiblePointerEnd)

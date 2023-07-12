@@ -79,7 +79,7 @@ bool IsKeyClicked(int key)
     // Check if the click time is below the current time by 0.05 seconds and is invoked, Kinda messy but works well.
     if (KeyStates[key] == KeyState::KeyInvoked && (KeyTimes[key]) >= (clock() * 0.001f) - 0.05f)
     {
-        if (!KeyHeld[key])
+       /* if (!KeyHeld[key])
         {
             KeyHeld[key] = true;
             return true;
@@ -88,7 +88,8 @@ bool IsKeyClicked(int key)
         {
             KeyHeld[key] = false;
             return false;
-        }
+        }*/
+        return true;
     }
     else
         return false;
