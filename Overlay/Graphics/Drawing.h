@@ -1,4 +1,10 @@
 #pragma once
+/*
+Instructions on sprite batching:
+Call SetDrawingSession
+call your spritebatch drawing calls
+call PackSpriteSession when you're finished with your draws.
+*/
 enum FontAlignment
 {
     Left = 0,
