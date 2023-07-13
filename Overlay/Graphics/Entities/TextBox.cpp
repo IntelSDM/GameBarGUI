@@ -142,7 +142,7 @@ void TextBox::Update()
 		{
 			TextBox::Blocked = true;
 		}
-		if (Char < 255 && Char != NULL && Char != VK_BACK && Char != VK_RETURN)
+		if (Char < 255 && Char != NULL && Char != VK_BACK && Char != VK_RETURN && !IsKeyDown(VK_LCONTROL))
 		{
 		//	(*TextBox::MainString) += Char;
 			TextBox::VisiblePointerEnd++;
@@ -159,7 +159,7 @@ void TextBox::Update()
 		if (!IsKeyDown(VK_LBUTTON))
 			TextBox::Held = false;
 
-		if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
+		if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_CONTROL))
 		{
 			TextBox::Held = true;
 			Vector2 relativemousepos = { MousePos.x - (TextBox::Pos.x + TextBox::ParentPos.x),MousePos.y - (TextBox::Pos.y + TextBox::ParentPos.y) };
@@ -186,6 +186,11 @@ void TextBox::Update()
 			TextBox::SelectedPoint = instance;
 
 		}
+		if (IsKeyDown(VK_CONTROL) && IsKeyDown(0x41))//(A)
+		{
+			TextBox::SelectionStart = 0;
+			TextBox::SelectionEnd = MainString->length();
+		}
 		if (TextBox::Held)
 		{
 			Vector2 relativemousepos = { MousePos.x - (TextBox::Pos.x + TextBox::ParentPos.x),MousePos.y - (TextBox::Pos.y + TextBox::ParentPos.y) };
@@ -204,7 +209,7 @@ void TextBox::Update()
 				instance = i;
 			}
 			if (instance == -1)
-				instance = TextBox::VisiblePointerEnd;
+				instance = TextBox::TextBox::VisiblePointerEnd;
 			if (TextBox::SelectedPoint > instance)
 			{
 				TextBox::SelectionEnd = TextBox::SelectedPoint;
@@ -215,6 +220,7 @@ void TextBox::Update()
 				TextBox::SelectionEnd = instance;
 				TextBox::SelectionStart = TextBox::SelectedPoint;
 			}
+
 		}
 		// Update the selected point if it is out of bounds
 		if (TextBox::SelectedPoint > TextBox::VisiblePointerEnd)
@@ -222,11 +228,9 @@ void TextBox::Update()
 			TextBox::SelectedPoint = TextBox::VisiblePointerEnd;
 		}
 		TextBox::SelectedPosition = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint - TextBox::VisiblePointerStart), 11, "Verdana");
-		if (TextBox::Held && !TextBox::Blocked)
-		{
-			TextBox::SelectingStartPosition = GetTextWidth(MainString->substr(TextBox::SelectionStart, TextBox::SelectionStart + 1), 11, "Verdana");
-			TextBox::SelectingEndPosition = GetTextWidth(MainString->substr(TextBox::SelectionStart, TextBox::SelectionEnd), 11, "Verdana");
-		}
+
+		TextBox::SelectingStartPosition = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectionStart - TextBox::VisiblePointerStart), 11, "Verdana");
+		TextBox::SelectingEndPosition = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectionEnd - TextBox::VisiblePointerStart), 11, "Verdana");
 	}
 
 
@@ -252,8 +256,8 @@ void TextBox::Draw()
 		float alpha = 255.0f * (1.0f - easedtime * 2.0f);
 		FilledLine(TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + TextBox::Size.y - 3, TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + 3, 1, Colour(255, 255, 255, static_cast<unsigned int>(alpha)));
 	}
-	if (TextBox::Held && !TextBox::Blocked)
+	if (TextBox::SelectingStartPosition >=0 || TextBox::SelectingEndPosition>=0)
 	{
-		FilledRectangle(TextBox::Pos.x + TextBox::ParentPos.x + SelectingStartPosition, TextBox::Pos.y + +TextBox::ParentPos.y, TextBox::SelectingEndPosition, TextBox::Size.y, Colour(0, 150, 255, 100));
+		FilledRectangle(TextBox::Pos.x + TextBox::ParentPos.x + SelectingStartPosition, TextBox::Pos.y + +TextBox::ParentPos.y, TextBox::SelectingEndPosition - SelectingStartPosition, TextBox::Size.y, Colour(0, 150, 255, 100));
 	}
 }
