@@ -142,7 +142,7 @@ void TextBox::Update()
 		{
 			TextBox::Blocked = true;
 		}
-		if (Char < 255 && Char != NULL && Char != VK_BACK && Char != VK_RETURN && !IsKeyDown(VK_LCONTROL))
+		if (Char < 255 && Char != NULL && Char != VK_BACK && Char != VK_RETURN && !IsKeyDown(VK_CONTROL))
 		{
 		//	(*TextBox::MainString) += Char;
 			TextBox::VisiblePointerEnd++;
@@ -159,7 +159,7 @@ void TextBox::Update()
 		if (!IsKeyDown(VK_LBUTTON))
 			TextBox::Held = false;
 
-		if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_CONTROL))
+		if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
 		{
 			TextBox::Held = true;
 			Vector2 relativemousepos = { MousePos.x - (TextBox::Pos.x + TextBox::ParentPos.x),MousePos.y - (TextBox::Pos.y + TextBox::ParentPos.y) };
