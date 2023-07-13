@@ -10,6 +10,11 @@ protected:
     int SelectedPoint;
     float SelectedPosition;
 
+    int SelectionStart;
+    int SelectionEnd;
+    float SelectingStartPosition = 0;
+    float SelectingEndPosition = 0;
+
     int VisiblePointerStart;
     int  VisiblePointerEnd;
     void TextBox::SetStartIndex();
