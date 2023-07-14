@@ -111,31 +111,47 @@ void TextBox::Update()
 	{
 		WPARAM character = Char;
 		if (character == VK_BACK && (*TextBox::MainString).length() != 0 && TextBox::VisiblePointerEnd != 0 && SelectedPoint != 0) // backspace, wndproc doesn't seem to like us using iskeyclicked for backspace right now
-		{
-			
-			if (TextBox::SelectedPoint == TextBox::VisiblePointerEnd)
+		{// no selection
+			if (TextBox::SelectionStart == TextBox::SelectedPoint && TextBox::SelectionEnd == TextBox::SelectedPoint)
 			{
-				(*TextBox::MainString).erase(std::prev((*TextBox::MainString).end()));
-				TextBox::VisiblePointerEnd--;
-				TextBox::SelectedPoint--;
+				if (TextBox::SelectedPoint == TextBox::VisiblePointerEnd)
+				{
+					(*TextBox::MainString).erase(std::prev((*TextBox::MainString).end()));
+					TextBox::VisiblePointerEnd--;
+					TextBox::SelectedPoint--;
+				}
+				else
+				{
+					TextBox::MainString->erase(TextBox::SelectedPoint - 1, 1);
+					TextBox::SelectedPoint--;
+					TextBox::VisiblePointerEnd--;
+				}
+
+				if (TextBox::VisiblePointerStart != 0 && GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana") < TextBox::Size.x - 6)
+				{
+					TextBox::VisiblePointerStart--;
+				}
+				// detect if there is any other text that we might need to add so our string doesn't randomly get cut off
+				while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::MainString->length() > TextBox::VisiblePointerEnd)
+				{
+					TextBox::VisiblePointerEnd++; // update position
+					TextBox::SelectedPoint++;
+					TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart + 1, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
+				}
 			}
 			else
 			{
-				TextBox::MainString->erase(TextBox::SelectedPoint - 1,1);
-				TextBox::SelectedPoint--;
-				TextBox::VisiblePointerEnd--;
-			}
-			
-			if (TextBox::VisiblePointerStart != 0 && GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana") < TextBox::Size.x - 6)
-			{
-				TextBox::VisiblePointerStart--;
-			}
-			// detect if there is any other text that we might need to add so our string doesn't randomly get cut off
-			while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::MainString->length() > TextBox::VisiblePointerEnd)
-			{
-				TextBox::VisiblePointerEnd++; // update position
-				TextBox::SelectedPoint++;
-				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
+				//selecting
+				TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
+				while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::MainString->length() > TextBox::VisiblePointerEnd)
+				{
+					TextBox::VisiblePointerEnd++; // update position
+					TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart + 1, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
+				}
+				//reset selected points
+				TextBox::SelectionStart == TextBox::SelectedPoint;
+				TextBox::SelectionEnd == TextBox::SelectedPoint;
+				TextBox::Held = false;
 			}
 		}
 		if (character == VK_RETURN)
