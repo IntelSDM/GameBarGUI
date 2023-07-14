@@ -59,10 +59,14 @@ void TextBox::Update()
 	}
 	else if (IsKeyClicked(VK_LBUTTON) && !IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && !TextBox::Blocked)
 	{
+		TextBox::Selecting = false;
+		TextBox::Held = false;
 		TextBox::Blocked = true; // prevent 2 being active at the same time unless they are somehow fucking merged
 	}
 	if (IsKeyClicked(VK_LEFT) && TextBox::LastClick < (clock() * 0.00001f))
 	{
+		TextBox::Selecting = false;
+		TextBox::Held = false;
 		// pointer isn't behind visible text
 		if (SelectedPoint > TextBox::VisiblePointerStart)
 		{
@@ -91,10 +95,13 @@ void TextBox::Update()
 	}
 	if (IsKeyClicked(VK_RIGHT) && TextBox::LastClick < (clock() * 0.00001f))
 	{
+		TextBox::Selecting = false;
+		TextBox::Held = false;
 		if(TextBox::SelectedPoint < TextBox::VisiblePointerEnd)
 		TextBox::SelectedPoint++;
 		else if (TextBox::VisiblePointerEnd != TextBox::MainString->length() && TextBox::SelectedPoint == TextBox::VisiblePointerEnd)
 		{
+			
 			TextBox::SelectedPoint++;
 			TextBox::VisiblePointerEnd++;
 			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
@@ -143,16 +150,29 @@ void TextBox::Update()
 			{
 				//selecting
 				TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
-				while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::MainString->length() > TextBox::VisiblePointerEnd)
+				TextBox::VisiblePointerEnd -= TextBox::SelectionEnd - TextBox::SelectionStart;
+				while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::VisiblePointerStart > 0)
+				{
+					TextBox::VisiblePointerStart++; // update position
+					TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
+
+				}
+				while (TextBox::TextWidth > TextBox::Size.x - 6 && TextBox::MainString->length() > TextBox::VisiblePointerEnd)
 				{
 					TextBox::VisiblePointerEnd++; // update position
 					TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart + 1, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
 				}
 				//reset selected points
-				TextBox::SelectionStart == TextBox::SelectedPoint;
-				TextBox::SelectionEnd == TextBox::SelectedPoint;
+				TextBox::SelectionStart = TextBox::SelectedPoint;
+				TextBox::SelectionEnd = TextBox::SelectedPoint;
 				TextBox::Held = false;
+				TextBox::Selecting = false;
 			}
+		}
+		if (!TextBox::Held && !TextBox::Selecting)
+		{
+			TextBox::SelectionStart = TextBox::SelectedPoint;
+			TextBox::SelectionEnd = TextBox::SelectedPoint;
 		}
 		if (character == VK_RETURN)
 		{
@@ -209,6 +229,7 @@ void TextBox::Update()
 		}
 		if (TextBox::Held)
 		{
+			Selecting = true;
 			Vector2 relativemousepos = { MousePos.x - (TextBox::Pos.x + TextBox::ParentPos.x),MousePos.y - (TextBox::Pos.y + TextBox::ParentPos.y) };
 			float lastdistance = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
 			int instance = 0;
@@ -272,7 +293,7 @@ void TextBox::Draw()
 		float alpha = 255.0f * (1.0f - easedtime * 2.0f);
 		FilledLine(TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + TextBox::Size.y - 3, TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + 3, 1, Colour(255, 255, 255, static_cast<unsigned int>(alpha)));
 	}
-	if (TextBox::SelectingStartPosition >=0 || TextBox::SelectingEndPosition>=0)
+	if (TextBox::SelectingStartPosition >=0 || TextBox::SelectingEndPosition>=0 && TextBox::Selecting)
 	{
 		FilledRectangle(TextBox::Pos.x + TextBox::ParentPos.x + SelectingStartPosition, TextBox::Pos.y + +TextBox::ParentPos.y, TextBox::SelectingEndPosition - SelectingStartPosition, TextBox::Size.y, Colour(0, 150, 255, 100));
 	}
