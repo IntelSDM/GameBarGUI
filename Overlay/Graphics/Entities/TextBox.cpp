@@ -191,9 +191,18 @@ void TextBox::DeleteText()
 		else
 		{
 			//selecting
-			TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
-			TextBox::VisiblePointerEnd -= TextBox::SelectionEnd - TextBox::SelectionStart;
-			TextBox::SelectedPoint -= TextBox::SelectionEnd - TextBox::SelectionStart;
+			// only change selectedpoint if its going to be removed as well
+			if (TextBox::SelectedPoint == TextBox::SelectionEnd)
+			{
+				TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
+				TextBox::VisiblePointerEnd -= TextBox::SelectionEnd - TextBox::SelectionStart;
+				TextBox::SelectedPoint -= TextBox::SelectionEnd - TextBox::SelectionStart;
+			}
+			else
+			{
+				TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
+				TextBox::VisiblePointerEnd -= TextBox::SelectionEnd - TextBox::SelectionStart;
+			}
 			while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::VisiblePointerStart > 0)
 			{
 				TextBox::VisiblePointerStart--; // Move the starting point up
