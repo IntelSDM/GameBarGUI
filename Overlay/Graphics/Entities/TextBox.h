@@ -7,6 +7,9 @@ protected:
     std::chrono::time_point<std::chrono::high_resolution_clock> AnimationStart;
     float AnimationInterval = 1.0f;
 
+    std::chrono::time_point<std::chrono::high_resolution_clock> SelectingAnimationStart;
+    float SelectingAnimationInterval = 0.005f;
+
     int SelectedPoint;
     float SelectedPosition;
 
@@ -26,7 +29,7 @@ protected:
     std::wstring VisibleString;
 
     float TextWidth = 0;
-    float TextHeight = 0;
+
 
     bool Selecting = false;
     bool Held = false;
