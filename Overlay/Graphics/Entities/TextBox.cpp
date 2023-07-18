@@ -367,7 +367,7 @@ void TextBox::CopyText()
 		  return;
 	  }
 
-	  wcsncpy_s(text, size / sizeof(wchar_t), VisibleString.substr(SelectionStart, SelectionEnd - SelectionStart).c_str(), SelectionEnd - SelectionStart);
+	  wcsncpy_s(text, size / sizeof(wchar_t), MainString->substr(SelectionStart, SelectionEnd - SelectionStart).c_str(), SelectionEnd - SelectionStart);
 
 	  text[SelectionEnd - SelectionStart] = L'\0';
 	  GlobalUnlock(global);
@@ -413,6 +413,37 @@ void TextBox::PasteText()
 		}
 		else
 		{
+			if (TextBox::SelectedPoint == TextBox::SelectionEnd)
+			{
+				TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
+				TextBox::VisiblePointerEnd -= TextBox::SelectionEnd - TextBox::SelectionStart;
+				TextBox::SelectedPoint -= TextBox::SelectionEnd - TextBox::SelectionStart;
+			}
+			else
+			{
+				TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
+				TextBox::VisiblePointerEnd -= TextBox::SelectionEnd - TextBox::SelectionStart;
+			}
+			TextBox::VisiblePointerEnd += clipboard.length();
+			MainString->insert(TextBox::SelectedPoint, clipboard);
+			TextBox::SelectedPoint += clipboard.length();
+			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+			while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::VisiblePointerStart > 0)
+			{
+				TextBox::VisiblePointerStart--; // Move the starting point up
+				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+			}
+
+			// If the text still doesn't fill the TextBox, try to extend from the end
+			while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::VisiblePointerEnd < TextBox::MainString->length())
+			{
+				TextBox::VisiblePointerEnd++; // Extend the ending point
+				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+			}
+
+			//reset selected points
+			TextBox::SelectionStart = TextBox::SelectedPoint;
+			TextBox::SelectionEnd = TextBox::SelectedPoint;
 
 		}
 		TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
