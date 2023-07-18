@@ -24,7 +24,7 @@ TextBox::TextBox(float x, float y, std::wstring text, std::wstring* data = nullp
 	TextBox::VisiblePointerEnd = MainString->length();
 	TextBox::SetStartIndex(); // this sets start value
 	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart,TextBox::VisiblePointerEnd);
-//	TextBox::SelectedPoint = VisiblePointerEnd - TextBox::VisiblePointerStart;
+	TextBox::SelectedPoint = VisiblePointerEnd - TextBox::VisiblePointerStart;
 	TextBox::SelectedPosition = GetTextWidth(TextBox::MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
 }
 void TextBox::SetStartIndex()
@@ -40,18 +40,8 @@ void TextBox::SetStartIndex()
 	}
 
 }
-
-
-void TextBox::Update()
+void TextBox::SetState()
 {
-	if (!TextBox::Parent)
-		TextBox::SetVisible(false);
-	if (!TextBox::IsVisible())
-		return;
-
-	TextBox::TextWidth = GetTextWidth(VisibleString, 11, "Verdana");
-	TextBox::ParentPos = TextBox::Parent->GetParent()->GetPos();
-	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd);
 	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
 	{
 		TextBox::Blocked = false;
@@ -62,6 +52,37 @@ void TextBox::Update()
 		TextBox::Held = false;
 		TextBox::Blocked = true; // prevent 2 being active at the same time unless they are somehow fucking merged
 	}
+	WPARAM character = Char;
+	if (character == VK_RETURN)
+	{
+		TextBox::Blocked = true;
+	}
+		if (!IsKeyDown(VK_LBUTTON))
+			TextBox::Held = false;
+}
+
+
+bool TextBox::IsKeyAcceptable()
+{
+	WPARAM character = Char;
+	if (character > 255)
+		return false;
+	if (character == NULL)
+		return false;
+	if (character == VK_BACK)
+		return false;
+	if (character == VK_RETURN)
+		return false;
+	if (IsKeyDown(VK_CONTROL))
+		return false;
+	if (character == VK_TAB)
+		return false;
+	return true;
+}
+void TextBox::ArrowKeyNavition()
+{
+	if (TextBox::Blocked)
+		return;
 	if (IsKeyClicked(VK_LEFT) && TextBox::LastClick < (clock() * 0.00001f))
 	{
 		TextBox::Selecting = false;
@@ -72,15 +93,15 @@ void TextBox::Update()
 			TextBox::SelectedPoint--;
 		}
 		// pointer is going behind currently visible text
-		else if(TextBox::VisiblePointerStart != 0 && SelectedPoint == TextBox::VisiblePointerStart)
+		else if (TextBox::VisiblePointerStart != 0 && SelectedPoint == TextBox::VisiblePointerStart)
 		{
 			TextBox::SelectedPoint--;
 			TextBox::VisiblePointerStart--;
 			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
 			// if the value exceeds the textbox bounds decrement the ending
-			while (TextBox::TextWidth > TextBox::Size.x - 6 && TextBox::VisiblePointerStart !=0)
+			while (TextBox::TextWidth > TextBox::Size.x - 6 && TextBox::VisiblePointerStart != 0)
 			{
-				TextBox::VisiblePointerEnd--; 
+				TextBox::VisiblePointerEnd--;
 				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
 			}
 			while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::MainString->length() > TextBox::VisiblePointerEnd && TextBox::VisiblePointerStart == 0)
@@ -96,11 +117,11 @@ void TextBox::Update()
 	{
 		TextBox::Selecting = false;
 		TextBox::Held = false;
-		if(TextBox::SelectedPoint < TextBox::VisiblePointerEnd)
-		TextBox::SelectedPoint++;
+		if (TextBox::SelectedPoint < TextBox::VisiblePointerEnd)
+			TextBox::SelectedPoint++;
 		else if (TextBox::VisiblePointerEnd != TextBox::MainString->length() && TextBox::SelectedPoint == TextBox::VisiblePointerEnd)
 		{
-			
+
 			TextBox::SelectedPoint++;
 			TextBox::VisiblePointerEnd++;
 			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
@@ -113,187 +134,233 @@ void TextBox::Update()
 		}
 		TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
 	}
-	if (!TextBox::Blocked) // take input
+}
+void TextBox::InputText()
+{
+	if (TextBox::Blocked)
+		return;
+	if (TextBox::IsKeyAcceptable())
 	{
-		WPARAM character = Char;
-		if (character == VK_BACK && (*TextBox::MainString).length() != 0 && TextBox::VisiblePointerEnd != 0 && SelectedPoint != 0) // backspace
-		{// no selection
-			if (TextBox::SelectionStart == TextBox::SelectedPoint && TextBox::SelectionEnd == TextBox::SelectedPoint)
-			{
-				if (TextBox::SelectedPoint == TextBox::VisiblePointerEnd)
-				{
-					(*TextBox::MainString).erase(std::prev((*TextBox::MainString).end()));
-					TextBox::VisiblePointerEnd--;
-					TextBox::SelectedPoint--;
-				}
-				else
-				{
-					TextBox::MainString->erase(TextBox::SelectedPoint - 1, 1);
-					TextBox::SelectedPoint--;
-					TextBox::VisiblePointerEnd--;
-				}
+		//	(*TextBox::MainString) += Char;
+		TextBox::VisiblePointerEnd++;
+		TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+		MainString->insert(TextBox::SelectedPoint, 1, Char);
+		TextBox::SelectedPoint++;
+		while (TextBox::TextWidth > TextBox::Size.x - 6)
+		{
+			TextBox::VisiblePointerStart++; // update position
+			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
+		}
+	}
 
-				if (TextBox::VisiblePointerStart != 0 && GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana") < TextBox::Size.x - 6)
-				{
-					TextBox::VisiblePointerStart--;
-				}
-				// detect if there is any other text that we might need to add so our string doesn't randomly get cut off
-				while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::MainString->length() > TextBox::VisiblePointerEnd)
-				{
-					TextBox::VisiblePointerEnd++; // update position
-					TextBox::SelectedPoint++;
-					TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart + 1, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
-				}
+}
+void TextBox::DeleteText()
+{
+	if (TextBox::Blocked)
+		return;
+	WPARAM character = Char;
+	if (character == VK_BACK && (*TextBox::MainString).length() != 0 && TextBox::VisiblePointerEnd != 0 && SelectedPoint != 0) // backspace
+	{// no selection
+		if (TextBox::SelectionStart == TextBox::SelectedPoint && TextBox::SelectionEnd == TextBox::SelectedPoint)
+		{
+			if (TextBox::SelectedPoint == TextBox::VisiblePointerEnd)
+			{
+				(*TextBox::MainString).erase(std::prev((*TextBox::MainString).end()));
+				TextBox::VisiblePointerEnd--;
+				TextBox::SelectedPoint--;
 			}
 			else
 			{
-				//selecting
-				TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
-				TextBox::VisiblePointerEnd -= TextBox::SelectionEnd - TextBox::SelectionStart;
-				TextBox::SelectedPoint -= TextBox::SelectionEnd - TextBox::SelectionStart;
-				while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::VisiblePointerStart > 0)
-				{
-					TextBox::VisiblePointerStart--; // Move the starting point up
-					TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
-				}
+				TextBox::MainString->erase(TextBox::SelectedPoint - 1, 1);
+				TextBox::SelectedPoint--;
+				TextBox::VisiblePointerEnd--;
+			}
 
-				// If the text still doesn't fill the TextBox, try to extend from the end
-				while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::VisiblePointerEnd < TextBox::MainString->length())
-				{
-					TextBox::VisiblePointerEnd++; // Extend the ending point
-					TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
-				}
-			
-				//reset selected points
-				TextBox::SelectionStart = TextBox::SelectedPoint;
-				TextBox::SelectionEnd = TextBox::SelectedPoint;
-				TextBox::Held = false;
-				TextBox::Selecting = false;
+			if (TextBox::VisiblePointerStart != 0 && GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana") < TextBox::Size.x - 6)
+			{
+				TextBox::VisiblePointerStart--;
+			}
+			// detect if there is any other text that we might need to add so our string doesn't randomly get cut off
+			while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::MainString->length() > TextBox::VisiblePointerEnd)
+			{
+				TextBox::VisiblePointerEnd++; // update position
+				TextBox::SelectedPoint++;
+				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart + 1, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
 			}
 		}
+		else
+		{
+			//selecting
+			TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
+			TextBox::VisiblePointerEnd -= TextBox::SelectionEnd - TextBox::SelectionStart;
+			TextBox::SelectedPoint -= TextBox::SelectionEnd - TextBox::SelectionStart;
+			while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::VisiblePointerStart > 0)
+			{
+				TextBox::VisiblePointerStart--; // Move the starting point up
+				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+			}
+
+			// If the text still doesn't fill the TextBox, try to extend from the end
+			while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::VisiblePointerEnd < TextBox::MainString->length())
+			{
+				TextBox::VisiblePointerEnd++; // Extend the ending point
+				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+			}
+
+			//reset selected points
+			TextBox::SelectionStart = TextBox::SelectedPoint;
+			TextBox::SelectionEnd = TextBox::SelectedPoint;
+			TextBox::Held = false;
+			TextBox::Selecting = false;
+		}
+	}
+}
+void TextBox::ClearText()
+{
+	Char = NULL;
+}
+void TextBox::SetSelection()
+{
+	if (TextBox::Blocked)
+		return;
+	if (TextBox::Held)
+	{
+		Selecting = true;
+		Vector2 relativemousepos = { MousePos.x - (TextBox::Pos.x + TextBox::ParentPos.x),MousePos.y - (TextBox::Pos.y + TextBox::ParentPos.y) };
+		float lastdistance = 99999; // the user shouldn't ever have a resolution/position over this value
+		int instance = 0;
+		for (int i = TextBox::VisiblePointerStart; i <= TextBox::VisiblePointerEnd; i++)
+		{
+			float width = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, i - TextBox::VisiblePointerStart), 11, "Verdana");
+			float distance = std::abs(relativemousepos.x - width);
+			if (distance > lastdistance)
+			{
+				instance = --i;
+				break;
+			}
+			lastdistance = distance;
+			instance = i;
+		}
+		if (instance == -1)
+			instance = TextBox::TextBox::VisiblePointerEnd;
+		if (TextBox::SelectedPoint > instance)
+		{
+			TextBox::SelectionEnd = TextBox::SelectedPoint;
+			TextBox::SelectionStart = instance;
+		}
+		else
+		{
+			TextBox::SelectionEnd = instance;
+			TextBox::SelectionStart = TextBox::SelectedPoint;
+		}
+
+	}
+
+	if (IsKeyDown(VK_CONTROL) && IsKeyDown(0x41))//(A)
+	{
+		TextBox::SelectionStart = 0;
+		TextBox::SelectionEnd = MainString->length();
+	}
+}
+void TextBox::SetSelectionPoint()
+{
+	if (TextBox::Blocked)
+		return;
+	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
+	{
+		TextBox::Held = true;
+		Vector2 relativemousepos = { MousePos.x - (TextBox::Pos.x + TextBox::ParentPos.x),MousePos.y - (TextBox::Pos.y + TextBox::ParentPos.y) };
+		// get width
+		// get last position
+		// is last position closer or this one?
+		// if last position is closer return last position.
+		float lastdistance = 999999;
+		int instance = 0;
+		for (int i = TextBox::VisiblePointerStart; i <= TextBox::VisiblePointerEnd; i++)
+		{
+			float width = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, i - TextBox::VisiblePointerStart), 11, "Verdana");
+			float distance = std::abs(relativemousepos.x - width);
+			if (distance > lastdistance)
+			{
+				instance = --i;
+				break;
+			}
+			lastdistance = distance;
+			instance = i;
+		}
+		if (instance == -1)
+			instance = TextBox::VisiblePointerEnd;
+		TextBox::SelectedPoint = instance;
+
+	}
+}
+void TextBox::SelectionDragging()
+{
+	if (TextBox::Blocked)
+		return;
+	if (TextBox::Held)
+	{
+		const int delay = 100; // Set the desired delay in milliseconds
+		auto time = std::chrono::high_resolution_clock::now();
+		// push text forwards
+		while (TextBox::VisiblePointerEnd != MainString->length() && TextBox::SelectionEnd == TextBox::VisiblePointerEnd)
+		{
+			auto curtime = std::chrono::high_resolution_clock::now();
+			auto elapsedtime = std::chrono::duration_cast<std::chrono::milliseconds>(curtime - time).count();
+			if (elapsedtime >= delay)
+			{
+				TextBox::SelectedPoint++;
+				TextBox::VisiblePointerEnd++;
+				TextBox::VisiblePointerStart++;
+			}
+
+		}
+
+		while (TextBox::VisiblePointerStart != 0 && TextBox::SelectionStart == TextBox::VisiblePointerStart)
+		{
+
+			auto curtime = std::chrono::high_resolution_clock::now();
+			auto elapsedtime = std::chrono::duration_cast<std::chrono::milliseconds>(curtime - time).count();
+			if (elapsedtime >= delay)
+			{
+				TextBox::SelectedPoint--;
+				TextBox::VisiblePointerEnd--;
+				TextBox::VisiblePointerStart--;
+				time = std::chrono::high_resolution_clock::now();
+			}
+
+		}
+
+	}
+}
+void TextBox::Update()
+{
+	if (!TextBox::Parent)
+		TextBox::SetVisible(false);
+	if (!TextBox::IsVisible())
+		return;
+
+	TextBox::TextWidth = GetTextWidth(VisibleString, 11, "Verdana");
+	TextBox::ParentPos = TextBox::Parent->GetParent()->GetPos();
+	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd);
+	TextBox::SetState();
+	TextBox::ArrowKeyNavition();
+	TextBox::InputText();
+	TextBox::DeleteText();
+	TextBox::ClearText();
+	TextBox::SetSelectionPoint();
+	TextBox::SetSelection();
+	TextBox::SelectionDragging();
+	if (!TextBox::Blocked) // take input
+	{
+	
 		if (!TextBox::Held && !TextBox::Selecting)
 		{
 			TextBox::SelectionStart = TextBox::SelectedPoint;
 			TextBox::SelectionEnd = TextBox::SelectedPoint;
 		}
-		if (character == VK_RETURN)
-		{
-			TextBox::Blocked = true;
-		}
-		if (Char < 255 && Char != NULL && Char != VK_BACK && Char != VK_RETURN && !IsKeyDown(VK_CONTROL))
-		{
-		//	(*TextBox::MainString) += Char;
-			TextBox::VisiblePointerEnd++;
-			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
-			MainString->insert(TextBox::SelectedPoint,1 ,Char);
-			TextBox::SelectedPoint++;
-			while (TextBox::TextWidth > TextBox::Size.x - 6)
-			{
-				TextBox::VisiblePointerStart++; // update position
-				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
-			}
-		}
-		Char = NULL;
-		if (!IsKeyDown(VK_LBUTTON))
-			TextBox::Held = false;
-		if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
-		{
-			TextBox::Held = true;
-			Vector2 relativemousepos = { MousePos.x - (TextBox::Pos.x + TextBox::ParentPos.x),MousePos.y - (TextBox::Pos.y + TextBox::ParentPos.y) };
-			// get width
-			// get last position
-			// is last position closer or this one?
-			// if last position is closer return last position.
-			float lastdistance = 999999;
-			int instance = 0;
-			for (int i = TextBox::VisiblePointerStart; i <= TextBox::VisiblePointerEnd; i++)
-			{
-				float width = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, i - TextBox::VisiblePointerStart), 11, "Verdana");
-				float distance = std::abs(relativemousepos.x - width);
-				if (distance > lastdistance)
-				{
-					instance = --i;
-					break;
-				}
-				lastdistance = distance;
-				instance = i;
-			}
-			if (instance == -1)
-				instance = TextBox::VisiblePointerEnd;
-			TextBox::SelectedPoint = instance;
 
-		}
-		if (TextBox::Held)
-		{
-			const int delay = 100; // Set the desired delay in milliseconds
-			auto time = std::chrono::high_resolution_clock::now();
-			// push text forwards
-			while (TextBox::VisiblePointerEnd != MainString->length() && TextBox::SelectionEnd == TextBox::VisiblePointerEnd)
-			{
-				auto curtime = std::chrono::high_resolution_clock::now();
-				auto elapsedtime = std::chrono::duration_cast<std::chrono::milliseconds>(curtime - time).count();
-				if (elapsedtime >= delay)
-				{
-					TextBox::SelectedPoint++;
-					TextBox::VisiblePointerEnd++;
-					TextBox::VisiblePointerStart++;
-				}
-			
-			}
-		
-			while (TextBox::VisiblePointerStart != 0 && TextBox::SelectionStart == TextBox::VisiblePointerStart)
-			{
-
-				auto curtime = std::chrono::high_resolution_clock::now();
-				auto elapsedtime = std::chrono::duration_cast<std::chrono::milliseconds>(curtime - time).count();
-				if (elapsedtime >= delay)
-				{
-					TextBox::SelectedPoint--;
-					TextBox::VisiblePointerEnd--;
-					TextBox::VisiblePointerStart--;
-					time = std::chrono::high_resolution_clock::now();
-				}
-				
-			}
-		
-		}
-		if (IsKeyDown(VK_CONTROL) && IsKeyDown(0x41))//(A)
-		{
-			TextBox::SelectionStart = 0;
-			TextBox::SelectionEnd = MainString->length();
-		}
-		if (TextBox::Held)
-		{
-			Selecting = true;
-			Vector2 relativemousepos = { MousePos.x - (TextBox::Pos.x + TextBox::ParentPos.x),MousePos.y - (TextBox::Pos.y + TextBox::ParentPos.y) };
-			float lastdistance = 99999; // the user shouldn't ever have a resolution/position over this value
-			int instance = 0;
-			for (int i = TextBox::VisiblePointerStart; i <= TextBox::VisiblePointerEnd; i++)
-			{
-				float width = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, i - TextBox::VisiblePointerStart), 11, "Verdana");
-				float distance = std::abs(relativemousepos.x - width);
-				if (distance > lastdistance)
-				{
-					instance = --i;
-					break;
-				}
-				lastdistance = distance;
-				instance = i;
-			}
-			if (instance == -1)
-				instance = TextBox::TextBox::VisiblePointerEnd;
-			if (TextBox::SelectedPoint > instance)
-			{
-				TextBox::SelectionEnd = TextBox::SelectedPoint;
-				TextBox::SelectionStart = instance;
-			}
-			else
-			{
-				TextBox::SelectionEnd = instance;
-				TextBox::SelectionStart = TextBox::SelectedPoint;
-			}
-
-		}
+	
 		// Update the selected point if it is out of bounds
 		if (TextBox::SelectedPoint > TextBox::VisiblePointerEnd)
 		{

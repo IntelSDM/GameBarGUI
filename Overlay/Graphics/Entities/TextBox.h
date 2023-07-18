@@ -20,7 +20,7 @@ protected:
 
     int VisiblePointerStart;
     int  VisiblePointerEnd;
-    void TextBox::SetStartIndex();
+    void SetStartIndex();
     Vector2 Pos;
     Vector2 Size;
     Vector2 ParentPos;
@@ -36,6 +36,14 @@ protected:
 
     bool IsKeyAcceptable();
 
+    void SetState();
+    void SetSelection();
+    void ArrowKeyNavition();
+    void InputText();
+    void DeleteText();
+    void ClearText();
+    void SetSelectionPoint();
+    void SelectionDragging();
 public:
     TextBox(float x, float y, std::wstring text, std::wstring* data);
     void Update();
