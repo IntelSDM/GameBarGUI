@@ -377,7 +377,46 @@ void TextBox::CopyText()
 }
 void TextBox::PasteText()
 {
+	if (TextBox::Blocked)
+		return;
+	if (!(IsKeyDown(VK_CONTROL) && IsKeyDown(0x56)))
+		return;
+	if (!OpenClipboard(nullptr))
+		return;
+	std::wstring clipboard = L"";
+	HANDLE data = GetClipboardData(CF_UNICODETEXT);
+	if (data != nullptr)
+	{
+		wchar_t* text = static_cast<wchar_t*>(GlobalLock(data));
+		if (text != nullptr)
+		{
+			clipboard = text;
+			GlobalUnlock(data);
+		}
+	}
 
+	CloseClipboard();
+	if (TextBox::LastClick < (clock() * 0.00001f))
+	{
+		if (TextBox::SelectedPoint == TextBox::SelectionStart && TextBox::SelectedPoint == TextBox::SelectionEnd)
+		{
+			TextBox::VisiblePointerEnd += clipboard.length();
+			MainString->insert(TextBox::SelectedPoint, clipboard);
+			TextBox::SelectedPoint += clipboard.length();
+			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+			while (TextBox::TextWidth > TextBox::Size.x - 6)
+			{
+				TextBox::VisiblePointerStart++; // update position
+				TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
+			}
+
+		}
+		else
+		{
+
+		}
+		TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
+	}
 }
 void TextBox::Update()
 {
