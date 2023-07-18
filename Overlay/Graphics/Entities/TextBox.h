@@ -44,6 +44,8 @@ protected:
     void ClearText();
     void SetSelectionPoint();
     void SelectionDragging();
+    void CopyText();
+    void PasteText();
 public:
     TextBox(float x, float y, std::wstring text, std::wstring* data);
     void Update();

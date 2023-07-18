@@ -342,6 +342,43 @@ void TextBox::SelectionDragging()
 
 	}
 }
+void TextBox::CopyText()
+{
+	if (TextBox::Blocked)
+		return;
+	if (TextBox::SelectedPoint == TextBox::SelectionStart && TextBox::SelectedPoint == TextBox::SelectionEnd)
+		return;
+	if (!(IsKeyDown(VK_CONTROL) && IsKeyDown(0x43)))
+		return;
+	  if (!OpenClipboard(nullptr))
+        return;
+	  size_t size = (SelectionEnd - SelectionStart) * sizeof(wchar_t) + sizeof(wchar_t);
+
+	  HGLOBAL global = GlobalAlloc(GMEM_MOVEABLE, size);
+	  if (!global) {
+		  CloseClipboard();
+		  return;
+	  }
+
+	  wchar_t* text = static_cast<wchar_t*>(GlobalLock(global));
+	  if (!text) {
+		  CloseClipboard();
+		  GlobalFree(global);
+		  return;
+	  }
+
+	  wcsncpy_s(text, size / sizeof(wchar_t), VisibleString.substr(SelectionStart, SelectionEnd - SelectionStart).c_str(), SelectionEnd - SelectionStart);
+
+	  text[SelectionEnd - SelectionStart] = L'\0';
+	  GlobalUnlock(global);
+	  EmptyClipboard();
+	  SetClipboardData(CF_UNICODETEXT, global);
+	  CloseClipboard();
+}
+void TextBox::PasteText()
+{
+
+}
 void TextBox::Update()
 {
 	if (!TextBox::Parent)
@@ -360,6 +397,8 @@ void TextBox::Update()
 	TextBox::SetSelectionPoint();
 	TextBox::SetSelection();
 	TextBox::SelectionDragging();
+	TextBox::CopyText();
+	TextBox::PasteText();
 	if (!TextBox::Blocked) // take input
 	{
 	
