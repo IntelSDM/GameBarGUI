@@ -26,6 +26,7 @@ TextBox::TextBox(float x, float y, std::wstring text, std::wstring* data = nullp
 	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart,TextBox::VisiblePointerEnd);
 	TextBox::SelectedPoint = VisiblePointerEnd - TextBox::VisiblePointerStart;
 	TextBox::SelectedPosition = GetTextWidth(TextBox::MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
+	TextBox::Blocked = true;
 }
 void TextBox::SetStartIndex()
 {
@@ -501,7 +502,7 @@ void TextBox::Draw()
 	
 	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x - 1, TextBox::Pos.y + +TextBox::ParentPos.y - 1, TextBox::Size.x + 2, TextBox::Size.y + 2, 4, 4, Colour(200, 200, 200, 255));
 	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x, TextBox::Pos.y + +TextBox::ParentPos.y, TextBox::Size.x, TextBox::Size.y, 4, 4, Colour(80, 80, 80, 255));
-	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + (TextBox::Size.x / 2), TextBox::ParentPos.y + TextBox::Pos.y - ((TextBox::Size.y / 2) - 1), TextBox::Name + std::to_wstring(VisiblePointerStart) +L"|" + std::to_wstring(VisiblePointerEnd) + L"|" + std::to_wstring(SelectedPoint) + L"|" + std::to_wstring(SelectionStart) + L"|" + std::to_wstring(SelectionEnd) + L"|" + std::to_wstring(TextBox::SelectingEndPosition - SelectingStartPosition), "Verdana", 12, Colour(255, 255, 255, 255), CentreCentre); // Title
+	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + (TextBox::Size.x / 2), TextBox::ParentPos.y + TextBox::Pos.y - ((TextBox::Size.y / 2) - 1), TextBox::Name + L":", "Verdana", 12, Colour(255, 255, 255, 255), CentreCentre); // Title
 	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + 3, (TextBox::ParentPos.y + TextBox::Pos.y) + (TextBox::Size.y / 4), TextBox::VisibleString, "Verdana", 11, Colour(255, 255, 255, 255), None); // Text
 
 	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - TextBox::AnimationStart;
@@ -515,6 +516,6 @@ void TextBox::Draw()
 	if (TextBox::SelectingStartPosition >=0 || TextBox::SelectingEndPosition>=0 && TextBox::Selecting)
 	{
 		float selectionwidth = std::abs(TextBox::SelectingEndPosition - TextBox::SelectingStartPosition); // bandage fix for negative value
-		FilledRectangle(TextBox::Pos.x + TextBox::ParentPos.x + SelectingStartPosition, TextBox::Pos.y + +TextBox::ParentPos.y, selectionwidth, TextBox::Size.y, Colour(0, 150, 255, 100));
+		FilledRectangle(TextBox::Pos.x + TextBox::ParentPos.x + SelectingStartPosition, TextBox::Pos.y +TextBox::ParentPos.y, selectionwidth, TextBox::Size.y, Colour(0, 150, 255, 100));
 	}
 }

@@ -235,7 +235,7 @@ void FilledRectangleSprite(int x, int y, int width, int height, Color colour)
     SwapChain->DrawImage(rendertarget, x, y);
 }
 
-void ColourPicker(int x, int y, int width, int height, Color colour)
+void DrawColourPicker(int x, int y, int width, int height, Color colour)
 {
     auto stops = ref new Platform::Array<CanvasGradientStop>(2);
     stops[0] = { 0.00f, colour };
@@ -263,7 +263,7 @@ void ColourPickerOnSpriteBatch(int x, int y, int width, int height, Color colour
     DrawingSession->FillRectangle(Rect(x, y, width, height), brush);
 
 }
-void ColourPickerSlider(int x, int y, int width, int height)
+void DrawColourPickerSlider(int x, int y, int width, int height)
 {
     auto stops = ref new Platform::Array<CanvasGradientStop>(7);
     stops[0] = { 0.00f, Colour(255,0,0,255) };

@@ -9,7 +9,7 @@
 #include "TextBox.h"
 #include "Slider.h"
 #include "TabController.h"
-
+#include "ColourPicker.h"
 EntityVector MenuEntity;
 int SelectedTab;
 int TabCount;
@@ -18,6 +18,7 @@ bool ToggleTest1 = true;
 std::wstring TextBoxText = L"txtboxdsgdsdshchgkhdsgsdgsdgWWWWAAAA";
 int intvalue = 3;
 float floatvalue = 8.5f;
+Color Col = Colour(255, 0, 0, 255);
 void CreateGUI()
 {
 	MenuEntity = std::make_shared< Container >();
@@ -46,6 +47,8 @@ void CreateGUI()
 			tab->Push(floatslider);
 			auto intslider = std::make_shared<Slider<int>>(10, 220, L"Slider Int", L"%", 0, 100, &intvalue);
 			tab->Push(intslider);
+			auto colourpicker = std::make_shared<ColourPicker>(10, 250, L"Colour Picker", &Col);
+			tab->Push(colourpicker);
 		}
 		tabcontroller->Push(tab);
 		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 25, 50, 20, &SelectedTab);
@@ -58,6 +61,7 @@ void CreateGUI()
 		tabcontroller->Push(tab2);
 		auto tab3 = std::make_shared<Tab>(L"Tab4", 170, 25, 50, 20, &SelectedTab);
 		tabcontroller->Push(tab3);
+		
 	}
 	MenuEntity->Push(form);
 	MenuEntity->Draw();

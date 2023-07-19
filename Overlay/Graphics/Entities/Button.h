@@ -4,10 +4,6 @@ class Button : public Entity
 {
 protected:
 
-    Vector2 Pos;
-    Vector2 Size;
-    Vector2 ParentPos;
-
     float LastClickTime = 0;
 
     std::function< void()> Action;
