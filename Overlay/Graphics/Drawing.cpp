@@ -281,6 +281,19 @@ void DrawColourPickerSlider(int x, int y, int width, int height)
     SwapChain->FillRectangle(Rect(x, y, width, height), brush);
 
 }
+void DrawColourPickerAlphaSlider(int x, int y, int width, int height, Color col)
+{
+    auto stops = ref new Platform::Array<CanvasGradientStop>(2);
+    stops[0] = { 0.00f, Colour(col.R,col.G,col.B,255) };
+    stops[1] = { 1.0f, Colour(col.R,col.G,col.B,0) };
+
+    auto brush = ref new CanvasLinearGradientBrush(SwapChain, stops);
+    brush->StartPoint = float2((float)x, (float)y);
+    brush->EndPoint = float2((float)(x), (float)y+ height);
+
+    SwapChain->FillRectangle(Rect(x, y, width, height), brush);
+
+}
 void ColourPickerSliderOnSpriteBatch(int x, int y, int width, int height)
 {
     auto stops = ref new Platform::Array<CanvasGradientStop>(7);

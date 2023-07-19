@@ -47,7 +47,7 @@ void CreateGUI()
 			tab->Push(floatslider);
 			auto intslider = std::make_shared<Slider<int>>(10, 220, L"Slider Int", L"%", 0, 100, &intvalue);
 			tab->Push(intslider);
-			auto colourpicker = std::make_shared<ColourPicker>(10, 250, L"Colour Picker", &Col);
+			auto colourpicker = std::make_shared<ColourPicker>(10, 250, &Col);
 			tab->Push(colourpicker);
 		}
 		tabcontroller->Push(tab);

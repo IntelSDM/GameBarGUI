@@ -3,10 +3,10 @@
 class ColourPicker : public Entity
 {
 protected:
-
+    Vector2 ClickedPos;
     Color* MainColour;
 public:
-    ColourPicker(float x, float y, std::wstring text, Color* colour);
+    ColourPicker(float x, float y, Color* colour);
     void Update();
     void Draw();
 };
