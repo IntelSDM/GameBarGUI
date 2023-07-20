@@ -8,12 +8,20 @@ protected:
     Color* RangeColour;
     Color* SelectedColour;
     Vector2 SelectedPos;
-    Vector2 SelectedRangePos;
+
+
+
     float Hue = 360;
     bool HeldHue = false;
+
+    bool HeldAlpha = false;
+    float Alpha = 255;
+
+
     bool Open = false;
     static float HueToSliderValue(float hue);
     static float SliderValueToHue(float slidervalue);
+    static float AlphaToSliderValue(float alpha);
     COLORREF ColourPicker::GetColorAtPosition(int x, int y);
 public:
     ColourPicker(float x, float y, Color* colour);
