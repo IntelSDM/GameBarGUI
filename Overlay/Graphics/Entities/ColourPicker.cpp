@@ -11,6 +11,8 @@ ColourPicker::ColourPicker(float x, float y, Color* colour)
 	ColourPicker::Open = false;
 	ColourPicker::Hue = RGBToHue(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B);
 	ColourPicker::Alpha = MainColour->A;
+	ColourPicker::Saturation = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).V;
+
 }
 float ColourPicker::HueToSliderValue(float hue)
 {
@@ -83,7 +85,7 @@ void ColourPicker::Update()
 		const float clamp = std::clamp<float>((float)MousePos.x - (float)(ClickedPos.x), 0.00f, (float)150);
 		const float ratio = clamp /150;
 		ColourPicker::Hue = 0.0f + (360.0f - 0.0f) * ratio;
-		*ColourPicker::MainColour = HueToRGB(Hue);
+		*ColourPicker::MainColour = HsvToRgb(ColourPicker::Hue, ColourPicker::Saturation, ColourPicker::Saturation, ColourPicker::Alpha);
 	}
 	if (HeldAlpha)
 	{
