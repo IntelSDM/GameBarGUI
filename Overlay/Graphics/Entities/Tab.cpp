@@ -56,7 +56,7 @@ void Tab::Draw()
 
 	textcolour = Colour(255, 0, 0, 255);
 	FilledRectangle(Tab::ParentPos.x + Tab::Pos.x, (Tab::ParentPos.y + Tab::ParentSize.y) - Tab::Pos.y, Tab::Size.x, Tab::Size.y, Colour(80, 80, 80, 255));
-	DrawText(Tab::ParentPos.x + Tab::Pos.x + (Tab::Size.x / 2), ((Tab::ParentPos.y + Tab::ParentSize.y) - Tab::Pos.y) + (Tab::Size.y / 2), Tab::Name, "Verdana", 12,  Colour(255, 255, 255, 255), CentreCentre);
+	DrawText(Tab::ParentPos.x + Tab::Pos.x + (Tab::Size.x / 2), ((Tab::ParentPos.y + Tab::ParentSize.y) - Tab::Pos.y) + (Tab::Size.y / 2), Tab::Name + std::to_wstring(GetContainer().size()), "Verdana", 12,  Colour(255, 255, 255, 255), CentreCentre);
 
 	if (selected)
 	{

@@ -152,6 +152,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>WindowsApp.lib;%(AdditionalDependencies);User32.lib</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>
@@ -160,6 +163,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>WindowsApp.lib;%(AdditionalDependencies);User32.lib</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -170,7 +176,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);User32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -180,6 +186,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>WindowsApp.lib;%(AdditionalDependencies);User32.lib</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -192,7 +201,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Shell32.lib;winmm.lib;User32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shell32.lib;winmm.lib;User32.lib;%(AdditionalDependencies);User32.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -209,7 +218,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)$(ProjectName)\Sockets;$(GeneratedFilesDir)\windows;$(SolutionDir)$(ProjectName)\Windows;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Graphics\;$(SolutionDir)$(ProjectName)\Graphics\Utility;$(SolutionDir)$(ProjectName)\Graphics\Start Up;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Gdi32.lib;Shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Gdi32.lib;Shell32.lib;%(AdditionalDependencies);User32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\dylan\OneDrive\Desktop\Battle_Eye_Project\ESPBar\Samples\WidgetSampleCX\glfw\include\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

@@ -29,7 +29,9 @@ void CreateGUI()
 			form->Push(tabcontroller);
 		//std::string name, float x, float y, float width, float height, int* selectedtab = nullptr
 		auto tab = std::make_shared<Tab>(L"Tab1", 5, 25, 50, 20, &SelectedTab);
-		{
+		{			
+			auto colourpicker = std::make_shared<ColourPicker>(200, 40, &Col);
+			tab->Push(colourpicker);
 			auto toggle = std::make_shared<Toggle>(10, 40, L"Toggle", &ToggleTest);
 			tab->Push(toggle);
 			auto toggle1 = std::make_shared<Toggle>(10, 60, L"Toggle", &ToggleTest1);
@@ -47,8 +49,7 @@ void CreateGUI()
 			tab->Push(floatslider);
 			auto intslider = std::make_shared<Slider<int>>(10, 220, L"Slider Int", L"%", 0, 100, &intvalue);
 			tab->Push(intslider);
-			auto colourpicker = std::make_shared<ColourPicker>(10, 250, &Col);
-			tab->Push(colourpicker);
+
 		}
 		tabcontroller->Push(tab);
 		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 25, 50, 20, &SelectedTab);

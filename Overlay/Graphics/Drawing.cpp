@@ -3,6 +3,7 @@
 #include "Drawing.h"
 #include "Font.h"
 #include <WindowsNumerics.h>
+#include "Input.h"
 CanvasDrawingSession^ DrawingSession;
 CanvasRenderTarget^ RenderTarget;
 void SetDrawingSession()
@@ -129,7 +130,6 @@ void DrawTextSprite(int x, int y, std::wstring text, std::string font, int fonts
     drawingsession->Clear(Windows::UI::Colors::Transparent);
     drawingsession->DrawTextLayout(layout, 0.0f, 0.0f, colour);
     delete drawingsession;
-
     SwapChain->DrawImage(rendertarget, x, y);
 }
 void DrawTextClipped(int x, int y,int width,int height, std::wstring text, std::string font, int fontsize, Color colour, FontAlignment alignment)
@@ -234,8 +234,8 @@ void FilledRectangleSprite(int x, int y, int width, int height, Color colour)
 
     SwapChain->DrawImage(rendertarget, x, y);
 }
-
-void DrawColourPicker(int x, int y, int width, int height, Color colour)
+Color colorSpectrum[150];
+Color DrawColourPicker(int x, int y, int width, int height, Color colour)
 {
     auto stops = ref new Platform::Array<CanvasGradientStop>(2);
     stops[0] = { 0.00f, colour };
@@ -247,8 +247,26 @@ void DrawColourPicker(int x, int y, int width, int height, Color colour)
     brush->EndPoint =  float2(x, y + height);
 
     SwapChain->FillRectangle(Rect(x, y, width, height), brush);
+    for (int i = 0; i < 150; i++)
+    {
+        float normalizedPosition = static_cast<float>(i) / 149.0f; // Normalized position between 0 and 1
 
+        // Manual color interpolation (lerp) between 'colour' and 'black'
+        byte r = static_cast<byte>(colour.R + normalizedPosition * (0 - colour.R));
+        byte g = static_cast<byte>(colour.G + normalizedPosition * (0 - colour.G));
+        byte b = static_cast<byte>(colour.B + normalizedPosition * (0 - colour.B));
+
+        colorSpectrum[i] = ColorHelper::FromArgb(255, r, g, b);
+    }
+    float normalizedX = static_cast<float>(MousePos.x - x) / static_cast<float>(width);
+    float normalizedY = static_cast<float>(MousePos.y - y) / static_cast<float>(height);
+    // Ensure that the normalized values are within the valid range
+    normalizedX = std::max(0.0f, std::min(normalizedX, 1.0f));
+    normalizedY = std::max(0.0f, std::min(normalizedY, 1.0f));
+    int index = static_cast<int>(normalizedX * 149);
+    return colorSpectrum[index];
 }
+
 void ColourPickerOnSpriteBatch(int x, int y, int width, int height, Color colour)
 {
     auto stops = ref new Platform::Array<CanvasGradientStop>(2);
@@ -290,7 +308,7 @@ void DrawColourPickerAlphaSlider(int x, int y, int width, int height, Color col)
     auto brush = ref new CanvasLinearGradientBrush(SwapChain, stops);
     brush->StartPoint = float2((float)x, (float)y);
     brush->EndPoint = float2((float)(x), (float)y+ height);
-
+    
     SwapChain->FillRectangle(Rect(x, y, width, height), brush);
 
 }
