@@ -26,7 +26,10 @@ float ColourPicker::AlphaToSliderValue(float alpha)
 {
 	return alpha / 255.0f;
 }
-
+float ColourPicker::SaturationToSliderValue(float saturation)
+{
+	return saturation / 255.0f;
+}
 void ColourPicker::Update()
 {
 	ColourPicker::ParentPos = ColourPicker::Parent->GetParent()->GetPos();
@@ -53,23 +56,24 @@ void ColourPicker::Update()
 	{
 		ColourPicker::HeldHue = false;
 		ColourPicker::HeldAlpha = false;
+		ColourPicker::HeldSaturation = false;
+		*ColourPicker::MainColour = HsvToRgb(ColourPicker::Hue, ColourPicker::Saturation, ColourPicker::Saturation, ColourPicker::Alpha);
 	}
 	
-
+	if (!ColourPicker::Open)
+		return;
 	if (IsMouseInRectangle(ClickedPos.x, ClickedPos.y, 150, 150) && IsKeyClicked(VK_LBUTTON) && ColourPicker::LastClick < (clock() * 0.00001f))
 	{
-//		ColourPicker::MainColour = ColourPicker::SelectedColour;
+		ColourPicker::HeldSaturation = true;
 		ColourPicker::LastClick = (clock() * 0.00001f) + 0.002f;
 	}
 	if (IsMouseInRectangle(ClickedPos.x, ClickedPos.y+155, 150, 10) && IsKeyClicked(VK_LBUTTON) && ColourPicker::LastClick < (clock() * 0.00001f))
 	{
-		//		ColourPicker::MainColour = ColourPicker::SelectedColour;
 		ColourPicker::HeldHue = true;
 		ColourPicker::LastClick = (clock() * 0.00001f) + 0.002f;
 	}
 	if (IsMouseInRectangle(ClickedPos.x + 155, ClickedPos.y, 20, 165) && IsKeyClicked(VK_LBUTTON) && ColourPicker::LastClick < (clock() * 0.00001f))
 	{
-		//		ColourPicker::MainColour = ColourPicker::SelectedColour;
 		ColourPicker::HeldAlpha = true;
 		ColourPicker::LastClick = (clock() * 0.00001f) + 0.002f;
 	}
@@ -89,6 +93,21 @@ void ColourPicker::Update()
 		ColourPicker::Alpha = (1.0f - ratio) * 255;
 		ColourPicker::MainColour->A = ColourPicker::Alpha;
 	}
+	if (HeldSaturation)
+	{
+		// Calculate the saturation values from the mouse position
+		const float xclamp = std::clamp<float>((float)MousePos.x - (float)(ClickedPos.x), 0.00f, (float)150);
+		const float yclamp = std::clamp<float>((float)MousePos.y - (float)(ClickedPos.y), 0.00f, (float)150);
+
+		const float xratio = xclamp / 150.0f;
+		const float yratio = (150.0f - yclamp) / 150.0f;
+
+		ColourPicker::Saturation = std::sqrt(xratio * xratio + yratio * yratio) * 255.0f;
+		if (ColourPicker::Saturation > 255.0f)
+			ColourPicker::Saturation = 255.0f;
+
+	
+	}
 }
 
 void ColourPicker::Draw()
@@ -100,16 +119,15 @@ void ColourPicker::Draw()
 	{
 		FilledRectangle(ClickedPos.x - 5, ClickedPos.y - 5, 185, 175, Colour(85, 85, 85, 255));
 		OutlineRectangle(ClickedPos.x - 5, ClickedPos.y - 5, 185, 175,1, Colour(180, 180, 180, 255));
-		ColourPicker::SelectedColour = &DrawColourPicker(ClickedPos.x, ClickedPos.y, 150, 150, *ColourPicker::MainColour);
-	
-		OutlineRectangle(ClickedPos.x +155, ClickedPos.y, 20, 165,1, Colour(180, 180, 180, 255));
+		DrawColourPicker(ClickedPos.x, ClickedPos.y, 150, 150, HsvToRgb(ColourPicker::Hue, 255.0f, 255.0f,ColourPicker::Alpha));
+		
 
 		// alpha
+		OutlineRectangle(ClickedPos.x + 155, ClickedPos.y, 20, 165, 1, Colour(180, 180, 180, 255));
 		DrawColourPickerAlphaSlider(ClickedPos.x + 155, ClickedPos.y, 20, 165, *ColourPicker::MainColour);
 		float alphavalue = ColourPicker::AlphaToSliderValue(ColourPicker::Alpha);
 		FilledRectangle(ClickedPos.x + 155, ClickedPos.y + ((int)165 * (1.0f - alphavalue)), 20, 2, Colour(255, 255, 255, 255));
 		
-
 		// hue
 		DrawColourPickerSlider(ClickedPos.x, ClickedPos.y + 155, 150, 10);
 		float huevalue = ColourPicker::HueToSliderValue(ColourPicker::Hue);

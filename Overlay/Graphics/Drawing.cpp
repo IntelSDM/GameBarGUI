@@ -234,8 +234,7 @@ void FilledRectangleSprite(int x, int y, int width, int height, Color colour)
 
     SwapChain->DrawImage(rendertarget, x, y);
 }
-Color colorSpectrum[150];
-Color DrawColourPicker(int x, int y, int width, int height, Color colour)
+void DrawColourPicker(int x, int y, int width, int height, Color colour)
 {
     auto stops = ref new Platform::Array<CanvasGradientStop>(2);
     stops[0] = { 0.00f, colour };
@@ -247,24 +246,7 @@ Color DrawColourPicker(int x, int y, int width, int height, Color colour)
     brush->EndPoint =  float2(x, y + height);
 
     SwapChain->FillRectangle(Rect(x, y, width, height), brush);
-    for (int i = 0; i < 150; i++)
-    {
-        float normalizedPosition = static_cast<float>(i) / 149.0f; // Normalized position between 0 and 1
-
-        // Manual color interpolation (lerp) between 'colour' and 'black'
-        byte r = static_cast<byte>(colour.R + normalizedPosition * (0 - colour.R));
-        byte g = static_cast<byte>(colour.G + normalizedPosition * (0 - colour.G));
-        byte b = static_cast<byte>(colour.B + normalizedPosition * (0 - colour.B));
-
-        colorSpectrum[i] = ColorHelper::FromArgb(255, r, g, b);
-    }
-    float normalizedX = static_cast<float>(MousePos.x - x) / static_cast<float>(width);
-    float normalizedY = static_cast<float>(MousePos.y - y) / static_cast<float>(height);
-    // Ensure that the normalized values are within the valid range
-    normalizedX = std::max(0.0f, std::min(normalizedX, 1.0f));
-    normalizedY = std::max(0.0f, std::min(normalizedY, 1.0f));
-    int index = static_cast<int>(normalizedX * 149);
-    return colorSpectrum[index];
+   
 }
 
 void ColourPickerOnSpriteBatch(int x, int y, int width, int height, Color colour)

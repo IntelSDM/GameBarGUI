@@ -23,7 +23,7 @@ void FilledRoundedRectangle(int x, int y, int width, int height, int aax, int aa
 void OutlineRoundedRectangle(int x, int y, int width, int height, int aax, int aay, Color colour);
 void OutlineCircle(int x, int y, int radius, int thickness, Color colour);
 void FilledCircle(int x, int y, int radius, int thickness, Color colour);
-Color DrawColourPicker(int x, int y, int width, int height, Color colour);
+void DrawColourPicker(int x, int y, int width, int height, Color colour);
 void DrawColourPickerSlider(int x, int y, int width, int height);
 Color GetColorAtCursorPosition(int x, int y, int pickerX, int pickerY, int pickerWidth, int pickerHeight);
 void DrawColourPickerAlphaSlider(int x, int y, int width, int height, Color col);

@@ -9,7 +9,8 @@ protected:
     Color* SelectedColour;
     Vector2 SelectedPos;
 
-
+    float Saturation = 255;
+    bool HeldSaturation = false;
 
     float Hue = 360;
     bool HeldHue = false;
@@ -22,6 +23,7 @@ protected:
     static float HueToSliderValue(float hue);
     static float SliderValueToHue(float slidervalue);
     static float AlphaToSliderValue(float alpha);
+    static float ColourPicker::SaturationToSliderValue(float saturation);
     COLORREF ColourPicker::GetColorAtPosition(int x, int y);
 public:
     ColourPicker(float x, float y, Color* colour);
