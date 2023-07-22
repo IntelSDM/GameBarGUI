@@ -35,7 +35,7 @@ child Entity::GetChildRelativeParent()
 }
 void Entity::SetBlockedSiblings(bool block)
 {
-    for (auto& it : Entity::Parent->Container())
+    for (auto& it : Entity::Parent->GetContainer())
     {
         if (it == shared_from_this())
             continue;
@@ -85,13 +85,13 @@ void Container::Update()
         (*it)->Update();
     }
 }
-childcontainer& Container::GetContainer()
+/*childcontainer& Container::Container()
 {
     return Container::ContainerInstance;
-}
+}*/
 
-size_t Container::GetChildren()
+/*size_t Container::GetChildren()
 {
     return Container::ContainerInstance.size();
-}
+}*/
 #pragma endregion

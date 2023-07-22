@@ -34,7 +34,7 @@ public:
 	virtual void Draw() {};
 	virtual void Update() {};
 
-	virtual childcontainer& Container() { static childcontainer bad{}; return bad; }
+	virtual childcontainer& GetContainer() { static childcontainer bad{}; return bad; }
 	virtual size_t Children() { return 0; }
 
 	virtual Vector2 GetPos() { return Pos; }
@@ -60,7 +60,6 @@ public:
 	void SetRelativeParent(child parent);
 
 	friend class Container;
-	friend class TabContainer;
 	friend class Tab;
 
 };
@@ -79,8 +78,8 @@ public:
 	}
 	void Draw();
 	void Update();
-	childcontainer& GetContainer();
-	size_t GetChildren();
+	virtual childcontainer& GetContainer() override { return ContainerInstance; }
+	virtual size_t Children() override { return ContainerInstance.size(); }
 
 
 };

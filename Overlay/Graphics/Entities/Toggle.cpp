@@ -60,6 +60,6 @@ void Toggle::Draw()
 	if (*Toggle::Data == true)
 		FilledRectangle(ParentPos.x + Pos.x + 1, ParentPos.y + Pos.y + 1, Size.x - 2, Size.y - 2, Colour(255, 0, 0, 255));
 	//FilledRectangle(Toggle::ParentPos.x + Toggle::Pos.x + (Toggle::Size.x) + 2, Toggle::ParentPos.y + Toggle::Pos.y - 1, Toggle::TextWidth + 4, Toggle::TextHeight, Colour(200, 0, 0, 255));
-	DrawText( Toggle::ParentPos.x + Toggle::Pos.x + (Toggle::Size.x) + 3, Toggle::ParentPos.y + Toggle::Pos.y - (Toggle::Size.y / 8), Toggle::Name + std::to_wstring(GetParent()->Container().size()), "Verdana", 12, Colour(255, 255, 255, 255), None);
+	DrawText( Toggle::ParentPos.x + Toggle::Pos.x + (Toggle::Size.x) + 3, Toggle::ParentPos.y + Toggle::Pos.y - (Toggle::Size.y / 8), Toggle::Name + std::to_wstring(Parent->GetContainer().size()), "Verdana", 12, Colour(255, 255, 255, 255), None);
 
 }

@@ -26,7 +26,7 @@ void Tab::Update()
 	// Bandaid fix
 	size_t ignore_count = 0;
 
-	for (child& it : Tab::Parent->Container())
+	for (child& it : Tab::Parent->GetContainer())
 	{
 		if (it == shared_from_this())
 			break;

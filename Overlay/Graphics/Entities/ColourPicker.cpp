@@ -35,7 +35,7 @@ float ColourPicker::SaturationToSliderValue(float saturation)
 void ColourPicker::Update()
 {
 	ColourPicker::ParentPos = ColourPicker::Parent->GetParent()->GetPos();
-	//SetBlockedSiblings(true);
+	SetBlockedSiblings(true);
 	if (!(IsMouseInRectangle(ColourPicker::ParentPos.x + ColourPicker::Pos.x, ColourPicker::ParentPos.y + ColourPicker::Pos.y, ColourPicker::Size.x, ColourPicker::Size.y) || IsMouseInRectangle(ClickedPos.x - 5, ClickedPos.y - 5, 175, 175)) && IsKeyClicked(VK_LBUTTON) && ColourPicker::Open)
 	{
 		ColourPicker::Open = false;
