@@ -38,26 +38,24 @@ public:
 
 		ParentPos = Parent->GetParent()->GetPos();
 
-		if (Blocked)
-			return;
+	
 		if (!IsKeyDown(VK_LBUTTON))
+		{
+		
 			Held = false;
-		if (IsMouseInRectangle(ParentPos.x + Pos.x - 2, ParentPos.y + (Pos.y + 15) - 2, Size.x + 3, Size.y + 3) && IsKeyClicked(VK_LBUTTON))
+		}
+		if (IsMouseInRectangle(ParentPos.x + Pos.x - 2, ParentPos.y + (Pos.y + 15) - 2, Size.x + 3, Size.y + 3) && IsKeyClicked(VK_LBUTTON) && !Blocked)
 		{
 			Held = true;
 		}
 		if (Held)
 		{
-			SetBlockedSiblings(true); // make sure no clicks go through when holding.
+			 // make sure no clicks go through when holding.
 			const float clamp = std::clamp<float>((float)MousePos.x - (float)(Pos.x + ParentPos.x), 0.00f, (float)Size.x);
 			const float ratio = clamp / Size.x;
 			*Value = MinValue + (MaxValue - MinValue) * ratio;
 			OutputValue = *Value;
 			ConvertValueToString();
-		}
-		else
-		{
-			SetBlockedSiblings(false);
 		}
 	}
 	void Draw()

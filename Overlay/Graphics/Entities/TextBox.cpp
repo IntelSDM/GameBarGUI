@@ -6,27 +6,18 @@
 #include "Graphics.h"
 
 
-/*
-bool for input which is set to true when clicked.
-take each key clicked and then translate it into the char
-display char, if char exceeds the width of the textbox, remove characters until it doesn't
-
-needs to pass through a string ptr for what it is editting
-*/
-
 TextBox::TextBox(float x, float y, std::wstring text, std::wstring* data = nullptr)
 {
 	TextBox::Pos = { x,y };
 	TextBox::Size = { 277,25 };
 	TextBox::Name = text;
-	TextBox::Blocked = false;
+	//TextBox::Blocked = false;
 	TextBox::MainString = data;
 	TextBox::VisiblePointerEnd = MainString->length();
 	TextBox::SetStartIndex(); // this sets start value
-	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart,TextBox::VisiblePointerEnd);
+	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd);
 	TextBox::SelectedPoint = VisiblePointerEnd - TextBox::VisiblePointerStart;
 	TextBox::SelectedPosition = GetTextWidth(TextBox::MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
-	TextBox::Blocked = true;
 }
 void TextBox::SetStartIndex()
 {
@@ -43,23 +34,26 @@ void TextBox::SetStartIndex()
 }
 void TextBox::SetState()
 {
-	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
+	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON) && ! TextBox::Blocked)
 	{
-		TextBox::Blocked = false;
+		TextBox::Active = true;
 	}
-	else if (IsKeyClicked(VK_LBUTTON) && !IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && !TextBox::Blocked)
+	else if (IsKeyClicked(VK_LBUTTON) && !IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size))
 	{
 		TextBox::Selecting = false;
 		TextBox::Held = false;
-		TextBox::Blocked = true; // prevent 2 being active at the same time unless they are somehow fucking merged
+		TextBox::Active = false; // prevent 2 being active at the same time unless they are somehow fucking merged
 	}
 	WPARAM character = Char;
 	if (character == VK_RETURN)
 	{
-		TextBox::Blocked = true;
+		TextBox::Active = false;
+
 	}
-		if (!IsKeyDown(VK_LBUTTON))
-			TextBox::Held = false;
+	if (!IsKeyDown(VK_LBUTTON))
+		TextBox::Held = false;
+	if (TextBox::SelectedPoint == TextBox::SelectionStart && TextBox::SelectedPoint == TextBox::SelectionEnd)
+		TextBox::Selecting = false;
 }
 
 
@@ -83,6 +77,8 @@ bool TextBox::IsKeyAcceptable()
 void TextBox::ArrowKeyNavition()
 {
 	if (TextBox::Blocked)
+		return;
+	if (!TextBox::Active)
 		return;
 	if (IsKeyClicked(VK_LEFT) && TextBox::LastClick < (clock() * 0.00001f))
 	{
@@ -140,6 +136,8 @@ void TextBox::InputText()
 {
 	if (TextBox::Blocked)
 		return;
+	if (!TextBox::Active)
+		return;
 	if (TextBox::IsKeyAcceptable())
 	{
 		//	(*TextBox::MainString) += Char;
@@ -159,10 +157,12 @@ void TextBox::DeleteText()
 {
 	if (TextBox::Blocked)
 		return;
+	if (!TextBox::Active)
+		return;
 	WPARAM character = Char;
 	if (character == VK_BACK && (*TextBox::MainString).length() != 0 && TextBox::VisiblePointerEnd != 0 && SelectedPoint != 0) // backspace
 	{// no selection
-		if (TextBox::SelectionStart == TextBox::SelectedPoint && TextBox::SelectionEnd == TextBox::SelectedPoint)
+		if (TextBox::SelectionStart == TextBox::SelectedPoint && TextBox::SelectionEnd == TextBox::SelectedPoint && !TextBox::Selecting)
 		{
 			if (TextBox::SelectedPoint == TextBox::VisiblePointerEnd)
 			{
@@ -233,9 +233,11 @@ void TextBox::SetSelection()
 {
 	if (TextBox::Blocked)
 		return;
+	if (!TextBox::Active)
+		return;
 	if (TextBox::Held)
 	{
-		Selecting = true;
+		TextBox::Selecting = true;
 		Vector2 relativemousepos = { MousePos.x - (TextBox::Pos.x + TextBox::ParentPos.x),MousePos.y - (TextBox::Pos.y + TextBox::ParentPos.y) };
 		float lastdistance = 99999; // the user shouldn't ever have a resolution/position over this value
 		int instance = 0;
@@ -263,7 +265,7 @@ void TextBox::SetSelection()
 			TextBox::SelectionEnd = instance;
 			TextBox::SelectionStart = TextBox::SelectedPoint;
 		}
-
+		
 	}
 
 	if (IsKeyDown(VK_CONTROL) && IsKeyDown(0x41))//(A)
@@ -275,6 +277,8 @@ void TextBox::SetSelection()
 void TextBox::SetSelectionPoint()
 {
 	if (TextBox::Blocked)
+		return;
+	if (!TextBox::Active)
 		return;
 	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON))
 	{
@@ -307,6 +311,8 @@ void TextBox::SetSelectionPoint()
 void TextBox::SelectionDragging()
 {
 	if (TextBox::Blocked)
+		return;
+	if (!TextBox::Active)
 		return;
 	if (TextBox::Held)
 	{
@@ -347,38 +353,42 @@ void TextBox::CopyText()
 {
 	if (TextBox::Blocked)
 		return;
+	if (!TextBox::Active)
+		return;
 	if (TextBox::SelectedPoint == TextBox::SelectionStart && TextBox::SelectedPoint == TextBox::SelectionEnd)
 		return;
 	if (!(IsKeyDown(VK_CONTROL) && IsKeyDown(0x43)))
 		return;
-	  if (!OpenClipboard(nullptr))
-        return;
-	  size_t size = (SelectionEnd - SelectionStart) * sizeof(wchar_t) + sizeof(wchar_t);
+	if (!OpenClipboard(nullptr))
+		return;
+	size_t size = (SelectionEnd - SelectionStart) * sizeof(wchar_t) + sizeof(wchar_t);
 
-	  HGLOBAL global = GlobalAlloc(GMEM_MOVEABLE, size);
-	  if (!global) {
-		  CloseClipboard();
-		  return;
-	  }
+	HGLOBAL global = GlobalAlloc(GMEM_MOVEABLE, size);
+	if (!global) {
+		CloseClipboard();
+		return;
+	}
 
-	  wchar_t* text = static_cast<wchar_t*>(GlobalLock(global));
-	  if (!text) {
-		  CloseClipboard();
-		  GlobalFree(global);
-		  return;
-	  }
+	wchar_t* text = static_cast<wchar_t*>(GlobalLock(global));
+	if (!text) {
+		CloseClipboard();
+		GlobalFree(global);
+		return;
+	}
 
-	  wcsncpy_s(text, size / sizeof(wchar_t), MainString->substr(SelectionStart, SelectionEnd - SelectionStart).c_str(), SelectionEnd - SelectionStart);
+	wcsncpy_s(text, size / sizeof(wchar_t), MainString->substr(SelectionStart, SelectionEnd - SelectionStart).c_str(), SelectionEnd - SelectionStart);
 
-	  text[SelectionEnd - SelectionStart] = L'\0';
-	  GlobalUnlock(global);
-	  EmptyClipboard();
-	  SetClipboardData(CF_UNICODETEXT, global);
-	  CloseClipboard();
+	text[SelectionEnd - SelectionStart] = L'\0';
+	GlobalUnlock(global);
+	EmptyClipboard();
+	SetClipboardData(CF_UNICODETEXT, global);
+	CloseClipboard();
 }
 void TextBox::PasteText()
 {
 	if (TextBox::Blocked)
+		return;
+	if (!TextBox::Active)
 		return;
 	if (!(IsKeyDown(VK_CONTROL) && IsKeyDown(0x56)))
 		return;
@@ -470,16 +480,15 @@ void TextBox::Update()
 	TextBox::SelectionDragging();
 	TextBox::CopyText();
 	TextBox::PasteText();
-	if (!TextBox::Blocked) // take input
+	if (TextBox::Active) // take input
 	{
-	
 		if (!TextBox::Held && !TextBox::Selecting)
 		{
 			TextBox::SelectionStart = TextBox::SelectedPoint;
 			TextBox::SelectionEnd = TextBox::SelectedPoint;
 		}
+		
 
-	
 		// Update the selected point if it is out of bounds
 		if (TextBox::SelectedPoint > TextBox::VisiblePointerEnd)
 		{
@@ -499,7 +508,7 @@ void TextBox::Draw()
 		TextBox::SetVisible(false);
 	if (!TextBox::IsVisible())
 		return;
-	
+
 	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x - 1, TextBox::Pos.y + +TextBox::ParentPos.y - 1, TextBox::Size.x + 2, TextBox::Size.y + 2, 4, 4, Colour(200, 200, 200, 255));
 	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x, TextBox::Pos.y + +TextBox::ParentPos.y, TextBox::Size.x, TextBox::Size.y, 4, 4, Colour(80, 80, 80, 255));
 	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + (TextBox::Size.x / 2), TextBox::ParentPos.y + TextBox::Pos.y - ((TextBox::Size.y / 2) - 1), TextBox::Name + L":", "Verdana", 12, Colour(255, 255, 255, 255), CentreCentre); // Title
@@ -508,14 +517,14 @@ void TextBox::Draw()
 	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - TextBox::AnimationStart;
 	float time = std::fmodf(elapsed.count(), TextBox::AnimationInterval) / TextBox::AnimationInterval;
 	float easedtime = InOutSine(time);
-	if (!TextBox::Blocked && std::fmod(elapsed.count(), TextBox::AnimationInterval) < TextBox::AnimationInterval / 2)
+	if (TextBox::Active && std::fmod(elapsed.count(), TextBox::AnimationInterval) < TextBox::AnimationInterval / 2)
 	{
 		float alpha = 255.0f * (1.0f - easedtime * 2.0f);
 		FilledLine(TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + TextBox::Size.y - 3, TextBox::Pos.x + TextBox::ParentPos.x + TextBox::SelectedPosition, TextBox::Pos.y + TextBox::ParentPos.y + 3, 1, Colour(255, 255, 255, static_cast<unsigned int>(alpha)));
 	}
-	if (TextBox::SelectingStartPosition >=0 || TextBox::SelectingEndPosition>=0 && TextBox::Selecting)
+	if (TextBox::SelectingStartPosition >= 0 || TextBox::SelectingEndPosition >= 0)
 	{
 		float selectionwidth = std::abs(TextBox::SelectingEndPosition - TextBox::SelectingStartPosition); // bandage fix for negative value
-		FilledRectangle(TextBox::Pos.x + TextBox::ParentPos.x + SelectingStartPosition, TextBox::Pos.y +TextBox::ParentPos.y, selectionwidth, TextBox::Size.y, Colour(0, 150, 255, 100));
+		FilledRectangle(TextBox::Pos.x + TextBox::ParentPos.x + SelectingStartPosition, TextBox::Pos.y + TextBox::ParentPos.y, selectionwidth, TextBox::Size.y, Colour(0, 150, 255, 100));
 	}
 }

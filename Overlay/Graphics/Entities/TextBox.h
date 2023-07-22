@@ -30,7 +30,7 @@ protected:
 
     float TextWidth = 0;
 
-
+    bool Active = false;
     bool Selecting = false;
     bool Held = false;
 
