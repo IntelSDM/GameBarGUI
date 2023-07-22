@@ -121,17 +121,17 @@ void ColourPicker::Draw()
 	{
 		FilledRectangle(ClickedPos.x - 5, ClickedPos.y - 5, 185, 175, Colour(85, 85, 85, 255));
 		OutlineRectangle(ClickedPos.x - 5, ClickedPos.y - 5, 185, 175,1, Colour(180, 180, 180, 255));
-		DrawColourPicker(ClickedPos.x, ClickedPos.y, 150, 150, HsvToRgb(ColourPicker::Hue, 255.0f, 255.0f,ColourPicker::Alpha));
+		SaturationSlider(ClickedPos.x, ClickedPos.y, 150, 150, HsvToRgb(ColourPicker::Hue, 255.0f, 255.0f,ColourPicker::Alpha));
 		
 
 		// alpha
 		OutlineRectangle(ClickedPos.x + 155, ClickedPos.y, 20, 165, 1, Colour(180, 180, 180, 255));
-		DrawColourPickerAlphaSlider(ClickedPos.x + 155, ClickedPos.y, 20, 165, *ColourPicker::MainColour);
+		AlphaSlider(ClickedPos.x + 155, ClickedPos.y, 20, 165, *ColourPicker::MainColour);
 		float alphavalue = ColourPicker::AlphaToSliderValue(ColourPicker::Alpha);
 		FilledRectangle(ClickedPos.x + 155, ClickedPos.y + ((int)165 * (1.0f - alphavalue)), 20, 2, Colour(255, 255, 255, 255));
 		
 		// hue
-		DrawColourPickerSlider(ClickedPos.x, ClickedPos.y + 155, 150, 10);
+		HueSlider(ClickedPos.x, ClickedPos.y + 155, 150, 10);
 		float huevalue = ColourPicker::HueToSliderValue(ColourPicker::Hue);
 		FilledRectangle(ClickedPos.x + ((int)150 * huevalue), ClickedPos.y + 155, 2, 10, Colour(255, 255, 255, 255));
 	}

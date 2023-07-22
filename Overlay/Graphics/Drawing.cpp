@@ -234,7 +234,7 @@ void FilledRectangleSprite(int x, int y, int width, int height, Color colour)
 
     SwapChain->DrawImage(rendertarget, x, y);
 }
-void DrawColourPicker(int x, int y, int width, int height, Color colour)
+void SaturationSlider(int x, int y, int width, int height, Color colour)
 {
     auto stops = ref new Platform::Array<CanvasGradientStop>(2);
     stops[0] = { 0.00f, colour };
@@ -249,21 +249,8 @@ void DrawColourPicker(int x, int y, int width, int height, Color colour)
    
 }
 
-void ColourPickerOnSpriteBatch(int x, int y, int width, int height, Color colour)
-{
-    auto stops = ref new Platform::Array<CanvasGradientStop>(2);
-    stops[0] = { 0.00f, colour };
-    stops[1] = { 1.0f, Colors::Black };
 
-
-    auto brush = ref new CanvasLinearGradientBrush(SwapChain, stops);
-    brush->StartPoint = float2(x + width, y);
-    brush->EndPoint = float2(x, y + height);
-
-    DrawingSession->FillRectangle(Rect(x, y, width, height), brush);
-
-}
-void DrawColourPickerSlider(int x, int y, int width, int height)
+void HueSlider(int x, int y, int width, int height)
 {
     auto stops = ref new Platform::Array<CanvasGradientStop>(7);
     stops[0] = { 0.00f, Colour(255,0,0,255) };
@@ -281,7 +268,7 @@ void DrawColourPickerSlider(int x, int y, int width, int height)
     SwapChain->FillRectangle(Rect(x, y, width, height), brush);
 
 }
-void DrawColourPickerAlphaSlider(int x, int y, int width, int height, Color col)
+void AlphaSlider(int x, int y, int width, int height, Color col)
 {
     auto stops = ref new Platform::Array<CanvasGradientStop>(2);
     stops[0] = { 0.00f, Colour(col.R,col.G,col.B,255) };
@@ -292,24 +279,6 @@ void DrawColourPickerAlphaSlider(int x, int y, int width, int height, Color col)
     brush->EndPoint = float2((float)(x), (float)y+ height);
     
     SwapChain->FillRectangle(Rect(x, y, width, height), brush);
-
-}
-void ColourPickerSliderOnSpriteBatch(int x, int y, int width, int height)
-{
-    auto stops = ref new Platform::Array<CanvasGradientStop>(7);
-    stops[0] = { 0.00f, Colour(255,0,0,255) };
-    stops[1] = { 0.16f, Colour(255,255,0,255) };
-    stops[2] = { 0.32f,  Colour(0,255,0,255) };
-    stops[3] = { 0.48f,  Colour(0,255,255,255) };
-    stops[4] = { 0.64f,  Colour(0,0,255,255) };
-    stops[5] = { 0.80f,  Colour(255,0,255,255) };
-    stops[6] = { 0.96f,  Colour(255,0,0,255) };
-
-    auto brush = ref new CanvasLinearGradientBrush(SwapChain, stops);
-    brush->StartPoint = float2((float)x, (float)y);
-    brush->EndPoint = float2((float)(x + width), (float)y);
-
-    DrawingSession->FillRectangle(Rect(x, y, width, height), brush);
 
 }
 void OutlineRectangle(int x, int y, int width, int height, int thickness, Color colour)
