@@ -10,6 +10,7 @@
 #include "Slider.h"
 #include "TabController.h"
 #include "ColourPicker.h"
+#include "KeyBind.h"
 EntityVector MenuEntity;
 int SelectedTab;
 int TabCount;
@@ -19,6 +20,7 @@ std::wstring TextBoxText = L"txtboxdsgdsdshchgkhdsgsdgsdgWWWWAAAA";
 int intvalue = 3;
 float floatvalue = 8.5f;
 Color Col = Colour(255, 255, 255, 255);
+int Key = 0;
 void CreateGUI()
 {
 	MenuEntity = std::make_shared< Container >();
@@ -49,7 +51,8 @@ void CreateGUI()
 			tab->Push(floatslider);
 			auto intslider = std::make_shared<Slider<int>>(10, 220, L"Slider Int", L"%", 0, 100, &intvalue);
 			tab->Push(intslider);
-
+			auto keybind = std::make_shared<KeyBind>(150, 80, L"KeyBind", &Key);
+			tab->Push(keybind);
 		}
 		tabcontroller->Push(tab);
 		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 25, 50, 20, &SelectedTab);
