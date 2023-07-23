@@ -249,9 +249,9 @@ void SaturationSlider(int x, int y, int width, int height, Color colour)
 
      stops = ref new Platform::Array<CanvasGradientStop>(4);
     stops[0] = { 0.00f,Colour(255,255,255,200) };
-    stops[1] = { 0.20f,Colour(colour.R,colour.G,colour.B,100) };
+    stops[1] = { 0.15f,Colour(colour.R,colour.G,colour.B,100) };
     stops[2] = { 1.0f, Colour(0,0,0,100) };
-    stops[3] = { 0.7f, Colour(0,0,0,100) };
+    stops[3] = { 0.6f, Colour(40,40,40,100) };
 
      brush = ref new CanvasLinearGradientBrush(SwapChain, stops);
     brush->StartPoint = float2(x, y);
