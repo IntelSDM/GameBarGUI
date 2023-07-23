@@ -18,7 +18,7 @@ bool ToggleTest1 = true;
 std::wstring TextBoxText = L"txtboxdsgdsdshchgkhdsgsdgsdgWWWWAAAA";
 int intvalue = 3;
 float floatvalue = 8.5f;
-Color Col = Colour(255, 0, 0, 255);
+Color Col = Colour(255, 255, 255, 255);
 void CreateGUI()
 {
 	MenuEntity = std::make_shared< Container >();

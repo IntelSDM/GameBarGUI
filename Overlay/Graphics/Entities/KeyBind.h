@@ -3,12 +3,10 @@
 class KeyBind : public Entity
 {
 protected:
-
-    float LastClickTime = 0;
-
-    std::function< void()> Action;
+    int* Key;
+    void CollectInput();
 public:
-    KeyBind(float x, float y, std::wstring text, int key);
+    KeyBind(float x, float y, std::wstring text, int* key);
     void Update();
     void Draw();
 };

@@ -12,6 +12,7 @@ ColourPicker::ColourPicker(float x, float y, Color* colour)
 	ColourPicker::Hue = RGBToHue(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B);
 	ColourPicker::Alpha = MainColour->A;
 	ColourPicker::Saturation = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).V;
+	ColourPicker::Brightness = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).S;
 
 }
 float ColourPicker::HueToSliderValue(float hue)
@@ -62,7 +63,7 @@ void ColourPicker::Update()
 		ColourPicker::HeldHue = false;
 		ColourPicker::HeldAlpha = false;
 		ColourPicker::HeldSaturation = false;
-		*ColourPicker::MainColour = HsvToRgb(ColourPicker::Hue, ColourPicker::Saturation, ColourPicker::Saturation, ColourPicker::Alpha);
+		*ColourPicker::MainColour = HsvToRgb(ColourPicker::Hue, ColourPicker::Brightness, ColourPicker::Saturation, ColourPicker::Alpha);
 	}
 	
 	if (!ColourPicker::Open)
@@ -88,7 +89,8 @@ void ColourPicker::Update()
 		const float clamp = std::clamp<float>((float)MousePos.x - (float)(ClickedPos.x), 0.00f, (float)150);
 		const float ratio = clamp /150;
 		ColourPicker::Hue = 0.0f + (360.0f - 0.0f) * ratio;
-		*ColourPicker::MainColour = HsvToRgb(ColourPicker::Hue, ColourPicker::Saturation, ColourPicker::Saturation, ColourPicker::Alpha);
+		// second var creates brigthness/ fullcolour - white, second one does black to full colour
+		*ColourPicker::MainColour = HsvToRgb(ColourPicker::Hue, ColourPicker::Brightness, ColourPicker::Saturation, ColourPicker::Alpha);
 	}
 	if (HeldAlpha)
 	{
@@ -106,11 +108,13 @@ void ColourPicker::Update()
 
 		const float xratio = xclamp / 150.0f;
 		const float yratio = (150.0f - yclamp) / 150.0f;
-
-		ColourPicker::Saturation = std::sqrt(xratio * xratio + yratio * yratio) * 255.0f;
+		ColourPicker::Saturation = yratio * 255.0f;
+		ColourPicker::Brightness = xratio * 255.0f;
+	//	ColourPicker::Saturation = std::sqrt(xratio * xratio + yratio * yratio) * 255.0f;
 		if (ColourPicker::Saturation > 255.0f)
 			ColourPicker::Saturation = 255.0f;
-
+		if (ColourPicker::Brightness > 255.0f)
+			ColourPicker::Brightness = 255.0f;
 	
 	}
 }
@@ -124,6 +128,8 @@ void ColourPicker::Draw()
 	FilledRectangle(ColourPicker::ParentPos.x + ColourPicker::Pos.x, ColourPicker::ParentPos.y + ColourPicker::Pos.y, ColourPicker::Size.x, ColourPicker::Size.y, *ColourPicker::MainColour);
 	OutlineRectangle(ColourPicker::ParentPos.x + ColourPicker::Pos.x, ColourPicker::ParentPos.y + ColourPicker::Pos.y, ColourPicker::Size.x, ColourPicker::Size.y, 1, Colour(85, 85, 85, 255));
 	
+	
+
 	if (ColourPicker::Open)
 	{
 		FilledRectangle(ClickedPos.x - 5, ClickedPos.y - 5, 185, 175, Colour(85, 85, 85, 255));

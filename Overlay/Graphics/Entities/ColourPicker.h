@@ -10,6 +10,7 @@ protected:
     Vector2 SelectedPos;
 
     float Saturation = 255;
+    float Brightness = 255;
     bool HeldSaturation = false;
 
     float Hue = 360;

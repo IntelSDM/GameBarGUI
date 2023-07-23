@@ -246,7 +246,18 @@ void SaturationSlider(int x, int y, int width, int height, Color colour)
     brush->EndPoint =  float2(x, y + height);
 
     SwapChain->FillRectangle(Rect(x, y, width, height), brush);
-   
+
+     stops = ref new Platform::Array<CanvasGradientStop>(4);
+    stops[0] = { 0.00f,Colour(255,255,255,200) };
+    stops[1] = { 0.20f,Colour(colour.R,colour.G,colour.B,100) };
+    stops[2] = { 1.0f, Colour(0,0,0,100) };
+    stops[3] = { 0.7f, Colour(0,0,0,100) };
+
+     brush = ref new CanvasLinearGradientBrush(SwapChain, stops);
+    brush->StartPoint = float2(x, y);
+    brush->EndPoint = float2(x, y + height);
+
+    SwapChain->FillRectangle(Rect(x, y, width, height), brush);
 }
 
 
