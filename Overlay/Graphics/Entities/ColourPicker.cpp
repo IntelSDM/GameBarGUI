@@ -34,6 +34,10 @@ float ColourPicker::SaturationToSliderValue(float saturation)
 }
 void ColourPicker::Update()
 {
+	if (!ColourPicker::Parent)
+		ColourPicker::SetVisible(false);
+	if (!ColourPicker::IsVisible())
+		return;
 	ColourPicker::ParentPos = ColourPicker::Parent->GetParent()->GetPos();
 	if (!(IsMouseInRectangle(ColourPicker::ParentPos.x + ColourPicker::Pos.x, ColourPicker::ParentPos.y + ColourPicker::Pos.y, ColourPicker::Size.x, ColourPicker::Size.y) || IsMouseInRectangle(ClickedPos.x - 5, ClickedPos.y - 5, 175, 175)) && IsKeyClicked(VK_LBUTTON) && ColourPicker::Open)
 	{
@@ -113,6 +117,10 @@ void ColourPicker::Update()
 
 void ColourPicker::Draw()
 {
+	if (!ColourPicker::Parent)
+		ColourPicker::SetVisible(false);
+	if (!ColourPicker::IsVisible())
+		return;
 	FilledRectangle(ColourPicker::ParentPos.x + ColourPicker::Pos.x, ColourPicker::ParentPos.y + ColourPicker::Pos.y, ColourPicker::Size.x, ColourPicker::Size.y, *ColourPicker::MainColour);
 	OutlineRectangle(ColourPicker::ParentPos.x + ColourPicker::Pos.x, ColourPicker::ParentPos.y + ColourPicker::Pos.y, ColourPicker::Size.x, ColourPicker::Size.y, 1, Colour(85, 85, 85, 255));
 	

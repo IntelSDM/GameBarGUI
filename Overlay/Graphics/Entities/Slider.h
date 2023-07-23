@@ -62,7 +62,8 @@ public:
 	{
 		if (!IsVisible())
 			return;
-
+		if (!Parent)
+			SetVisible(false);
 		DrawText(ParentPos.x + Pos.x, (ParentPos.y + Pos.y) - 5, Name + L": " + OutputString + Measurement, "Verdana", 12,  Colour(255, 255, 255, 255), None);
 		OutlineRectangle(ParentPos.x + Pos.x - 1, ParentPos.y + (Pos.y + 15) - 1, Size.x + 2, Size.y + 2, 1, Colour(255, 255, 255, 255));
 		FilledRectangle(ParentPos.x + Pos.x, ParentPos.y + (Pos.y + 15), Size.x, Size.y, Colour(80, 80, 80, 255));
