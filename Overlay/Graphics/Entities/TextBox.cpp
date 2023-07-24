@@ -45,7 +45,7 @@ void TextBox::SetState()
 		TextBox::Active = false; // prevent 2 being active at the same time unless they are somehow fucking merged
 	}
 	WPARAM character = Char;
-	if (character == VK_RETURN)
+	if (character == VK_RETURN || character == VK_ESCAPE)
 	{
 		TextBox::Active = false;
 

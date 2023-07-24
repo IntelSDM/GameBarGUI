@@ -29,6 +29,7 @@
     <ClCompile Include="Graphics\Utility\Animation.cpp" />
     <ClCompile Include="Graphics\Entities\ColourPicker.cpp" />
     <ClCompile Include="Graphics\Entities\KeyBind.cpp" />
+    <ClCompile Include="Graphics\Entities\ImageTab.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -52,6 +53,7 @@
     <ClInclude Include="Graphics\Utility\Animation.h" />
     <ClInclude Include="Graphics\Entities\ColourPicker.h" />
     <ClInclude Include="Graphics\Entities\KeyBind.h" />
+    <ClInclude Include="Graphics\Entities\ImageTab.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
