@@ -24,10 +24,10 @@ void Button::Update()
 	Button::ParentPos = Button::Parent->GetParent()->GetPos();
 	if (!Button::Blocked)
 	{
-		if (IsMouseInRectangle(Button::Pos + ParentPos, Button::Size) && IsKeyClicked(VK_LBUTTON) && Button::LastClickTime < (clock() * 0.00001f))
+		if (IsMouseInRectangle(Button::Pos + ParentPos, Button::Size) && IsKeyClicked(VK_LBUTTON) && Button::LastClick < (clock() * 0.00001f))
 		{
 			Button::Action();
-			Button::LastClickTime = (clock() * 0.00001f) + 0.002f;
+			Button::LastClick = (clock() * 0.00001f) + 0.002f;
 		}
 	}
 }

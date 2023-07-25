@@ -4,7 +4,6 @@ class Button : public Entity
 {
 protected:
 
-    float LastClickTime = 0;
 
     std::function< void()> Action;
 public:

@@ -11,6 +11,7 @@
 #include "TabController.h"
 #include "ColourPicker.h"
 #include "KeyBind.h"
+#include "DropDown.h"
 EntityVector MenuEntity;
 int SelectedTab;
 int TabCount;
@@ -21,6 +22,7 @@ int intvalue = 3;
 float floatvalue = 8.5f;
 Color Col = Colour(255, 255, 255, 255);
 int Key = 0;
+int Down = 0;
 void CreateGUI()
 {
 	MenuEntity = std::make_shared< Container >();
@@ -53,6 +55,9 @@ void CreateGUI()
 			tab->Push(intslider);
 			auto keybind = std::make_shared<KeyBind>(150, 80, L"KeyBind", &Key);
 			tab->Push(keybind);
+			std::list<std::wstring> downvalues = {L"Value 1", L"Value 2", L"Value 3"};
+			auto dropdown = std::make_shared<DropDown>(240, 80, L"DropDown", &Down,downvalues);
+			tab->Push(dropdown);
 		}
 		tabcontroller->Push(tab);
 		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 25, 50, 20, &SelectedTab);
