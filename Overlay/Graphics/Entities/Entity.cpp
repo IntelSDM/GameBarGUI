@@ -71,7 +71,7 @@ void Entity::SetRelativeParent(child parent)
 #pragma region Container
 void Container::Draw()
 {
-    // Reverse iterate, avoid some issues with things like combo-boxes.
+    // Reverse iterate
 
     for (auto it = ContainerInstance.crbegin(); it != ContainerInstance.crend(); it++)
     {
