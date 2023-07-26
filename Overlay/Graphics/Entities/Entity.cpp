@@ -71,16 +71,15 @@ void Entity::SetRelativeParent(child parent)
 #pragma region Container
 void Container::Draw()
 {
-    // Reverse iterate
-
-    for (auto it = ContainerInstance.crbegin(); it != ContainerInstance.crend(); it++)
+    // Forwards iterate as the form is already iterating backwards
+    for (auto it = ContainerInstance.begin(); it != ContainerInstance.end(); it++)
     {
         (*it)->Draw();
     }
 }
 void Container::Update()
 {
-    for (auto it = ContainerInstance.crbegin(); it != ContainerInstance.crend(); it++)
+    for (auto it = ContainerInstance.begin(); it != ContainerInstance.end(); it++)
     {
         (*it)->Update();
     }
