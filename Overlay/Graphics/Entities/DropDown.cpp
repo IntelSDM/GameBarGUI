@@ -75,14 +75,25 @@ void DropDown::Update()
 	{
 		if (IsMouseInRectangle(DropDown::Pos + ParentPos, DropDown::Size) && IsKeyClicked(VK_LBUTTON) && DropDown::LastClick < (clock() * 0.00001f))
 		{
-			DropDown::Active = true;
-			DropDown::SetBlockedSiblings(true);
-			DropDown::LastClick = (clock() * 0.00001f) + 0.002f;
-			DropDown::CalculateBuffer();
-			DropDown::ConvertSelectedName();
+			if (!DropDown::Active)
+			{
+				DropDown::Active = true;
+				DropDown::SetBlockedSiblings(true);
+				DropDown::LastClick = (clock() * 0.00001f) + 0.002f;
+				DropDown::CalculateBuffer();
+				DropDown::ConvertSelectedName();
+			}
+			else
+			{
+				DropDown::Active = false;
+				DropDown::SetBlockedSiblings(false);
+				DropDown::CalculateBuffer();
+				DropDown::ConvertSelectedName();
+				DropDown::LastClick = (clock() * 0.00001f) + 0.002f;
+			}
 		}
 	}
-	if (!IsMouseInRectangle(DropDown::Pos + ParentPos, DropDown::Size) && IsKeyClicked(VK_LBUTTON) && DropDown::Active )
+	if ( IsKeyClicked(VK_LBUTTON) && DropDown::Active && !(IsMouseInRectangle(DropDown::Pos + ParentPos, DropDown::Size) || IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +5, DropDown::DropWidth, DropDown::Names.size() * DropDown::Size.y)))
 	{
 		DropDown::Active = false;
 		DropDown::SetBlockedSiblings(false);
@@ -97,7 +108,22 @@ void DropDown::Update()
 		DropDown::ConvertSelectedName();
 	}
 	if (DropDown::Active)
+	{
+		DropDown::SizeDifference = DropDown::DropWidth - DropDown::TextWidth;
 		DropDown::SetDropDownWidth();
+		int i = 0;
+		for (const std::wstring& name : DropDown::Names)
+		{
+			float itemposy = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + (i * DropDown::Size.y);
+
+			if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), itemposy, DropDown::DropWidth, DropDown::Size.y) && IsKeyClicked(VK_LBUTTON))
+			{
+				*DropDown::Index = i;
+				DropDown::ConvertSelectedName();
+			}
+			i++;
+		}
+	}
 }
 
 void DropDown::Draw()
@@ -116,22 +142,33 @@ void DropDown::Draw()
 	float triangley3 = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y - 3;
 	if(!DropDown::Active)
 	FilledTriangle(trianglex1, triangley1, trianglex2, triangley2, trianglex3, triangley3, Colour(255, 0, 0, 255));
-	DrawText(DropDown::ParentPos.x + DropDown::Pos.x + 5, DropDown::ParentPos.y + DropDown::Pos.y + (DropDown::Size.y /8), DropDown::SelectedName, "Verdana", 11, Colour(240, 240, 240, 255), None);
-	float sizedifference = DropDown::DropWidth - DropDown::TextWidth; 
+	DrawText(DropDown::ParentPos.x + DropDown::Pos.x + 5, DropDown::ParentPos.y + DropDown::Pos.y + (DropDown::Size.y /8),DropDown::SelectedName, "Verdana", 11, Colour(240, 240, 240, 255), None);
+
 	if (DropDown::DropWidth < DropDown::Size.x)
 	{
 		DropDown::DropWidth = DropDown::Size.x;
-		sizedifference = 0;
+		DropDown::SizeDifference = 0;
 	}
 	if (DropDown::Active)
 	{
-		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (sizedifference / 2) - 1, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +4, DropDown::DropWidth + 1, DropDown::Names.size() * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
-		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (sizedifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +5, DropDown::DropWidth, DropDown::Names.size() * DropDown::Size.y,Colour(80,80,80,255));
-		for (int i = 1; i <= DropDown::Names.size(); i++)
-		{
-			
-			FilledLine(DropDown::ParentPos.x + DropDown::Pos.x - (sizedifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + (i * DropDown::Size.y), DropDown::ParentPos.x + DropDown::Pos.x + DropDown::DropWidth, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + (i * DropDown::Size.y), 1, Colour(255, 0, 0, 255));
+		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2) - 1, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +4, DropDown::DropWidth + 1, DropDown::Names.size() * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
+		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +5, DropDown::DropWidth, DropDown::Names.size() * DropDown::Size.y,Colour(80,80,80,255));
 
+		int i = 0;
+		for (const std::wstring& name : DropDown::Names)
+		{
+			float itemposy = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + (i * DropDown::Size.y);
+			if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), itemposy, DropDown::DropWidth, DropDown::Size.y))
+			{
+				FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), itemposy, DropDown::DropWidth, DropDown::Size.y, Colour(150, 150, 150, 120));
+				
+			}
+			if(i == *DropDown::Index)
+				DrawText(DropDown::ParentPos.x + DropDown::Pos.x + 5 - (DropDown::SizeDifference / 2), itemposy + (DropDown::Size.y / 8), name, "Verdana", 11, Colour(255, 0, 0, 255), None);
+			else
+				DrawText(DropDown::ParentPos.x + DropDown::Pos.x + 5 - (DropDown::SizeDifference / 2), itemposy + (DropDown::Size.y / 8), name, "Verdana", 11, Colour(240, 240, 240, 255), None);
+			i++;
 		}
+
 	}
 }

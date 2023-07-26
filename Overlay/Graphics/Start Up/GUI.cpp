@@ -22,7 +22,7 @@ int intvalue = 3;
 float floatvalue = 8.5f;
 Color Col = Colour(255, 255, 255, 255);
 int Key = 0;
-int Down = 0;
+int Down = 1;
 void CreateGUI()
 {
 	MenuEntity = std::make_shared< Container >();
@@ -56,8 +56,9 @@ void CreateGUI()
 			auto keybind = std::make_shared<KeyBind>(150, 80, L"KeyBind", &Key);
 			tab->Push(keybind);
 			std::list<std::wstring> downvalues = {L"Value 12345", L"Value 2", L"Value 3"};
-			auto dropdown = std::make_shared<DropDown>(240, 80, L"DropDown", &Down,downvalues);
+			auto dropdown = std::make_shared<DropDown>(290, 80, L"DropDown", &Down,downvalues);
 			tab->Push(dropdown);
+			
 		}
 		tabcontroller->Push(tab);
 		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 25, 50, 20, &SelectedTab);
