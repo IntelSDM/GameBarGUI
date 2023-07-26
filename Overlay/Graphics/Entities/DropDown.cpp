@@ -62,13 +62,36 @@ void DropDown::ConvertSelectedName()
 	}
 
 }
+void DropDown::ArrowNavigation()
+{
+	if (!DropDown::Active)
+		return;
+	if (IsKeyClicked(VK_DOWN) && DropDown::LastClick < (clock() * 0.00001f))
+	{
+		if (DropDown::Names.size()-1> DropDown::PointerEnd)
+		{
+			DropDown::PointerEnd++;
+			DropDown::PointerStart++;
+			DropDown::LastClick = (clock() * 0.00001f) + 0.002f;
+		}
+	}
+	if (IsKeyClicked(VK_UP) && DropDown::LastClick < (clock() * 0.00001f))
+	{
+		if (DropDown::PointerStart > 0)
+		{
+			DropDown::PointerEnd--;
+			DropDown::PointerStart--;
+			DropDown::LastClick = (clock() * 0.00001f) + 0.002f;
+		}
+	}
+}
 void DropDown::Update()
 {
 	if (!DropDown::Parent)
 		DropDown::SetVisible(false);
 	if (!DropDown::IsVisible())
 		return;
-	
+	DropDown::ArrowNavigation();
 	DropDown::ParentPos = DropDown::Parent->GetParent()->GetPos();
 	DropDown::CalculateBuffer();
 	if (!DropDown::Blocked)
@@ -114,8 +137,18 @@ void DropDown::Update()
 		int i = 0;
 		for (const std::wstring& name : DropDown::Names)
 		{
-			float itemposy = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + (i * DropDown::Size.y);
-
+			if (i < DropDown::PointerStart)
+			{
+				i++;
+				continue;
+			}
+			if (i > DropDown::PointerEnd)
+			{
+				i++;
+				continue;
+			}
+			float itemposy = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + ((i - DropDown::PointerStart) * DropDown::Size.y);
+			
 			if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), itemposy, DropDown::DropWidth, DropDown::Size.y) && IsKeyClicked(VK_LBUTTON))
 			{
 				*DropDown::Index = i;
@@ -151,13 +184,23 @@ void DropDown::Draw()
 	}
 	if (DropDown::Active)
 	{
-		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2) - 1, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +4, DropDown::DropWidth + 1, DropDown::Names.size() * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
-		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +5, DropDown::DropWidth, DropDown::Names.size() * DropDown::Size.y,Colour(80,80,80,255));
+		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2) - 1, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +4, DropDown::DropWidth + 1, (DropDown::PointerEnd+1 - DropDown::PointerStart) * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
+		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +5, DropDown::DropWidth, (DropDown::PointerEnd+1 - DropDown::PointerStart) * DropDown::Size.y,Colour(80,80,80,255));
 
 		int i = 0;
 		for (const std::wstring& name : DropDown::Names)
 		{
-			float itemposy = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + (i * DropDown::Size.y);
+			if (i < DropDown::PointerStart)
+			{
+				i++;
+				continue;
+			}
+			if (i > DropDown::PointerEnd)
+			{
+				i++;
+				continue;
+			}
+			float itemposy = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + ((i- DropDown::PointerStart) * DropDown::Size.y);
 			if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), itemposy, DropDown::DropWidth, DropDown::Size.y))
 			{
 				FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), itemposy, DropDown::DropWidth, DropDown::Size.y, Colour(150, 150, 150, 120));

@@ -13,7 +13,10 @@ protected:
     void ConvertSelectedName();
     void CalculateBuffer();
     void SetDropDownWidth();
+    void ArrowNavigation();
     float SizeDifference;
+    int PointerStart = 0;
+    int PointerEnd = 5;
 public:
     DropDown(float x, float y, std::wstring text, int* items,std::list<std::wstring>names);
     void Update();
