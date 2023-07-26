@@ -37,11 +37,11 @@ void Tab::Update()
 	bool selected = Index == *Selected;
 	if (!selected && !Tab::Blocked)
 	{
-		if (IsMouseInRectangle(Tab::ParentPos.x + Tab::Pos.x, (Tab::ParentPos.y + Tab::ParentSize.y) - Tab::Pos.y, Tab::Size.x, Tab::Size.y) && IsKeyClicked(VK_LBUTTON) && !selected)
+		if (IsMouseInRectangle(Tab::ParentPos.x + Tab::Pos.x, (Tab::ParentPos.y + Tab::ParentSize.y) - Tab::Pos.y, Tab::Size.x, Tab::Size.y) && IsKeyClicked(VK_LBUTTON) && !selected && Tab::LastClick < (clock() * 0.00001f))
 		{
 			*Selected = Index;
 			// ideally you just want to make a timer and use that but since this is just poc we do this
-			Sleep(50); // allows us to smooth into tabs as we don't want inputs to go straight through tabs
+			Tab::LastClick = (clock() * 0.00001f) + 0.002f;
 		}
 	}
 
