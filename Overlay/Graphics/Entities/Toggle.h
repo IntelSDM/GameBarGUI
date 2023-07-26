@@ -3,7 +3,6 @@
 class Toggle : public Entity
 {
 protected:
-    float LastClickTime = 0;
 
     bool* Data;
     bool Tabbed = false;

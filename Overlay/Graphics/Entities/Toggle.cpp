@@ -34,15 +34,15 @@ void Toggle::Update()
 		{
 
 			*Toggle::Data = !(*Toggle::Data);
-			Toggle::LastClickTime = (clock() * 0.00001f) + 0.002f;
+			Toggle::LastClick = (clock() * 0.00001f) + 0.002f;
 		}
 		// text click check
 		Vector2 textdimensions = { Toggle::TextWidth + 4,Toggle::TextHeight };
-		if (IsMouseInRectangle(Toggle::ParentPos.x + Toggle::Pos.x + (Toggle::Size.x), Toggle::ParentPos.y + Toggle::Pos.y - 1, Toggle::TextWidth, Toggle::TextHeight) && IsKeyClicked(VK_LBUTTON) && Toggle::LastClickTime < (clock() * 0.00001f))
+		if (IsMouseInRectangle(Toggle::ParentPos.x + Toggle::Pos.x + (Toggle::Size.x), Toggle::ParentPos.y + Toggle::Pos.y - 1, Toggle::TextWidth, Toggle::TextHeight) && IsKeyClicked(VK_LBUTTON) && Toggle::LastClick < (clock() * 0.00001f))
 		{
 
 			*Toggle::Data = !(*Toggle::Data);
-			Toggle::LastClickTime = (clock() * 0.00001f) + 0.002f;
+			Toggle::LastClick = (clock() * 0.00001f) + 0.002f;
 		}
 	}
 }
