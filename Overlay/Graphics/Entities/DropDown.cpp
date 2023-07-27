@@ -94,6 +94,7 @@ void DropDown::Update()
 	DropDown::ArrowNavigation();
 	DropDown::ParentPos = DropDown::Parent->GetParent()->GetPos();
 	DropDown::CalculateBuffer();
+	DropDown::UpdateSlider();
 	if (!DropDown::Blocked)
 	{
 		if (IsMouseInRectangle(DropDown::Pos + ParentPos, DropDown::Size) && IsKeyClicked(VK_LBUTTON) && DropDown::LastClick < (clock() * 0.00001f))
@@ -118,10 +119,10 @@ void DropDown::Update()
 	}
 	if ( IsKeyClicked(VK_LBUTTON) && DropDown::Active && !(IsMouseInRectangle(DropDown::Pos + ParentPos, DropDown::Size) || IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +5, DropDown::DropWidth, DropDown::Names.size() * DropDown::Size.y)))
 	{
-		DropDown::Active = false;
+	/*	DropDown::Active = false;
 		DropDown::SetBlockedSiblings(false);
 		DropDown::CalculateBuffer();
-		DropDown::ConvertSelectedName();
+		DropDown::ConvertSelectedName();*/
 	}
 	if ((IsKeyClicked(VK_RETURN) || IsKeyClicked(VK_ESCAPE)) && DropDown::Active)
 	{
@@ -149,13 +150,31 @@ void DropDown::Update()
 			}
 			float itemposy = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + ((i - DropDown::PointerStart) * DropDown::Size.y);
 			
-			if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), itemposy, DropDown::DropWidth, DropDown::Size.y) && IsKeyClicked(VK_LBUTTON))
+			if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), itemposy, DropDown::DropWidth + (DropDown::SizeDifference / 2), DropDown::Size.y) && IsKeyClicked(VK_LBUTTON))
 			{
 				*DropDown::Index = i;
 				DropDown::ConvertSelectedName();
 			}
 			i++;
 		}
+	}
+}
+void DropDown::UpdateSlider()
+{
+	if (!IsKeyDown(VK_LBUTTON))
+		DropDown::SliderHeld = false;
+	if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4, 6, (DropDown::PointerEnd - DropDown::PointerStart) * DropDown::Size.y) && IsKeyClicked(VK_LBUTTON))
+		DropDown::SliderHeld = true;
+	if (DropDown::SliderHeld)
+	{
+		const float relativeMouseY = (float)MousePos.y - (float)(Pos.y + ParentPos.y) - 5; // Subtract the extra offset (5) added in your Draw function
+		const float maxSliderHeight = (DropDown::Names.size() - DropDown::PointerStart) * DropDown::Size.y;
+
+		// Calculate the new endpointer based on the relative mouse position
+		DropDown::PointerEnd = static_cast<int>(std::clamp<float>(DropDown::PointerStart + (relativeMouseY / maxSliderHeight) * (DropDown::Names.size() - DropDown::PointerStart), static_cast<float>(DropDown::PointerStart), static_cast<float>(DropDown::Names.size() - 1)));
+
+		const int maxVisibleItems = static_cast<int>(DropDown::Size.y > 0 ? std::max(1.0f, DropDown::Size.y / static_cast<float>(DropDown::Size.y)) : 1.0f);
+		DropDown::PointerStart = std::clamp<int>(DropDown::PointerEnd - maxVisibleItems + 1, 0, std::max(0, static_cast<int>(DropDown::Names.size()) - maxVisibleItems));
 	}
 }
 
@@ -212,6 +231,11 @@ void DropDown::Draw()
 				DrawText(DropDown::ParentPos.x + DropDown::Pos.x + 5 - (DropDown::SizeDifference / 2), itemposy + (DropDown::Size.y / 8), name, "Verdana", 11, Colour(240, 240, 240, 255), None);
 			i++;
 		}
+		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4, 6, (DropDown::PointerEnd + 1 - DropDown::PointerStart) * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
+		float slidery = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + ((DropDown::PointerStart - 0) * DropDown::Size.y);
+		float sliderheight = (DropDown::PointerEnd - DropDown::PointerStart + 1) * (((DropDown::PointerEnd + 1 - DropDown::PointerStart) * DropDown::Size.y) / DropDown::Names.size() - (DropDown::PointerStart));
 
+		// Draw the sliding rectangle
+		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, slidery, 6, sliderheight, Colour(255, 0, 0, 255));
 	}
 }

@@ -10,13 +10,18 @@ protected:
     std::wstring SelectedName;
     float TextWidth = 0;
     float CutOffBuffer = 0;
+    float SizeDifference;
+    int PointerStart = 0;
+    int PointerEnd = 5;
+
     void ConvertSelectedName();
     void CalculateBuffer();
     void SetDropDownWidth();
     void ArrowNavigation();
-    float SizeDifference;
-    int PointerStart = 0;
-    int PointerEnd = 5;
+    void UpdateSlider();
+
+    bool SliderHeld = false;
+
 public:
     DropDown(float x, float y, std::wstring text, int* items,std::list<std::wstring>names);
     void Update();

@@ -30,7 +30,7 @@ void Toggle::Update()
 	if (!Toggle::Blocked)
 	{
 		// square click check
-		if (IsMouseInRectangle(Toggle::Pos + Toggle::ParentPos, Toggle::Size) && IsKeyClicked(VK_LBUTTON) && Toggle::LastClickTime < (clock() * 0.00001f))
+		if (IsMouseInRectangle(Toggle::Pos + Toggle::ParentPos, Toggle::Size) && IsKeyClicked(VK_LBUTTON) && Toggle::LastClick < (clock() * 0.00001f))
 		{
 
 			*Toggle::Data = !(*Toggle::Data);
