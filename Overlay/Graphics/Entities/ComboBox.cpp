@@ -1,0 +1,248 @@
+#include "pch.h"
+#include "Input.h"
+#include "Drawing.h"
+#include "ComboBox.h"
+#include "Font.h"
+ComboBox::ComboBox(float x, float y, std::wstring text, std::list<bool*>items, std::list<std::wstring>names)
+{
+	ComboBox::Pos = { x,y };
+	ComboBox::Name = text;
+	ComboBox::Items = items;
+	ComboBox::Names = names;
+	ComboBox::Size = { 120,20 };
+	ComboBox::CalculateBuffer();
+	ComboBox::ConvertSelectedName();
+}
+void ComboBox::CalculateBuffer()
+{
+	if (!ComboBox::Active)
+		ComboBox::CutOffBuffer = 15;
+	else
+		ComboBox::CutOffBuffer = 0;
+}
+void ComboBox::SetComboBoxWidth()
+{
+	float width = 0;
+	for (std::wstring str : ComboBox::Names)
+	{
+		float wdth = GetTextWidth(str, 11, "Verdana");
+		if (wdth > width)
+			width = wdth;
+	}
+	ComboBox::DropWidth = width;
+}
+void ComboBox::ConvertSelectedName()
+{
+
+	
+	std::wstring combinedstr = L"";
+	for (int i = 0; i < ComboBox::Names.size(); i++)
+	{
+		auto it = ComboBox::Names.begin();
+		std::advance(it, i);
+		std::advance(std::begin(ComboBox::Items), i);
+		if (**std::begin(Items))
+			combinedstr += *it;
+	}
+	float originalwidth = GetTextWidth(combinedstr, 11, "Verdana");
+
+	if (originalwidth < ComboBox::Size.x - ComboBox::CutOffBuffer)
+	{
+		ComboBox::SelectedName = combinedstr;
+		TextWidth = originalwidth;
+		return;
+	}
+	else
+	{
+		std::wstring str = combinedstr;
+		for (int i = str.length(); i > 0; i--)
+		{
+			str.erase(std::prev((str).end()));
+			float width = GetTextWidth(str + L"..", 11, "Verdana");
+			if (width < ComboBox::Size.x - ComboBox::CutOffBuffer)
+			{
+				ComboBox::SelectedName = str + L"..";
+				TextWidth = width;
+				return;
+			}
+		}
+		ComboBox::SelectedName = str + L"..";
+		TextWidth = GetTextWidth(str + L"..", 11, "Verdana");
+	}
+
+}
+void ComboBox::ArrowNavigation()
+{
+	if (!ComboBox::Active)
+		return;
+	if (IsKeyClicked(VK_DOWN) && ComboBox::LastClick < (clock() * 0.00001f))
+	{
+		if (ComboBox::Names.size() - 1 > ComboBox::PointerEnd)
+		{
+			ComboBox::PointerEnd++;
+			ComboBox::PointerStart++;
+			ComboBox::LastClick = (clock() * 0.00001f) + 0.002f;
+		}
+	}
+	if (IsKeyClicked(VK_UP) && ComboBox::LastClick < (clock() * 0.00001f))
+	{
+		if (ComboBox::PointerStart > 0)
+		{
+			ComboBox::PointerEnd--;
+			ComboBox::PointerStart--;
+			ComboBox::LastClick = (clock() * 0.00001f) + 0.002f;
+		}
+	}
+}
+void ComboBox::Update()
+{
+	if (!ComboBox::Parent)
+		ComboBox::SetVisible(false);
+	if (!ComboBox::IsVisible())
+		return;
+	ComboBox::ArrowNavigation();
+	ComboBox::ParentPos = ComboBox::Parent->GetParent()->GetPos();
+	ComboBox::CalculateBuffer();
+	ComboBox::UpdateSlider();
+	if (!ComboBox::Blocked)
+	{
+		if (IsMouseInRectangle(ComboBox::Pos + ParentPos, ComboBox::Size) && IsKeyClicked(VK_LBUTTON) && ComboBox::LastClick < (clock() * 0.00001f))
+		{
+			if (!ComboBox::Active)
+			{
+				ComboBox::Active = true;
+				ComboBox::SetBlockedSiblings(true);
+				ComboBox::LastClick = (clock() * 0.00001f) + 0.002f;
+				ComboBox::CalculateBuffer();
+				ComboBox::ConvertSelectedName();
+			}
+			else
+			{
+				ComboBox::Active = false;
+				ComboBox::SetBlockedSiblings(false);
+				ComboBox::CalculateBuffer();
+				ComboBox::ConvertSelectedName();
+				ComboBox::LastClick = (clock() * 0.00001f) + 0.002f;
+			}
+		}
+	}
+	if (IsKeyClicked(VK_LBUTTON) && ComboBox::Active && !(IsMouseInRectangle(ComboBox::Pos + ParentPos, ComboBox::Size) || IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2), ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5, ComboBox::DropWidth, ComboBox::Names.size() * ComboBox::Size.y) || IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y)))
+	{
+		ComboBox::Active = false;
+		ComboBox::SetBlockedSiblings(false);
+		ComboBox::CalculateBuffer();
+		ComboBox::ConvertSelectedName();
+	}
+	if ((IsKeyClicked(VK_RETURN) || IsKeyClicked(VK_ESCAPE)) && ComboBox::Active)
+	{
+		ComboBox::Active = false;
+		ComboBox::SetBlockedSiblings(false);
+		ComboBox::CalculateBuffer();
+		ComboBox::ConvertSelectedName();
+	}
+	if (ComboBox::Active)
+	{
+		ComboBox::SizeDifference = ComboBox::DropWidth - ComboBox::TextWidth;
+		ComboBox::SetComboBoxWidth();
+		int i = 0;
+		for (const std::wstring& name : ComboBox::Names)
+		{
+			if (i < ComboBox::PointerStart)
+			{
+				i++;
+				continue;
+			}
+			if (i > ComboBox::PointerEnd)
+			{
+				i++;
+				continue;
+			}
+			float itemposy = ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5 + ((i - ComboBox::PointerStart) * ComboBox::Size.y);
+
+			if (IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x, itemposy, ComboBox::DropWidth + (ComboBox::SizeDifference / 2), ComboBox::Size.y) && IsKeyClicked(VK_LBUTTON))
+			{
+				//ComboBox::Index = i;
+				std::advance(std::begin(ComboBox::Items), i);
+				**std::begin(Items) = true;
+			}
+			i++;
+		}
+	}
+}
+void ComboBox::UpdateSlider()
+{
+	if (!IsKeyDown(VK_LBUTTON))
+		ComboBox::SliderHeld = false;
+	if (IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) && IsKeyClicked(VK_LBUTTON))
+		ComboBox::SliderHeld = true;
+	if (ComboBox::SliderHeld)
+	{
+		float ratio = (MousePos.y - (float)(ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4)) / (float)((ComboBox::MaxVisibleItems - 1) * ComboBox::Size.y);
+		ratio = std::clamp(ratio, 0.0f, 1.0f);
+		ComboBox::PointerEnd = (int)(ComboBox::MaxVisibleItems + (ComboBox::Names.size() - ComboBox::MaxVisibleItems) * ratio) - 1;
+
+	}
+	ComboBox::PointerStart = ComboBox::PointerEnd - ComboBox::MaxVisibleItems + 1;
+}
+
+void ComboBox::Draw()
+{
+	if (!ComboBox::Parent)
+		ComboBox::SetVisible(false);
+	if (!ComboBox::IsVisible())
+		return;
+	OutlineRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - 1, ComboBox::ParentPos.y + ComboBox::Pos.y - 1, ComboBox::Size.x + 1, ComboBox::Size.y + 1, 1, Colour(130, 130, 130, 255));
+	FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x, ComboBox::ParentPos.y + ComboBox::Pos.y, ComboBox::Size.x, ComboBox::Size.y, Colour(80, 80, 80, 255));
+	float trianglex1 = ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x - 12;
+	float triangley1 = ComboBox::ParentPos.y + ComboBox::Pos.y + 3;
+	float trianglex2 = ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x - 3;
+	float triangley2 = ComboBox::Pos.y + ComboBox::ParentPos.y + 3;
+	float trianglex3 = ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x - 7;
+	float triangley3 = ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y - 3;
+	if (!ComboBox::Active)
+		FilledTriangle(trianglex1, triangley1, trianglex2, triangley2, trianglex3, triangley3, Colour(255, 0, 0, 255));
+	DrawText(ComboBox::ParentPos.x + ComboBox::Pos.x + 5, ComboBox::ParentPos.y + ComboBox::Pos.y + (ComboBox::Size.y / 8), ComboBox::SelectedName, "Verdana", 11, Colour(240, 240, 240, 255), None);
+
+	if (ComboBox::DropWidth < ComboBox::Size.x)
+	{
+		ComboBox::DropWidth = ComboBox::Size.x;
+		ComboBox::SizeDifference = 0;
+	}
+	if (ComboBox::Active)
+	{
+		OutlineRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2) - 1, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, ComboBox::DropWidth + 1, (ComboBox::PointerEnd + 1 - ComboBox::PointerStart) * ComboBox::Size.y + 1, 1, Colour(130, 130, 130, 255));
+		FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2), ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5, ComboBox::DropWidth, (ComboBox::PointerEnd + 1 - ComboBox::PointerStart) * ComboBox::Size.y, Colour(80, 80, 80, 255));
+
+		int i = 0;
+		for (const std::wstring& name : ComboBox::Names)
+		{
+			if (i < ComboBox::PointerStart)
+			{
+				i++;
+				continue;
+			}
+			if (i > ComboBox::PointerEnd)
+			{
+				i++;
+				continue;
+			}
+			float itemposy = ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5 + ((i - ComboBox::PointerStart) * ComboBox::Size.y);
+			if (IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2), itemposy, ComboBox::DropWidth, ComboBox::Size.y))
+			{
+				FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2), itemposy, ComboBox::DropWidth, ComboBox::Size.y, Colour(150, 150, 150, 120));
+
+			}
+			std::advance(std::begin(ComboBox::Items), i);
+			if (**std::begin(Items))
+				DrawText(ComboBox::ParentPos.x + ComboBox::Pos.x + 5 - (ComboBox::SizeDifference / 2), itemposy + (ComboBox::Size.y / 8), name, "Verdana", 11, Colour(255, 0, 0, 255), None);
+			else
+				DrawText(ComboBox::ParentPos.x + ComboBox::Pos.x + 5 - (ComboBox::SizeDifference / 2), itemposy + (ComboBox::Size.y / 8), name, "Verdana", 11, Colour(240, 240, 240, 255), None);
+			i++;
+		}
+		OutlineRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd + 1 - ComboBox::PointerStart) * ComboBox::Size.y + 1, 1, Colour(130, 130, 130, 255));
+		float slidery = ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5 + ((ComboBox::PointerStart - 0) * ComboBox::Size.y);
+		float sliderheight = (ComboBox::PointerEnd - ComboBox::PointerStart + 1) * (((ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) / ComboBox::Names.size() - (ComboBox::PointerStart));
+
+		FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, slidery, 6, sliderheight, Colour(255, 0, 0, 255));
+	}
+}

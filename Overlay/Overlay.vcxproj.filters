@@ -30,6 +30,7 @@
     <ClCompile Include="Graphics\Entities\ColourPicker.cpp" />
     <ClCompile Include="Graphics\Entities\KeyBind.cpp" />
     <ClCompile Include="Graphics\Entities\DropDown.cpp" />
+    <ClCompile Include="Graphics\Entities\ComboBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -54,6 +55,7 @@
     <ClInclude Include="Graphics\Entities\ColourPicker.h" />
     <ClInclude Include="Graphics\Entities\KeyBind.h" />
     <ClInclude Include="Graphics\Entities\DropDown.h" />
+    <ClInclude Include="Graphics\Entities\ComboBox.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
