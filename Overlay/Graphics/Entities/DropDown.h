@@ -11,8 +11,11 @@ protected:
     float TextWidth = 0;
     float CutOffBuffer = 0;
     float SizeDifference;
+
+    int MaxVisibleItems = 5;
+
     int PointerStart = 0;
-    int PointerEnd = 5;
+    int PointerEnd = MaxVisibleItems;
 
     void ConvertSelectedName();
     void CalculateBuffer();
@@ -21,6 +24,7 @@ protected:
     void UpdateSlider();
 
     bool SliderHeld = false;
+
 
 public:
     DropDown(float x, float y, std::wstring text, int* items,std::list<std::wstring>names);

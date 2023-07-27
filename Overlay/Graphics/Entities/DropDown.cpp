@@ -171,15 +171,12 @@ void DropDown::UpdateSlider()
 		DropDown::SliderHeld = true;
 	if (DropDown::SliderHeld)
 	{
-		const float relativeMouseY = (float)MousePos.y - (float)(Pos.y + ParentPos.y) - 5; // Subtract the extra offset (5) added in your Draw function
-		const float maxSliderHeight = (DropDown::Names.size() - DropDown::PointerStart) * DropDown::Size.y;
-
-		// Calculate the new endpointer based on the relative mouse position
-		DropDown::PointerEnd = static_cast<int>(std::clamp<float>(DropDown::PointerStart + (relativeMouseY / maxSliderHeight) * (DropDown::Names.size() - DropDown::PointerStart), static_cast<float>(DropDown::PointerStart), static_cast<float>(DropDown::Names.size() - 1)));
-
-		const int maxVisibleItems = static_cast<int>(DropDown::Size.y > 0 ? std::max(1.0f, DropDown::Size.y / static_cast<float>(DropDown::Size.y)) : 1.0f);
-		DropDown::PointerStart = std::clamp<int>(DropDown::PointerEnd - maxVisibleItems + 1, 0, std::max(0, static_cast<int>(DropDown::Names.size()) - maxVisibleItems));
+		float ratio = (MousePos.y - (float)(DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4)) / (float)((DropDown::MaxVisibleItems - 1) * DropDown::Size.y);
+		ratio = std::clamp(ratio, 0.0f, 1.0f);
+		DropDown::PointerEnd = (int)(DropDown::MaxVisibleItems + (DropDown::Names.size() - DropDown::MaxVisibleItems) * ratio) - 1;
+	
 	}
+	DropDown::PointerStart = DropDown::PointerEnd - DropDown::MaxVisibleItems+1;
 }
 
 void DropDown::Draw()
@@ -237,9 +234,8 @@ void DropDown::Draw()
 		}
 		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4, 6, (DropDown::PointerEnd + 1 - DropDown::PointerStart) * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
 		float slidery = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + ((DropDown::PointerStart - 0) * DropDown::Size.y);
-		float sliderheight = (DropDown::PointerEnd - DropDown::PointerStart + 1) * (((DropDown::PointerEnd + 1 - DropDown::PointerStart) * DropDown::Size.y) / DropDown::Names.size() - (DropDown::PointerStart));
+		float sliderheight = (DropDown::PointerEnd - DropDown::PointerStart + 1) * (((DropDown::PointerEnd  - DropDown::PointerStart) * DropDown::Size.y) / DropDown::Names.size() - (DropDown::PointerStart));
 
-		// Draw the sliding rectangle
 		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, slidery, 6, sliderheight, Colour(255, 0, 0, 255));
 	}
 }
