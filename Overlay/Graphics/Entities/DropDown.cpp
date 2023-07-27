@@ -9,7 +9,7 @@ DropDown::DropDown(float x, float y, std::wstring text, int* index, std::list<st
 	DropDown::Name = text;
 	DropDown::Index = index;
 	DropDown::Names = names;
-	DropDown::Size = { 80,20 };
+	DropDown::Size = { 120,20 };
 	DropDown::CalculateBuffer();
 	DropDown::ConvertSelectedName();
 }
@@ -150,7 +150,7 @@ void DropDown::Update()
 			}
 			float itemposy = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + ((i - DropDown::PointerStart) * DropDown::Size.y);
 			
-			if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), itemposy, DropDown::DropWidth + (DropDown::SizeDifference / 2), DropDown::Size.y) && IsKeyClicked(VK_LBUTTON))
+			if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x , itemposy, DropDown::DropWidth + (DropDown::SizeDifference/2), DropDown::Size.y) && IsKeyClicked(VK_LBUTTON))
 			{
 				*DropDown::Index = i;
 				DropDown::Active = false;
