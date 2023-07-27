@@ -12,6 +12,13 @@ ComboBox::ComboBox(float x, float y, std::wstring text, std::list<bool*>items, s
 	ComboBox::Size = { 120,20 };
 	ComboBox::CalculateBuffer();
 	ComboBox::ConvertSelectedName();
+
+	if (ComboBox::MaxVisibleItems > items.size())
+	{
+		ComboBox::MaxVisibleItems = items.size();
+	}
+	ComboBox::PointerStart = 0;
+	ComboBox::PointerEnd = ComboBox::MaxVisibleItems;
 }
 void ComboBox::CalculateBuffer()
 {
@@ -41,9 +48,10 @@ void ComboBox::ConvertSelectedName()
 		auto it = ComboBox::Names.begin();
 		std::advance(it, i);
 		std::advance(std::begin(ComboBox::Items), i);
-		if (**std::begin(Items))
-			combinedstr += *it;
+		if (**std::begin(Items) == true)
+			combinedstr += *it + L",";
 	}
+	combinedstr.erase(std::prev((combinedstr).end())); // last character will be "," and we dont need that
 	float originalwidth = GetTextWidth(combinedstr, 11, "Verdana");
 
 	if (originalwidth < ComboBox::Size.x - ComboBox::CutOffBuffer)
@@ -182,7 +190,7 @@ void ComboBox::UpdateSlider()
 		ComboBox::PointerEnd = (int)(ComboBox::MaxVisibleItems + (ComboBox::Names.size() - ComboBox::MaxVisibleItems) * ratio) - 1;
 
 	}
-	ComboBox::PointerStart = ComboBox::PointerEnd - ComboBox::MaxVisibleItems + 1;
+	ComboBox::PointerStart = ComboBox::PointerEnd - ComboBox::MaxVisibleItems;
 }
 
 void ComboBox::Draw()
@@ -210,8 +218,8 @@ void ComboBox::Draw()
 	}
 	if (ComboBox::Active)
 	{
-		OutlineRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2) - 1, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, ComboBox::DropWidth + 1, (ComboBox::PointerEnd + 1 - ComboBox::PointerStart) * ComboBox::Size.y + 1, 1, Colour(130, 130, 130, 255));
-		FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2), ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5, ComboBox::DropWidth, (ComboBox::PointerEnd + 1 - ComboBox::PointerStart) * ComboBox::Size.y, Colour(80, 80, 80, 255));
+		OutlineRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2) - 1, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, ComboBox::DropWidth + 1, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y + 1, 1, Colour(130, 130, 130, 255));
+		FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2), ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5, ComboBox::DropWidth, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y, Colour(80, 80, 80, 255));
 
 		int i = 0;
 		for (const std::wstring& name : ComboBox::Names)
@@ -233,15 +241,15 @@ void ComboBox::Draw()
 
 			}
 			std::advance(std::begin(ComboBox::Items), i);
-			if (**std::begin(Items))
+			if (**std::begin(Items) == true)
 				DrawText(ComboBox::ParentPos.x + ComboBox::Pos.x + 5 - (ComboBox::SizeDifference / 2), itemposy + (ComboBox::Size.y / 8), name, "Verdana", 11, Colour(255, 0, 0, 255), None);
 			else
 				DrawText(ComboBox::ParentPos.x + ComboBox::Pos.x + 5 - (ComboBox::SizeDifference / 2), itemposy + (ComboBox::Size.y / 8), name, "Verdana", 11, Colour(240, 240, 240, 255), None);
 			i++;
 		}
-		OutlineRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd + 1 - ComboBox::PointerStart) * ComboBox::Size.y + 1, 1, Colour(130, 130, 130, 255));
+		OutlineRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y + 1, 1, Colour(130, 130, 130, 255));
 		float slidery = ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5 + ((ComboBox::PointerStart - 0) * ComboBox::Size.y);
-		float sliderheight = (ComboBox::PointerEnd - ComboBox::PointerStart + 1) * (((ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) / ComboBox::Names.size() - (ComboBox::PointerStart));
+		float sliderheight = (ComboBox::PointerEnd - ComboBox::PointerStart) * (((ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) / ComboBox::Names.size() - (ComboBox::PointerStart));
 
 		FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, slidery, 6, sliderheight, Colour(255, 0, 0, 255));
 	}

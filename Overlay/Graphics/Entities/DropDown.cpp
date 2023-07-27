@@ -12,6 +12,12 @@ DropDown::DropDown(float x, float y, std::wstring text, int* index, std::list<st
 	DropDown::Size = { 120,20 };
 	DropDown::CalculateBuffer();
 	DropDown::ConvertSelectedName();
+	if (DropDown::MaxVisibleItems > DropDown::Names.size())
+	{
+		DropDown::MaxVisibleItems = DropDown::Names.size();
+	}
+	DropDown::PointerStart = 0;
+	DropDown::PointerEnd = DropDown::MaxVisibleItems;
 }
 void DropDown::CalculateBuffer()
 {
