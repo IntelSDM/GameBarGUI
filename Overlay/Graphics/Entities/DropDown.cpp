@@ -153,7 +153,11 @@ void DropDown::Update()
 			if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), itemposy, DropDown::DropWidth + (DropDown::SizeDifference / 2), DropDown::Size.y) && IsKeyClicked(VK_LBUTTON))
 			{
 				*DropDown::Index = i;
+				DropDown::Active = false;
+				DropDown::SetBlockedSiblings(false);
+				DropDown::CalculateBuffer();
 				DropDown::ConvertSelectedName();
+
 			}
 			i++;
 		}
