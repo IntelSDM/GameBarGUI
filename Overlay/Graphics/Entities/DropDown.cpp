@@ -117,12 +117,12 @@ void DropDown::Update()
 			}
 		}
 	}
-	if ( IsKeyClicked(VK_LBUTTON) && DropDown::Active && !(IsMouseInRectangle(DropDown::Pos + ParentPos, DropDown::Size) || IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +5, DropDown::DropWidth, DropDown::Names.size() * DropDown::Size.y)))
+	if ( IsKeyClicked(VK_LBUTTON) && DropDown::Active && !(IsMouseInRectangle(DropDown::Pos + ParentPos, DropDown::Size) || IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +5, DropDown::DropWidth, DropDown::Names.size() * DropDown::Size.y) || IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4, 6, (DropDown::PointerEnd - DropDown::PointerStart) * DropDown::Size.y)))
 	{
-	/*	DropDown::Active = false;
+		DropDown::Active = false;
 		DropDown::SetBlockedSiblings(false);
 		DropDown::CalculateBuffer();
-		DropDown::ConvertSelectedName();*/
+		DropDown::ConvertSelectedName();
 	}
 	if ((IsKeyClicked(VK_RETURN) || IsKeyClicked(VK_ESCAPE)) && DropDown::Active)
 	{
