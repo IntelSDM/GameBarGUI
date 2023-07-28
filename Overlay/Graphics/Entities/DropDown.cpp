@@ -149,7 +149,7 @@ void DropDown::Update()
 				i++;
 				continue;
 			}
-			if (i > DropDown::PointerEnd)
+			if (i > DropDown::PointerEnd-1)
 			{
 				i++;
 				continue;
@@ -179,10 +179,10 @@ void DropDown::UpdateSlider()
 	{
 		float ratio = (MousePos.y - (float)(DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4)) / (float)((DropDown::MaxVisibleItems - 1) * DropDown::Size.y);
 		ratio = std::clamp(ratio, 0.0f, 1.0f);
-		DropDown::PointerEnd = (int)(DropDown::MaxVisibleItems + (DropDown::Names.size() - DropDown::MaxVisibleItems) * ratio) - 1;
+		DropDown::PointerEnd = (int)(DropDown::MaxVisibleItems + (DropDown::Names.size() - DropDown::MaxVisibleItems) * ratio);
 	
 	}
-	DropDown::PointerStart = DropDown::PointerEnd - DropDown::MaxVisibleItems+1;
+	DropDown::PointerStart = DropDown::PointerEnd - DropDown::MaxVisibleItems;
 }
 
 void DropDown::Draw()
@@ -210,8 +210,8 @@ void DropDown::Draw()
 	}
 	if (DropDown::Active)
 	{
-		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2) - 1, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +4, DropDown::DropWidth + 1, (DropDown::PointerEnd+1 - DropDown::PointerStart) * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
-		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +5, DropDown::DropWidth, (DropDown::PointerEnd+1 - DropDown::PointerStart) * DropDown::Size.y,Colour(80,80,80,255));
+		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2) - 1, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +4, DropDown::DropWidth + 1, (DropDown::PointerEnd - DropDown::PointerStart) * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
+		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x - (DropDown::SizeDifference / 2), DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y +5, DropDown::DropWidth, (DropDown::PointerEnd - DropDown::PointerStart) * DropDown::Size.y,Colour(80,80,80,255));
 
 		int i = 0;
 		for (const std::wstring& name : DropDown::Names)
@@ -221,7 +221,7 @@ void DropDown::Draw()
 				i++;
 				continue;
 			}
-			if (i > DropDown::PointerEnd)
+			if (i > DropDown::PointerEnd-1)
 			{
 				i++;
 				continue;
@@ -238,10 +238,13 @@ void DropDown::Draw()
 				DrawText(DropDown::ParentPos.x + DropDown::Pos.x + 5 - (DropDown::SizeDifference / 2), itemposy + (DropDown::Size.y / 8), name, "Verdana", 11, Colour(240, 240, 240, 255), None);
 			i++;
 		}
-		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4, 6, (DropDown::PointerEnd + 1 - DropDown::PointerStart) * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
-		float slidery = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + ((DropDown::PointerStart - 0) * DropDown::Size.y);
-		float sliderheight = (DropDown::PointerEnd - DropDown::PointerStart + 1) * (((DropDown::PointerEnd  - DropDown::PointerStart) * DropDown::Size.y) / DropDown::Names.size() - (DropDown::PointerStart));
-
+		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4, 6, (DropDown::PointerEnd - DropDown::PointerStart) * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
+		float slidery = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + ((DropDown::PointerStart)*DropDown::Size.y);
+		float sliderheight = ((DropDown::PointerEnd - 1) - DropDown::PointerStart) * ((((DropDown::PointerEnd - 1) - DropDown::PointerStart) * DropDown::Size.y) / DropDown::Names.size());
+		if(slidery + sliderheight > (DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x) + (DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4))
+		{
+			sliderheight = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4;
+		}
 		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, slidery, 6, sliderheight, Colour(255, 0, 0, 255));
 	}
 }
