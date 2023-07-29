@@ -100,7 +100,7 @@ void DropDown::Update()
 	DropDown::ArrowNavigation();
 	DropDown::ParentPos = DropDown::Parent->GetParent()->GetPos();
 	DropDown::CalculateBuffer();
-	DropDown::UpdateSlider();
+	DropDown::UpdateScrollBar();
 	if (!DropDown::Blocked)
 	{
 		if (IsMouseInRectangle(DropDown::Pos + ParentPos, DropDown::Size) && IsKeyClicked(VK_LBUTTON) && DropDown::LastClick < (clock() * 0.00001f))
@@ -169,13 +169,13 @@ void DropDown::Update()
 		}
 	}
 }
-void DropDown::UpdateSlider()
+void DropDown::UpdateScrollBar()
 {
 	if (!IsKeyDown(VK_LBUTTON))
-		DropDown::SliderHeld = false;
+		DropDown::ScrollBar = false;
 	if (IsMouseInRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4, 6, (DropDown::PointerEnd - DropDown::PointerStart) * DropDown::Size.y) && IsKeyClicked(VK_LBUTTON))
-		DropDown::SliderHeld = true;
-	if (DropDown::SliderHeld)
+		DropDown::ScrollBar = true;
+	if (DropDown::ScrollBar)
 	{
 		float ratio = (MousePos.y - (float)(DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4)) / (float)((DropDown::MaxVisibleItems - 1) * DropDown::Size.y);
 		ratio = std::clamp(ratio, 0.0f, 1.0f);
@@ -239,12 +239,13 @@ void DropDown::Draw()
 			i++;
 		}
 		OutlineRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4, 6, (DropDown::PointerEnd - DropDown::PointerStart) * DropDown::Size.y + 1, 1, Colour(130, 130, 130, 255));
-		float slidery = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + ((DropDown::PointerStart)*DropDown::Size.y);
-		float sliderheight = ((DropDown::PointerEnd - 1) - DropDown::PointerStart) * ((((DropDown::PointerEnd - 1) - DropDown::PointerStart) * DropDown::Size.y) / DropDown::Names.size());
-		if(slidery + sliderheight > (DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x) + (DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4))
-		{
-			sliderheight = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 4;
-		}
-		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, slidery, 6, sliderheight, Colour(255, 0, 0, 255));
+		int unselectedelements = Names.size() - MaxVisibleItems;
+		float unselectedclamp = std::clamp(unselectedelements, 1, (int)Names.size());
+		float scrollheight = ((DropDown::PointerEnd - DropDown::PointerStart) * DropDown::Size.y) / (unselectedclamp);
+		float scrolly = DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + (((PointerEnd - MaxVisibleItems) * Size.y));
+		float scrollyclamp = std::clamp(scrolly, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5, DropDown::ParentPos.y + DropDown::Pos.y + DropDown::Size.y + 5 + ((DropDown::PointerEnd - DropDown::PointerStart) * DropDown::Size.y) - scrollheight);
+
+
+		FilledRectangle(DropDown::ParentPos.x + DropDown::Pos.x + DropDown::Size.x, scrollyclamp, 6, scrollheight, Colour(255, 0, 0, 255));
 	}
 }

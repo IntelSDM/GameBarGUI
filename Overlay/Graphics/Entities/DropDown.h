@@ -21,9 +21,9 @@ protected:
     void CalculateBuffer();
     void SetDropDownWidth();
     void ArrowNavigation();
-    void UpdateSlider();
+    void UpdateScrollBar();
 
-    bool SliderHeld = false;
+    bool ScrollBar = false;
 
 
 public:

@@ -114,7 +114,7 @@ void ComboBox::Update()
 	ComboBox::ArrowNavigation();
 	ComboBox::ParentPos = ComboBox::Parent->GetParent()->GetPos();
 	ComboBox::CalculateBuffer();
-	ComboBox::UpdateSlider();
+	ComboBox::UpdateScrollBar();
 	if (!ComboBox::Blocked)
 	{
 		if (IsMouseInRectangle(ComboBox::Pos + ParentPos, ComboBox::Size) && IsKeyClicked(VK_LBUTTON) && ComboBox::LastClick < (clock() * 0.00001f))
@@ -182,13 +182,13 @@ void ComboBox::Update()
 		}
 	}
 }
-void ComboBox::UpdateSlider()
+void ComboBox::UpdateScrollBar()
 {
 	if (!IsKeyDown(VK_LBUTTON))
-		ComboBox::SliderHeld = false;
+		ComboBox::ScrollBarHeld = false;
 	if (IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) && IsKeyClicked(VK_LBUTTON))
-		ComboBox::SliderHeld = true;
-	if (ComboBox::SliderHeld)
+		ComboBox::ScrollBarHeld = true;
+	if (ComboBox::ScrollBarHeld)
 	{
 		float ratio = (MousePos.y - (float)(ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4)) / (float)((ComboBox::MaxVisibleItems - 1) * ComboBox::Size.y);
 		ratio = std::clamp(ratio, 0.0f, 1.0f);
@@ -256,9 +256,12 @@ void ComboBox::Draw()
 			i++;
 		}
 		OutlineRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y + 1, 1, Colour(130, 130, 130, 255));
-		float slidery = ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5 + ((ComboBox::PointerStart ) * ComboBox::Size.y);
-		float sliderheight = ((ComboBox::PointerEnd-1) - ComboBox::PointerStart) * ((((ComboBox::PointerEnd-1) - ComboBox::PointerStart) * ComboBox::Size.y) / ComboBox::Names.size());
-		float sliderclamped = std::clamp(sliderheight, 1.0f, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y);
-		FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, slidery, 6, sliderclamped, Colour(255, 0, 0, 255));
+		int unselectedelements = Names.size() - MaxVisibleItems;
+		float unselectedclamp = std::clamp(unselectedelements, 1, (int)Names.size());
+		float scrollheight = ((ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) / (unselectedclamp);
+		float scrolly = ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5 + (((PointerEnd - MaxVisibleItems) * Size.y));
+		float scrollyclamp = std::clamp(scrolly, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5 + ((ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) - scrollheight);
+
+		FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, scrollyclamp, 6, scrollheight, Colour(255, 0, 0, 255));
 	}
 }

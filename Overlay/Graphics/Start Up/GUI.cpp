@@ -61,7 +61,7 @@ void CreateGUI()
 			tab->Push(intslider);
 			auto keybind = std::make_shared<KeyBind>(150, 80, L"KeyBind", &Key);
 			tab->Push(keybind);
-			std::list<std::wstring> downvalues = {L"Value 12345", L"Value 2", L"Value 3", L"Value 4" , L"Value 5", L"Value 6", L"Value 7" , L"Value 8" , L"Value 9" };
+			std::list<std::wstring> downvalues = {L"Value 12345", L"Value 2", L"Value 3", L"Value 4" , L"Value 5", L"Value 6", L"Value 7" , L"Value 8" , L"Value 9" , L"Value 9" };
 			auto dropdown = std::make_shared<DropDown>(290, 80, L"DropDown", &Down,downvalues);
 			tab->Push(dropdown);
 			std::list<std::wstring> combovalues = { L"Value 12345", L"Value 2", L"Value 3", L"Value 4" , L"Value 5", L"Value 6", L"Value 7" , L"Value 8" };
