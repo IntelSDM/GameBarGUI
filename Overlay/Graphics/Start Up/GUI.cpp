@@ -15,8 +15,8 @@
 #include "ComboBox.h"
 #include "TabListBoxController.h"
 EntityVector MenuEntity;
-int SelectedTab;
-int TabCount;
+int SelectedTab = 1;
+int TabCount=0;
 bool ToggleTest;
 bool ToggleTest1 = true;
 std::wstring TextBoxText = L"txtboxdsgdsdshchgkhdsgsdgsdgWWWWAAAA";
@@ -69,14 +69,15 @@ void CreateGUI()
 			std::list<bool*> bools = { &Combo1 ,&Combo2 ,&Combo3 ,&Combo4 ,&Combo5,&Combo5 ,&Combo5 ,&Combo5 };
 			auto combo = std::make_shared<ComboBox>(290, 110, L"DropDown", bools, combovalues);
 			tab->Push(combo);
-			auto tablist = std::make_shared<TabListBoxController>(295, 150, 150,150);
-			tab->Push(tablist);
+		
 		}
 		tabcontroller->Push(tab);
 		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 25, 50, 20, &SelectedTab);
 		{
-			auto label = std::make_shared<Label>(L"Label", 10, 80);
-			tab1->Push(label);
+		//	auto label = std::make_shared<Label>(L"Label", 10, 80);
+		//	tab1->Push(label);
+			auto tablist = std::make_shared<TabListBoxController>(10, 40, 150, 150);
+			tab1->Push(tablist);
 		}
 		tabcontroller->Push(tab1);
 		auto tab2 = std::make_shared<Tab>(L"Tab3", 115, 25, 50, 20, &SelectedTab);

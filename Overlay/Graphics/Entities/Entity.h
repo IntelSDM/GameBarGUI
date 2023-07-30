@@ -61,7 +61,7 @@ public:
 
 	friend class Container;
 	friend class Tab;
-
+	friend class ListBoxTab;
 };
 class Container : public Entity
 {
