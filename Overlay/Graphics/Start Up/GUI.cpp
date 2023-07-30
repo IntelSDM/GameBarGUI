@@ -13,6 +13,7 @@
 #include "KeyBind.h"
 #include "DropDown.h"
 #include "ComboBox.h"
+#include "TabListBoxController.h"
 EntityVector MenuEntity;
 int SelectedTab;
 int TabCount;
@@ -68,6 +69,8 @@ void CreateGUI()
 			std::list<bool*> bools = { &Combo1 ,&Combo2 ,&Combo3 ,&Combo4 ,&Combo5,&Combo5 ,&Combo5 ,&Combo5 };
 			auto combo = std::make_shared<ComboBox>(290, 110, L"DropDown", bools, combovalues);
 			tab->Push(combo);
+			auto tablist = std::make_shared<TabListBoxController>(295, 150, 150,150);
+			tab->Push(tablist);
 		}
 		tabcontroller->Push(tab);
 		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 25, 50, 20, &SelectedTab);

@@ -40,7 +40,7 @@ public:
 	virtual Vector2 GetPos() { return Pos; }
 	virtual Vector2 GetSize() { return Size; }
 	virtual Vector2 GetScale() { return Scale; }
-
+	virtual Vector2 GetParentPos() { return ParentPos; }
 
 
 	child GetChildRelativeParent();
