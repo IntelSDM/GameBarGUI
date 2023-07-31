@@ -5,7 +5,10 @@ class TabListBoxController : public Container
 {
 protected:
 	std::list<std::shared_ptr<TabListBox>> Tabs;
+	std::list<std::wstring> Names;
+	std::list<std::wstring> CulledNames;
 	int* Selected;
+	void UpdateCulledNames();
 public:
 	TabListBoxController(float x, float y, float width, float height, int* selected);
 	void Update();

@@ -66,7 +66,7 @@ void CreateGUI()
 			std::list<std::wstring> downvalues = {L"Value 12345", L"Value 2", L"Value 3", L"Value 4" , L"Value 5", L"Value 6", L"Value 7" , L"Value 8" , L"Value 9" , L"Value 9" };
 			auto dropdown = std::make_shared<DropDown>(290, 80, L"DropDown", &Down,downvalues);
 			tab->Push(dropdown);
-			std::list<std::wstring> combovalues = { L"Value 12345", L"Value 2", L"Value 3", L"Value 4" , L"Value 5", L"Value 6", L"Value 7" , L"Value 8" };
+			std::list<std::wstring> combovalues = { L"Value 12345", L"Value 2sdgsdgsdgsdgsdgsdgsdg", L"Value 3", L"Value 4" , L"Value 5", L"Value 6", L"Value 7" , L"Value 8" };
 			std::list<bool*> bools = { &Combo1 ,&Combo2 ,&Combo3 ,&Combo4 ,&Combo5,&Combo5 ,&Combo5 ,&Combo5 };
 			auto combo = std::make_shared<ComboBox>(290, 110, L"DropDown", bools, combovalues);
 			tab->Push(combo);

@@ -41,7 +41,7 @@ public:
 	virtual Vector2 GetSize() { return Size; }
 	virtual Vector2 GetScale() { return Scale; }
 	virtual Vector2 GetParentPos() { return ParentPos; }
-
+	virtual std::wstring GetName() { return Name; }
 
 	child GetChildRelativeParent();
 	child GetParent();

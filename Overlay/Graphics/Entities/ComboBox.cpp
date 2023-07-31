@@ -137,7 +137,7 @@ void ComboBox::Update()
 			}
 		}
 	}
-	if (IsKeyClicked(VK_LBUTTON) && ComboBox::Active && !(IsMouseInRectangle(ComboBox::Pos + ParentPos, ComboBox::Size) || IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2), ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5, ComboBox::DropWidth, ComboBox::Names.size() * ComboBox::Size.y) || IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y)))
+	if (IsKeyClicked(VK_LBUTTON) && ComboBox::Active && !(IsMouseInRectangle(ComboBox::Pos + ParentPos, ComboBox::Size) || IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x - (ComboBox::SizeDifference / 2), ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5, ComboBox::DropWidth, ComboBox::Names.size() * ComboBox::Size.y) || IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x + (ComboBox::SizeDifference / 2), ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y)))
 	{
 		ComboBox::Active = false;
 		ComboBox::SetBlockedSiblings(false);
@@ -186,7 +186,7 @@ void ComboBox::UpdateScrollBar()
 {
 	if (!IsKeyDown(VK_LBUTTON))
 		ComboBox::ScrollBarHeld = false;
-	if (IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) && IsKeyClicked(VK_LBUTTON))
+	if (IsMouseInRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x +(ComboBox::SizeDifference / 2), ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) && IsKeyClicked(VK_LBUTTON))
 		ComboBox::ScrollBarHeld = true;
 	if (ComboBox::ScrollBarHeld)
 	{
@@ -255,13 +255,13 @@ void ComboBox::Draw()
 				DrawText(ComboBox::ParentPos.x + ComboBox::Pos.x + 5 - (ComboBox::SizeDifference / 2), itemposy + (ComboBox::Size.y / 8), name, "Verdana", 11, Colour(240, 240, 240, 255), None);
 			i++;
 		}
-		OutlineRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y + 1, 1, Colour(130, 130, 130, 255));
+		OutlineRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x + (ComboBox::SizeDifference /2), ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 4, 6, (ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y + 1, 1, Colour(130, 130, 130, 255));
 		int unselectedelements = Names.size() - MaxVisibleItems;
 		float unselectedclamp = std::clamp(unselectedelements, 1, (int)Names.size());
 		float scrollheight = ((ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) / (unselectedclamp);
 		float scrolly = ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5 + (((PointerEnd - MaxVisibleItems) * Size.y));
 		float scrollyclamp = std::clamp(scrolly, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5, ComboBox::ParentPos.y + ComboBox::Pos.y + ComboBox::Size.y + 5 + ((ComboBox::PointerEnd - ComboBox::PointerStart) * ComboBox::Size.y) - scrollheight);
 
-		FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x, scrollyclamp, 6, scrollheight, Colour(255, 0, 0, 255));
+		FilledRectangle(ComboBox::ParentPos.x + ComboBox::Pos.x + ComboBox::Size.x + (ComboBox::SizeDifference / 2), scrollyclamp, 6, scrollheight, Colour(255, 0, 0, 255));
 	}
 }
