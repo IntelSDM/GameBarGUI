@@ -16,6 +16,7 @@
 #include "TabListBoxController.h"
 EntityVector MenuEntity;
 int SelectedTab = 1;
+int SelectedSubTab = 0;
 int TabCount=0;
 bool ToggleTest;
 bool ToggleTest1 = true;
@@ -76,7 +77,9 @@ void CreateGUI()
 		{
 		//	auto label = std::make_shared<Label>(L"Label", 10, 80);
 		//	tab1->Push(label);
-			auto tablist = std::make_shared<TabListBoxController>(10, 40, 150, 150);
+			auto tablist = std::make_shared<TabListBoxController>(10, 40, 150, 150, &SelectedSubTab);
+			auto listtab1 = std::make_shared<TabListBox>(L"Tab1");
+			tablist->PushBack(listtab1);
 			tab1->Push(tablist);
 		}
 		tabcontroller->Push(tab1);

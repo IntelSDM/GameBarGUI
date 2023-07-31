@@ -1,12 +1,12 @@
 #pragma once
 #include "Entity.h"
-class ListBoxTab : public Container
+class TabListBox : public Container
 {
 protected:
-    int Index;
     int* Selected;
 public:
-    ListBoxTab(std::wstring name, int* selectedtab);
+    TabListBox(std::wstring name);
+    int Index;
     void Update();
     void Draw();
 };
