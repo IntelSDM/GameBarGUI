@@ -7,6 +7,7 @@ protected:
 	std::list<std::shared_ptr<TabListBox>> Tabs;
 	std::list<std::wstring> Names;
 	std::list<std::wstring> CulledNames;
+	int ScrollWidth = 5;
 	int* Selected;
 	void UpdateCulledNames();
 public:
