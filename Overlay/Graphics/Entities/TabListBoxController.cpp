@@ -183,9 +183,9 @@ void TabListBoxController::Draw()
 	}
 	if (TabListBoxController::Tabs.size() > TabListBoxController::Size.y / 20)
 	{
-		int unselectedelements = Names.size() - MaxVisibleItems;
+		int unselectedelements = Tabs.size() - MaxVisibleItems;
 		float unselectedclamp = std::clamp(unselectedelements, 1, (int)Names.size());
-		float scrollheight = TabListBoxController::Size.y / unselectedclamp;
+		float scrollheight = (TabListBoxController::Size.y / unselectedclamp);
 		float scrolly = TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (((PointerEnd - MaxVisibleItems) * 20));
 		float scrollyclamp = std::clamp(scrolly, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + 5 + ((TabListBoxController::PointerEnd - TabListBoxController::PointerStart) * 20) - scrollheight);
 
