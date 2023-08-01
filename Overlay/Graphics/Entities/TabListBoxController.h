@@ -10,6 +10,10 @@ protected:
 	int ScrollWidth = 5;
 	int* Selected;
 	void UpdateCulledNames();
+	int PointerStart = 0;
+	int PointerEnd;
+	int MaxVisibleItems = TabListBoxController::Size.y / 20;
+	bool FirstItem = false;
 public:
 	TabListBoxController(float x, float y, float width, float height, int* selected);
 	void Update();

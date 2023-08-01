@@ -11,6 +11,8 @@ TabListBoxController::TabListBoxController(float x, float y, float width, float 
 	TabListBoxController::Pos = { x,y };
 	TabListBoxController::Size = { width,height };
 	TabListBoxController::Selected = selected;
+	TabListBoxController::PointerEnd = TabListBoxController::Size.y / 20;
+	TabListBoxController::PointerStart = 0;
 }
 void TabListBoxController::UpdateCulledNames()
 {
@@ -79,8 +81,8 @@ void TabListBoxController::Draw()
 			DrawText(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20), name, "Verdana", 11, Colour(255, 0, 0, 255), None);
 			else
 			{
-				FilledRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20), width, 20, Colour(150,150,150,255));
-				DrawText(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20), name, "Verdana", 11, Colour(255, 0, 0, 255), None);
+				FilledRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20), width, 20, Colour(120,120,120,255));
+				DrawText(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20) + 5, name, "Verdana", 11, Colour(255, 0, 0, 255), None);
 			}
 		}
 	
@@ -100,5 +102,18 @@ void TabListBoxController::PushBack(std::shared_ptr<TabListBox> tab)
 {
 	TabListBoxController::Tabs.push_back(tab);
 	TabListBoxController::Names.push_back(tab->GetName());
+	if (!FirstItem)
+	{
+		*TabListBoxController::Selected = tab->Index;
+		FirstItem = true;
+	}
+	TabListBoxController::Push(tab);
 	TabListBoxController::UpdateCulledNames();
+	TabListBoxController::PointerEnd = TabListBoxController::Tabs.size();
+		TabListBoxController::MaxVisibleItems = TabListBoxController::Tabs.size();
+	if (TabListBoxController::Tabs.size() > TabListBoxController::Size.y / 20)
+		TabListBoxController::MaxVisibleItems = TabListBoxController::Size.y / 20;
+	if (TabListBoxController::PointerEnd > TabListBoxController::Size.y / 20)
+		TabListBoxController::PointerEnd = TabListBoxController::Size.y / 20;
+	
 }

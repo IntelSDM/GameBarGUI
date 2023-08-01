@@ -41,7 +41,6 @@ void ComboBox::SetComboBoxWidth()
 void ComboBox::ConvertSelectedName()
 {
 
-	
 	std::wstring combinedstr = L"";
 	for (int i = 0; i < ComboBox::Names.size(); i++)
 	{
@@ -54,13 +53,40 @@ void ComboBox::ConvertSelectedName()
 		if (**itbool == true)
 			combinedstr += *it + L",";
 	}
+	if (combinedstr.length() == 0)
+	{
+		combinedstr = L"Unselected";
+		float originalwidth = GetTextWidth(combinedstr, 11, "Verdana");
+		if (originalwidth < ComboBox::Size.x - ComboBox::CutOffBuffer)
+		{
+			ComboBox::TextWidth = originalwidth;
+			ComboBox::SelectedName = combinedstr;
+			return;
+		}
+		else
+		{
+			for (int i = combinedstr.length(); i > 0; i--)
+			{
+				combinedstr.erase(std::prev((combinedstr).end()));
+				float width = GetTextWidth(combinedstr + L"..", 11, "Verdana");
+				if (width < ComboBox::Size.x - ComboBox::CutOffBuffer)
+				{
+					ComboBox::SelectedName = combinedstr + L"..";
+					ComboBox::TextWidth = width;
+					return;
+				}
+			}
+		}
+		
+	}
+
 	combinedstr.erase(std::prev((combinedstr).end())); // last character will be "," and we dont need that
 	float originalwidth = GetTextWidth(combinedstr, 11, "Verdana");
 
 	if (originalwidth < ComboBox::Size.x - ComboBox::CutOffBuffer)
 	{
 		ComboBox::SelectedName = combinedstr;
-		TextWidth = originalwidth;
+		ComboBox::TextWidth = originalwidth;
 		return;
 	}
 	else
@@ -73,12 +99,12 @@ void ComboBox::ConvertSelectedName()
 			if (width < ComboBox::Size.x - ComboBox::CutOffBuffer)
 			{
 				ComboBox::SelectedName = str + L"..";
-				TextWidth = width;
+				ComboBox::TextWidth = width;
 				return;
 			}
 		}
 		ComboBox::SelectedName = str + L"..";
-		TextWidth = GetTextWidth(str + L"..", 11, "Verdana");
+		ComboBox::TextWidth = GetTextWidth(str + L"..", 11, "Verdana");
 	}
 
 }
@@ -177,6 +203,7 @@ void ComboBox::Update()
 
 				**it = !**it;
 				ComboBox::LastClick = (clock() * 0.00001f) + 0.002f;
+				ComboBox::ConvertSelectedName();
 			}
 			i++;
 		}
