@@ -77,7 +77,7 @@ void CreateGUI()
 		{
 		//	auto label = std::make_shared<Label>(L"Label", 10, 80);
 		//	tab1->Push(label);
-			auto tablist = std::make_shared<TabListBoxController>(10, 40, 150, 150, &SelectedSubTab);
+			auto tablist = std::make_shared<TabListBoxController>(10, 40, 160, 160, &SelectedSubTab);
 			auto listtab1 = std::make_shared<TabListBox>(L"Tab1");
 			{
 				std::list<std::wstring> downvalues = { L"Value 12345", L"Value 2", L"Value 3", L"Value 4" , L"Value 5", L"Value 6", L"Value 7" , L"Value 8" , L"Value 9" , L"Value 9" };
@@ -87,10 +87,20 @@ void CreateGUI()
 			auto listtab2 = std::make_shared<TabListBox>(L"Tab2");
 			auto listtab3 = std::make_shared<TabListBox>(L"Tab3");
 			auto listtab4 = std::make_shared<TabListBox>(L"Tab4fdhdfhdhfdfhdfhdfhdhfdfhdfhdfhdfhdfhdfdfhdfhdfh");
+			auto listtab5 = std::make_shared<TabListBox>(L"Tab5");
+			auto listtab6 = std::make_shared<TabListBox>(L"Tab6");
+			auto listtab7 = std::make_shared<TabListBox>(L"Tab7");
+			auto listtab8 = std::make_shared<TabListBox>(L"Tab8");
+			auto listtab9 = std::make_shared<TabListBox>(L"Tab9");
 			tablist->PushBack(listtab1);
 			tablist->PushBack(listtab2);
 			tablist->PushBack(listtab3);
 			tablist->PushBack(listtab4);
+			tablist->PushBack(listtab5);
+			tablist->PushBack(listtab6);
+			tablist->PushBack(listtab7);
+			tablist->PushBack(listtab8);
+			tablist->PushBack(listtab9);
 			tab1->Push(tablist);
 		}
 		tabcontroller->Push(tab1);

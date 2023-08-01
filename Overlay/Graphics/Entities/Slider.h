@@ -12,7 +12,7 @@ protected:
 	T* Value;
 	T OutputValue;
 
-	bool Held;
+	bool Held = false;
 
 	std::wstring Measurement;
 	std::wstring OutputString;

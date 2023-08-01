@@ -45,50 +45,44 @@ void TabListBoxController::UpdateCulledNames()
 	
 	
 }
+void TabListBoxController::ArrowKeyNavigation()
+{
+	if (TabListBoxController::Tabs.size() < TabListBoxController::Size.y / 20)
+		return;
+	if (IsKeyClicked(VK_DOWN) && TabListBoxController::LastClick < (clock() * 0.00001f))
+	{
+		if (TabListBoxController::Tabs.size() - 1 > TabListBoxController::PointerEnd)
+		{
+			TabListBoxController::PointerEnd++;
+			TabListBoxController::PointerStart++;
+			TabListBoxController::LastClick = (clock() * 0.00001f) + 0.002f;
+		}
+	}
+	if (IsKeyClicked(VK_UP) && TabListBoxController::LastClick < (clock() * 0.00001f))
+	{
+		if (TabListBoxController::PointerStart > 0)
+		{
+			TabListBoxController::PointerEnd--;
+			TabListBoxController::PointerStart--;
+			TabListBoxController::LastClick = (clock() * 0.00001f) + 0.002f;
+		}
+	}
+}
 void TabListBoxController::Update()
 {
 	if (!TabListBoxController::Parent)
 		TabListBoxController::SetVisible(false);
 	if (!TabListBoxController::IsVisible())
 		return;
+
 	TabListBoxController::ParentPos = TabListBoxController::Parent->GetParentPos();
+	TabListBoxController::ArrowKeyNavigation();
 }
 void TabListBoxController::Draw()
 {
 	if (!TabListBoxController::IsVisible())
 		return;
-	FilledRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y, TabListBoxController::Size.x, TabListBoxController::Size.y, Colour(80, 80, 80, 255));
-	OutlineRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x-1, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y-1, TabListBoxController::Size.x+1, TabListBoxController::Size.y+1,1,Colour(150, 150, 150, 255));
-	FilledRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y, TabListBoxController::ScrollWidth, TabListBoxController::Size.y, Colour(130, 130, 130, 255));
-	int i = 0;
-	for (std::wstring culledname : TabListBoxController::CulledNames)
-	{
-		if (!IsMouseInRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20), TabListBoxController::Size.x, 20))
-		{
-			DrawText(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20), culledname, "Verdana", 11, Colour(240, 240, 240, 255), None);
-		}
-		i++;
-	}
-	// do this in a seperate loop so we can draw over all culled names
-	i = 0;
-	for (std::wstring name : TabListBoxController::Names)
-	{
-		
-		if (IsMouseInRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20), TabListBoxController::Size.x, 20))
-		{
-			int width = GetTextWidth(name, 11, "Verdana");
-			if(width + TabListBoxController::ScrollWidth + 2 + 5 < TabListBoxController::Size.x)
-			DrawText(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20), name, "Verdana", 11, Colour(255, 0, 0, 255), None);
-			else
-			{
-				FilledRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20), width, 20, Colour(120,120,120,255));
-				DrawText(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (i * 20) + 5, name, "Verdana", 11, Colour(255, 0, 0, 255), None);
-			}
-		}
-	
-		i++;
-	}
-	for each (std::shared_ptr<TabListBox> tab in TabListBoxController::Tabs)
+	for (std::shared_ptr<TabListBox> tab : TabListBoxController::Tabs)
 	{
 		if (tab->Index == *Selected)
 		{
@@ -96,7 +90,69 @@ void TabListBoxController::Draw()
 			tab->Update();
 		}
 	}
+	FilledRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y, TabListBoxController::Size.x, TabListBoxController::Size.y, Colour(80, 80, 80, 255));
+	OutlineRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x-1, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y-1, TabListBoxController::Size.x+1, TabListBoxController::Size.y+1,1,Colour(150, 150, 150, 255));
 
+	int i = 0;
+	for (std::wstring culledname : TabListBoxController::CulledNames)
+	{
+		if (i < TabListBoxController::PointerStart)
+		{
+			i++;
+			continue;
+		}
+		if (i > TabListBoxController::PointerEnd-1)
+		{
+			i++;
+			continue;
+		}
+		float itemposy = TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + ((i - TabListBoxController::PointerStart) * 20);
+		if (!IsMouseInRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2, (itemposy), TabListBoxController::Size.x, 20))
+		{
+			DrawText(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2,(itemposy), culledname, "Verdana", 11, Colour(240, 240, 240, 255), None);
+		}
+		i++;
+	}
+	// do this in a seperate loop so we can draw over all culled names
+	i = 0;
+	for (std::wstring name : TabListBoxController::Names)
+	{
+		if (i < TabListBoxController::PointerStart)
+		{
+			i++;
+			continue;
+		}
+		if (i > TabListBoxController::PointerEnd - 1)
+		{
+			i++;
+			continue;
+		}
+		float itemposy = TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + ((i - TabListBoxController::PointerStart) * 20);
+		if (IsMouseInRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2, (itemposy), TabListBoxController::Size.x, 20))
+		{
+			int width = GetTextWidth(name, 11, "Verdana");
+			if(width + TabListBoxController::ScrollWidth + 2 + 5 < TabListBoxController::Size.x)
+			DrawText(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, (itemposy), name, "Verdana", 11, Colour(255, 0, 0, 255), None);
+			else
+			{
+				FilledRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, (itemposy), width, 20, Colour(120,120,120,255));
+				DrawText(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2 + 5, (itemposy) + 5, name, "Verdana", 11, Colour(255, 0, 0, 255), None);
+			}
+		}
+	
+		i++;
+	}
+	if (TabListBoxController::Tabs.size() > TabListBoxController::Size.y / 20)
+	{
+		int unselectedelements = Names.size() - MaxVisibleItems;
+		float unselectedclamp = std::clamp(unselectedelements, 1, (int)Names.size());
+		float scrollheight = ((TabListBoxController::PointerEnd - TabListBoxController::PointerStart) * 20) / (unselectedclamp);
+		float scrolly = TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + (((PointerEnd - MaxVisibleItems) * 20));
+		float scrollyclamp = std::clamp(scrolly, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + 5 + ((TabListBoxController::PointerEnd - TabListBoxController::PointerStart) * 20) - scrollheight);
+
+		FilledRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y, TabListBoxController::ScrollWidth, TabListBoxController::Size.y, Colour(130, 130, 130, 255));
+		FilledRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x, scrollyclamp, 5, scrollheight, Colour(255, 0, 0, 255));
+	}
 }
 void TabListBoxController::PushBack(std::shared_ptr<TabListBox> tab)
 {
