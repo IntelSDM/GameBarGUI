@@ -10,14 +10,17 @@ protected:
 	int ScrollWidth = 5;
 	int* Selected;
 	bool ScrollBarHeld = false;
+	bool Active = false;
 
 	void UpdateCulledNames();
 	void ArrowKeyNavigation();
 	void ScrollBarAction();
-
+	void SetActiveIndex();
+	void SetActive();
 	int PointerStart = 2;
 	int PointerEnd;
 	int MaxVisibleItems = TabListBoxController::Size.y / 20;
+	int ActiveIndex = 0;
 
 	bool FirstItem = false;
 public:
