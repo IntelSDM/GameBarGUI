@@ -51,7 +51,7 @@ void TabListBoxController::ArrowKeyNavigation()
 		return;
 	if (IsKeyClicked(VK_DOWN) && TabListBoxController::LastClick < (clock() * 0.00001f))
 	{
-		if (TabListBoxController::Tabs.size() - 1 > TabListBoxController::PointerEnd)
+		if (TabListBoxController::Tabs.size() > TabListBoxController::PointerEnd)
 		{
 			TabListBoxController::PointerEnd++;
 			TabListBoxController::PointerStart++;
@@ -77,6 +77,22 @@ void TabListBoxController::Update()
 
 	TabListBoxController::ParentPos = TabListBoxController::Parent->GetParentPos();
 	TabListBoxController::ArrowKeyNavigation();
+	TabListBoxController::ScrollBarAction();
+}
+void TabListBoxController::ScrollBarAction()
+{
+	if (!IsKeyDown(VK_LBUTTON))
+		TabListBoxController::ScrollBarHeld = false;
+	if (IsMouseInRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x, TabListBoxController::ParentPos.y + TabListBoxController::Pos.y, 5, TabListBoxController::Size.y) && IsKeyClicked(VK_LBUTTON))
+		TabListBoxController::ScrollBarHeld = true;
+	if (TabListBoxController::ScrollBarHeld)
+	{
+		float ratio = (MousePos.y - (float)(TabListBoxController::ParentPos.y + TabListBoxController::Pos.y)) / (float)((TabListBoxController::MaxVisibleItems - 1) * 20);
+		ratio = std::clamp(ratio, 0.0f, 1.0f);
+		TabListBoxController::PointerEnd = (int)(TabListBoxController::MaxVisibleItems + (TabListBoxController::Names.size() - TabListBoxController::MaxVisibleItems) * ratio);
+
+	}
+	TabListBoxController::PointerStart = TabListBoxController::PointerEnd - TabListBoxController::MaxVisibleItems;
 }
 void TabListBoxController::Draw()
 {

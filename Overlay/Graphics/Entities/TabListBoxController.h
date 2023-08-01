@@ -9,11 +9,16 @@ protected:
 	std::list<std::wstring> CulledNames;
 	int ScrollWidth = 5;
 	int* Selected;
+	bool ScrollBarHeld = false;
+
 	void UpdateCulledNames();
 	void ArrowKeyNavigation();
+	void ScrollBarAction();
+
 	int PointerStart = 2;
 	int PointerEnd;
 	int MaxVisibleItems = TabListBoxController::Size.y / 20;
+
 	bool FirstItem = false;
 public:
 	TabListBoxController(float x, float y, float width, float height, int* selected);

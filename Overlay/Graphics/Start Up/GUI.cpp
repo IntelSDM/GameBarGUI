@@ -92,6 +92,7 @@ void CreateGUI()
 			auto listtab7 = std::make_shared<TabListBox>(L"Tab7");
 			auto listtab8 = std::make_shared<TabListBox>(L"Tab8");
 			auto listtab9 = std::make_shared<TabListBox>(L"Tab9");
+			auto listtab10 = std::make_shared<TabListBox>(L"Tab10");
 			tablist->PushBack(listtab1);
 			tablist->PushBack(listtab2);
 			tablist->PushBack(listtab3);
@@ -101,6 +102,7 @@ void CreateGUI()
 			tablist->PushBack(listtab7);
 			tablist->PushBack(listtab8);
 			tablist->PushBack(listtab9);
+			tablist->PushBack(listtab10);
 			tab1->Push(tablist);
 		}
 		tabcontroller->Push(tab1);
