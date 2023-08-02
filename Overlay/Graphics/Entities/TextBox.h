@@ -21,14 +21,24 @@ protected:
     int VisiblePointerStart;
     int  VisiblePointerEnd;
     void SetStartIndex();
-    Vector2 Pos;
-    Vector2 Size;
-    Vector2 ParentPos;
 
     std::wstring* MainString;
     std::wstring VisibleString;
 
     float TextWidth = 0;
+
+    bool ContextActive = false;
+    Vector2 ContextPos;
+    Vector2 ContextSize;
+    void ContextCopyText();
+    void ContextSelectAll();
+    void ContextPasteText();
+    std::map<std::wstring, std::function<void()>> ContextNames = {
+     { L"Select All", [this]() { ContextSelectAll(); } },
+    { L"Copy", [this]() { ContextCopyText(); } },
+    { L"Paste", [this]() { ContextPasteText(); } }
+    };
+
 
     bool Active = false;
     bool Selecting = false;
@@ -37,7 +47,6 @@ protected:
     bool IsKeyAcceptable();
 
     void SetState();
-    void SetSelection();
     void ArrowKeyNavition();
     void InputText();
     void DeleteText();
@@ -46,6 +55,9 @@ protected:
     void SelectionDragging();
     void CopyText();
     void PasteText();
+    void ContextMenu();
+    void SetSelection();
+
 public:
     TextBox(float x, float y, std::wstring text, std::wstring* data);
     void Update();

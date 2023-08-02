@@ -18,6 +18,7 @@ TextBox::TextBox(float x, float y, std::wstring text, std::wstring* data = nullp
 	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd);
 	TextBox::SelectedPoint = VisiblePointerEnd - TextBox::VisiblePointerStart;
 	TextBox::SelectedPosition = GetTextWidth(TextBox::MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
+	TextBox::ContextSize = { 80.0f,20.0f * (int)TextBox::ContextNames.size() };
 }
 void TextBox::SetStartIndex()
 {
@@ -34,9 +35,10 @@ void TextBox::SetStartIndex()
 }
 void TextBox::SetState()
 {
-	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON) && ! TextBox::Blocked)
+	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_LBUTTON) && ! TextBox::Blocked && ((TextBox::ContextActive && !IsMouseInRectangle(TextBox::ContextPos,TextBox::ContextSize)) || !TextBox::ContextActive))
 	{
 		TextBox::Active = true;
+		TextBox::ContextActive = false;
 	}
 	else if (IsKeyClicked(VK_LBUTTON) && !IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size))
 	{
@@ -274,6 +276,106 @@ void TextBox::SetSelection()
 		TextBox::SelectionEnd = MainString->length();
 	}
 }
+void TextBox::ContextSelectAll()
+{
+	TextBox::SelectionStart = 0;
+	TextBox::SelectionEnd = MainString->length();
+}
+void TextBox::ContextCopyText()
+{
+	if (!OpenClipboard(nullptr))
+		return;
+	size_t size = (SelectionEnd - SelectionStart) * sizeof(wchar_t) + sizeof(wchar_t);
+
+	HGLOBAL global = GlobalAlloc(GMEM_MOVEABLE, size);
+	if (!global) {
+		CloseClipboard();
+		return;
+	}
+
+	wchar_t* text = static_cast<wchar_t*>(GlobalLock(global));
+	if (!text) {
+		CloseClipboard();
+		GlobalFree(global);
+		return;
+	}
+
+	wcsncpy_s(text, size / sizeof(wchar_t), MainString->substr(SelectionStart, SelectionEnd - SelectionStart).c_str(), SelectionEnd - SelectionStart);
+
+	text[SelectionEnd - SelectionStart] = L'\0';
+	GlobalUnlock(global);
+	EmptyClipboard();
+	SetClipboardData(CF_UNICODETEXT, global);
+	CloseClipboard();
+}
+void TextBox::ContextPasteText()
+{
+	if (!OpenClipboard(nullptr))
+		return;
+	std::wstring clipboard = L"";
+	HANDLE data = GetClipboardData(CF_UNICODETEXT);
+	if (data != nullptr)
+	{
+		wchar_t* text = static_cast<wchar_t*>(GlobalLock(data));
+		if (text != nullptr)
+		{
+			clipboard = text;
+			GlobalUnlock(data);
+		}
+	}
+
+	CloseClipboard();
+
+	if (TextBox::SelectedPoint == TextBox::SelectionStart && TextBox::SelectedPoint == TextBox::SelectionEnd)
+	{
+		TextBox::VisiblePointerEnd += clipboard.length();
+		MainString->insert(TextBox::SelectedPoint, clipboard);
+		TextBox::SelectedPoint += clipboard.length();
+		TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+		while (TextBox::TextWidth > TextBox::Size.x - 6)
+		{
+			TextBox::VisiblePointerStart++; // update position
+			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana"); // update width so we can exit
+		}
+
+	}
+	else
+	{
+		if (TextBox::SelectedPoint == TextBox::SelectionEnd)
+		{
+			TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
+			TextBox::VisiblePointerEnd -= TextBox::SelectionEnd - TextBox::SelectionStart;
+			TextBox::SelectedPoint -= TextBox::SelectionEnd - TextBox::SelectionStart;
+		}
+		else
+		{
+			TextBox::MainString->erase(TextBox::SelectionStart, TextBox::SelectionEnd - TextBox::SelectionStart);
+			TextBox::VisiblePointerEnd -= TextBox::SelectionEnd - TextBox::SelectionStart;
+		}
+		TextBox::VisiblePointerEnd += clipboard.length();
+		MainString->insert(TextBox::SelectedPoint, clipboard);
+		TextBox::SelectedPoint += clipboard.length();
+		TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+		while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::VisiblePointerStart > 0)
+		{
+			TextBox::VisiblePointerStart--; // Move the starting point up
+			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+		}
+
+		// If the text still doesn't fill the TextBox, try to extend from the end
+		while (TextBox::TextWidth < TextBox::Size.x - 6 && TextBox::VisiblePointerEnd < TextBox::MainString->length())
+		{
+			TextBox::VisiblePointerEnd++; // Extend the ending point
+			TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
+		}
+
+		//reset selected points
+		TextBox::SelectionStart = TextBox::SelectedPoint;
+		TextBox::SelectionEnd = TextBox::SelectedPoint;
+
+	}
+
+}
 void TextBox::SetSelectionPoint()
 {
 	if (TextBox::Blocked)
@@ -349,6 +451,7 @@ void TextBox::SelectionDragging()
 
 	}
 }
+
 void TextBox::CopyText()
 {
 	if (TextBox::Blocked)
@@ -460,6 +563,37 @@ void TextBox::PasteText()
 		TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
 	}
 }
+void TextBox::ContextMenu()
+{
+	if (IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) && IsKeyClicked(VK_RBUTTON) && !TextBox::Blocked)
+	{
+		TextBox::ContextActive = true;
+		TextBox::ContextPos = MousePos;
+		TextBox::Selecting = false;
+		TextBox::Held = false;
+		TextBox::Active = false; // prevent 2 being active at the same time unless they are somehow fucking merged
+		TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
+	}
+	else if (IsKeyClicked(VK_LBUTTON) && !IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size))
+	{
+		TextBox::ContextActive = false;
+	}
+	if(!(IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size) || IsMouseInRectangle(TextBox::ContextPos, TextBox::ContextSize)) && IsKeyClicked(VK_RBUTTON) && !TextBox::Blocked)
+		TextBox::ContextActive = false;
+	
+	if (!TextBox::ContextActive)
+		return;
+	int i = 0;
+	for (auto& pair : TextBox::ContextNames)
+	{
+		if (IsMouseInRectangle(TextBox::ContextPos.x, TextBox::ContextPos.y + (i * 20), TextBox::ContextSize.x, 20) && IsKeyClicked(VK_LBUTTON) && TextBox::LastClick < (clock() * 0.00001f))
+		{
+			pair.second();
+			TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
+		}
+		i++;
+	}
+}
 void TextBox::Update()
 {
 	if (!TextBox::Parent)
@@ -480,6 +614,7 @@ void TextBox::Update()
 	TextBox::SelectionDragging();
 	TextBox::CopyText();
 	TextBox::PasteText();
+	TextBox::ContextMenu();
 	if (TextBox::Active) // take input
 	{
 		if (!TextBox::Held && !TextBox::Selecting)
@@ -512,7 +647,7 @@ void TextBox::Draw()
 	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x - 1, TextBox::Pos.y + +TextBox::ParentPos.y - 1, TextBox::Size.x + 2, TextBox::Size.y + 2, 4, 4, Colour(200, 200, 200, 255));
 	FilledRoundedRectangle(TextBox::Pos.x + TextBox::ParentPos.x, TextBox::Pos.y + +TextBox::ParentPos.y, TextBox::Size.x, TextBox::Size.y, 4, 4, Colour(80, 80, 80, 255));
 	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + (TextBox::Size.x / 2), TextBox::ParentPos.y + TextBox::Pos.y - ((TextBox::Size.y / 2) - 1), TextBox::Name + L":", "Verdana", 12, Colour(255, 255, 255, 255), CentreCentre); // Title
-	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + 3, (TextBox::ParentPos.y + TextBox::Pos.y) + (TextBox::Size.y / 4), TextBox::VisibleString, "Verdana", 11, Colour(255, 255, 255, 255), None); // Text
+	DrawText(TextBox::ParentPos.x + TextBox::Pos.x + 3, (TextBox::ParentPos.y + TextBox::Pos.y) + (TextBox::Size.y / 4), TextBox::VisibleString, "Verdana", 11, Colour(255, 255, 255, 255), None);
 
 	std::chrono::duration<float> elapsed = std::chrono::high_resolution_clock::now() - TextBox::AnimationStart;
 	float time = std::fmodf(elapsed.count(), TextBox::AnimationInterval) / TextBox::AnimationInterval;
@@ -526,5 +661,22 @@ void TextBox::Draw()
 	{
 		float selectionwidth = std::abs(TextBox::SelectingEndPosition - TextBox::SelectingStartPosition); // bandage fix for negative value
 		FilledRectangle(TextBox::Pos.x + TextBox::ParentPos.x + SelectingStartPosition, TextBox::Pos.y + TextBox::ParentPos.y, selectionwidth, TextBox::Size.y, Colour(0, 150, 255, 100));
+	}
+	if (TextBox::ContextActive)
+	{
+		OutlineRectangle(TextBox::ContextPos.x, TextBox::ContextPos.y, TextBox::ContextSize.x, TextBox::ContextSize.y,1 ,Colour(255, 255, 255, 255));
+		FilledRectangle(TextBox::ContextPos.x, TextBox::ContextPos.y, TextBox::ContextSize.x, TextBox::ContextSize.y, Colour(80, 80, 80, 255));
+		int i = 0;
+		for (auto pair : TextBox::ContextNames)
+		{
+			if(i!= 0)
+			FilledLine(TextBox::ContextPos.x, TextBox::ContextPos.y + i * 20, TextBox::ContextPos.x + TextBox::ContextSize.x, TextBox::ContextPos.y + i * 20, 1.0f, Colour(255, 255, 255, 255));
+
+			if (IsMouseInRectangle(TextBox::ContextPos.x, TextBox::ContextPos.y + (i * 20), TextBox::ContextSize.x, 20))
+			FilledRectangle(TextBox::ContextPos.x, TextBox::ContextPos.y + (i * 20), TextBox::ContextSize.x, 20, Colour(120, 120, 120, 255));
+			DrawText(TextBox::ContextPos.x + (TextBox::ContextSize.x/2), TextBox::ContextPos.y + (i * 20) + 10, pair.first, "Verdana", 11, Colour(255, 255, 255, 255), CentreCentre);
+		
+			i++;
+		}
 	}
 }

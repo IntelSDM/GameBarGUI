@@ -19,6 +19,16 @@ protected:
     bool HeldAlpha = false;
     float Alpha = 255;
 
+    bool ContextActive = false;
+    Vector2 ContextPos;
+    Vector2 ContextSize;
+    void ContextMenu();
+    void Copy();
+    void Paste();
+    std::map<std::wstring, std::function<void()>> ContextNames = {
+    { L"Copy", [this]() { Copy(); } },
+    { L"Paste", [this]() { Paste(); } }
+    };
 
     bool Open = false;
     static float HueToSliderValue(float hue);

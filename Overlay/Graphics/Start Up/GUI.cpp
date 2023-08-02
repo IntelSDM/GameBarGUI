@@ -14,6 +14,7 @@
 #include "DropDown.h"
 #include "ComboBox.h"
 #include "TabListBoxController.h"
+Color ColourPickerClipBoard = Colors::Red;
 EntityVector MenuEntity;
 int SelectedTab = 1;
 int SelectedSubTab = 0;

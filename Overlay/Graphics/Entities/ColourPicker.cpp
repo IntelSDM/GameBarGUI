@@ -2,7 +2,7 @@
 #include "ColourPicker.h"
 #include "Input.h"
 #include "Drawing.h"
-
+#include "GUI.h"
 ColourPicker::ColourPicker(float x, float y, Color* colour)
 {
 	ColourPicker::MainColour = colour;
@@ -13,7 +13,7 @@ ColourPicker::ColourPicker(float x, float y, Color* colour)
 	ColourPicker::Alpha = MainColour->A;
 	ColourPicker::Saturation = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).V;
 	ColourPicker::Brightness = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).S;
-
+	ColourPicker::ContextSize = { 80.0f,20.0f * (int)ColourPicker::ContextNames.size() };
 }
 float ColourPicker::HueToSliderValue(float hue)
 {
@@ -33,6 +33,46 @@ float ColourPicker::SaturationToSliderValue(float saturation)
 {
 	return saturation / 255.0f;
 }
+void ColourPicker::Copy()
+{
+	ColourPickerClipBoard = *ColourPicker::MainColour;
+	
+}
+void ColourPicker::Paste()
+{
+	*ColourPicker::MainColour = ColourPickerClipBoard;
+	ColourPicker::Saturation = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).V;
+	ColourPicker::Brightness = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).S;
+	ColourPicker::Hue = RGBToHue(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B);
+}
+void ColourPicker::ContextMenu()
+{
+	if (IsMouseInRectangle(ColourPicker::Pos + ColourPicker::ParentPos, ColourPicker::Size) && IsKeyClicked(VK_RBUTTON) && !ColourPicker::Blocked && !ColourPicker::Open)
+	{
+		ColourPicker::ContextActive = true;
+		ColourPicker::Open = false;
+		ColourPicker::ContextPos = MousePos;
+		SetBlockedSiblings(true);
+	}
+	if (!IsMouseInRectangle(ColourPicker::ContextPos, ColourPicker::ContextSize) && IsKeyClicked(VK_LBUTTON))
+	{
+		if (ColourPicker::ContextActive)
+			SetBlockedSiblings(false);
+		ColourPicker::ContextActive = false;
+	}
+	if (!ColourPicker::ContextActive)
+		return;
+	int i = 0;
+	for (auto& pair : ColourPicker::ContextNames)
+	{
+		if (IsMouseInRectangle(ColourPicker::ContextPos.x, ColourPicker::ContextPos.y + (i * 20), ColourPicker::ContextSize.x, 20) && IsKeyClicked(VK_LBUTTON) && ColourPicker::LastClick < (clock() * 0.00001f))
+		{
+			pair.second();
+			ColourPicker::LastClick = (clock() * 0.00001f) + 0.002f;
+		}
+		i++;
+	}
+}
 void ColourPicker::Update()
 {
 	if (!ColourPicker::Parent)
@@ -40,25 +80,28 @@ void ColourPicker::Update()
 	if (!ColourPicker::IsVisible())
 		return;
 	ColourPicker::ParentPos = ColourPicker::Parent->GetParentPos();
+	ColourPicker::ContextMenu();
 	if (!(IsMouseInRectangle(ColourPicker::ParentPos.x + ColourPicker::Pos.x, ColourPicker::ParentPos.y + ColourPicker::Pos.y, ColourPicker::Size.x, ColourPicker::Size.y) || IsMouseInRectangle(ClickedPos.x - 5, ClickedPos.y - 5, 175, 175)) && IsKeyClicked(VK_LBUTTON) && ColourPicker::Open)
 	{
 		ColourPicker::Open = false;
+
 		SetBlockedSiblings(false);
 
 	}
 	if (ColourPicker::Blocked)
 		return;
-	if (IsMouseInRectangle(ColourPicker::ParentPos.x + ColourPicker::Pos.x, ColourPicker::ParentPos.y + ColourPicker::Pos.y, ColourPicker::Size.x, ColourPicker::Size.y) && IsKeyClicked(VK_LBUTTON) && ColourPicker::LastClick < (clock() * 0.00001f))
+	if (IsMouseInRectangle(ColourPicker::ParentPos.x + ColourPicker::Pos.x, ColourPicker::ParentPos.y + ColourPicker::Pos.y, ColourPicker::Size.x, ColourPicker::Size.y) && IsKeyClicked(VK_LBUTTON) && ColourPicker::LastClick < (clock() * 0.00001f) && !(IsMouseInRectangle(ClickedPos.x - 5, ClickedPos.y - 5, 185, 175) && ColourPicker::Open))
 	{
 		ClickedPos = MousePos;
 		ColourPicker::Open = !ColourPicker::Open;
 		ColourPicker::LastClick = (clock() * 0.00001f) + 0.002f;
+		ColourPicker::ContextActive = false;
 		if(ColourPicker::Open)
 			SetBlockedSiblings(true);
 		if (!ColourPicker::Open)
 			SetBlockedSiblings(false);
 	}
-	if (!IsKeyDown(VK_LBUTTON))
+	if (!IsKeyDown(VK_LBUTTON) && !ColourPicker::ContextActive)
 	{
 		ColourPicker::HeldHue = false;
 		ColourPicker::HeldAlpha = false;
@@ -147,5 +190,22 @@ void ColourPicker::Draw()
 		HueSlider(ClickedPos.x, ClickedPos.y + 155, 150, 10);
 		float huevalue = ColourPicker::HueToSliderValue(ColourPicker::Hue);
 		FilledRectangle(ClickedPos.x + ((int)150 * huevalue), ClickedPos.y + 155, 2, 10, Colour(255, 255, 255, 255));
+	}
+	if (ColourPicker::ContextActive)
+	{
+		OutlineRectangle(ColourPicker::ContextPos.x, ColourPicker::ContextPos.y, ColourPicker::ContextSize.x, ColourPicker::ContextSize.y, 1, Colour(255, 255, 255, 255));
+		FilledRectangle(ColourPicker::ContextPos.x, ColourPicker::ContextPos.y, ColourPicker::ContextSize.x, ColourPicker::ContextSize.y, Colour(80, 80, 80, 255));
+		int i = 0;
+		for (auto pair : ColourPicker::ContextNames)
+		{
+			if (i != 0)
+				FilledLine(ColourPicker::ContextPos.x, ColourPicker::ContextPos.y + i * 20, ColourPicker::ContextPos.x + ColourPicker::ContextSize.x, ColourPicker::ContextPos.y + i * 20, 1.0f, Colour(255, 255, 255, 255));
+
+			if (IsMouseInRectangle(ColourPicker::ContextPos.x, ColourPicker::ContextPos.y + (i * 20), ColourPicker::ContextSize.x, 20))
+				FilledRectangle(ColourPicker::ContextPos.x, ColourPicker::ContextPos.y + (i * 20), ColourPicker::ContextSize.x, 20, Colour(120, 120, 120, 255));
+			DrawText(ColourPicker::ContextPos.x + (ColourPicker::ContextSize.x / 2), ColourPicker::ContextPos.y + (i * 20) + 10, pair.first, "Verdana", 11, Colour(255, 255, 255, 255), CentreCentre);
+
+			i++;
+		}
 	}
 }
