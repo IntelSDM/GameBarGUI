@@ -49,7 +49,7 @@ void KeyBind::Update()
 		return;
 
 
-	KeyBind::ParentPos = KeyBind::Parent->GetParent()->GetPos();
+	KeyBind::ParentPos = KeyBind::Parent->GetParentPos();
 	if (!KeyBind::Blocked)
 	{
 		if (IsMouseInRectangle(KeyBind::Pos + ParentPos, KeyBind::Size) && IsKeyClicked(VK_LBUTTON) && KeyBind::LastClick < (clock() * 0.00001f) && !KeyBind::Blocked && !KeyBind::Active)

@@ -468,7 +468,7 @@ void TextBox::Update()
 		return;
 
 	TextBox::TextWidth = GetTextWidth(VisibleString, 11, "Verdana");
-	TextBox::ParentPos = TextBox::Parent->GetParent()->GetPos();
+	TextBox::ParentPos = TextBox::Parent->GetParentPos();
 	TextBox::VisibleString = MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd);
 	TextBox::SetState();
 	TextBox::ArrowKeyNavition();

@@ -26,7 +26,7 @@ void Toggle::Update()
 	if (!Toggle::IsVisible())
 		return;
 
-	Toggle::ParentPos = Toggle::Parent->GetParent()->GetPos();
+	Toggle::ParentPos = Toggle::Parent->GetParentPos();
 	if (!Toggle::Blocked)
 	{
 		// square click check

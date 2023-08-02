@@ -138,7 +138,7 @@ void ComboBox::Update()
 	if (!ComboBox::IsVisible())
 		return;
 	ComboBox::ArrowNavigation();
-	ComboBox::ParentPos = ComboBox::Parent->GetParent()->GetPos();
+	ComboBox::ParentPos = ComboBox::Parent->GetParentPos();
 	ComboBox::CalculateBuffer();
 	ComboBox::UpdateScrollBar();
 	if (!ComboBox::Blocked)

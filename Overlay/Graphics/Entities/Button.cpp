@@ -21,7 +21,7 @@ void Button::Update()
 		return;
 
 
-	Button::ParentPos = Button::Parent->GetParent()->GetPos();
+	Button::ParentPos = Button::Parent->GetParentPos();
 	if (!Button::Blocked)
 	{
 		if (IsMouseInRectangle(Button::Pos + ParentPos, Button::Size) && IsKeyClicked(VK_LBUTTON) && Button::LastClick < (clock() * 0.00001f))

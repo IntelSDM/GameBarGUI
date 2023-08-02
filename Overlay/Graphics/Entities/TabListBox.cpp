@@ -16,6 +16,7 @@ TabListBox::TabListBox(std::wstring name)
 void TabListBox::Update()
 {
 	TabListBox::ParentPos = TabListBox::Parent->GetParentPos();
+	TabListBox::Pos = TabListBox::Parent->GetParentPos();
 	Container::Update();
 }
 void TabListBox::Draw()
