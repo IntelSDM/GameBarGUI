@@ -23,8 +23,8 @@ void Tab::Update()
 		return;
 	Tab::ParentPos = Tab::GetParent()->GetPos();
 	Tab::ParentSize = Tab::GetParent()->GetSize();
-	// Bandaid fix
-	size_t ignore_count = 0;
+
+	size_t ignorecount = 0;
 
 	for (child& it : Tab::Parent->GetContainer())
 	{
@@ -32,7 +32,7 @@ void Tab::Update()
 			break;
 
 		if (!it->IsVisible())
-			++ignore_count;
+			++ignorecount;
 	}
 	bool selected = Index == *Selected;
 	if (!selected && !Tab::Blocked)

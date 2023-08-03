@@ -41,6 +41,7 @@ public:
 	virtual Vector2 GetSize() { return Size; }
 	virtual Vector2 GetScale() { return Scale; }
 	virtual Vector2 GetParentPos() { return ParentPos; }
+	virtual Vector2 GetParentSize() { return ParentSize; }
 	virtual std::wstring GetName() { return Name; }
 
 	child GetChildRelativeParent();
@@ -62,6 +63,7 @@ public:
 	friend class Container;
 	friend class Tab;
 	friend class ListBoxTab;
+	friend class GroupBox;
 };
 class Container : public Entity
 {

@@ -33,6 +33,7 @@
     <ClCompile Include="Graphics\Entities\ComboBox.cpp" />
     <ClCompile Include="Graphics\Entities\TabListBoxController.cpp" />
     <ClCompile Include="Graphics\Entities\TabListBox.cpp" />
+    <ClCompile Include="Graphics\Entities\GroupBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.xaml.h" />
@@ -60,6 +61,7 @@
     <ClInclude Include="Graphics\Entities\ComboBox.h" />
     <ClInclude Include="Graphics\Entities\TabListBoxController.h" />
     <ClInclude Include="Graphics\Entities\TabListBox.h" />
+    <ClInclude Include="Graphics\Entities\GroupBox.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">

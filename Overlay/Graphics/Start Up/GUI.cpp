@@ -14,6 +14,7 @@
 #include "DropDown.h"
 #include "ComboBox.h"
 #include "TabListBoxController.h"
+#include "GroupBox.h"
 Color ColourPickerClipBoard = Colors::Red;
 int KeyBindClipBoard = 0;
 EntityVector MenuEntity;
@@ -119,6 +120,10 @@ void CreateGUI()
 		}
 		tabcontroller->Push(tab1);
 		auto tab2 = std::make_shared<Tab>(L"Tab3", 115, 25, 50, 20, &SelectedTab);
+		{
+			auto groupbox = std::make_shared<GroupBox>(L"Groupbox", 20, 40, 250, 200);
+			tab2->Push(groupbox);
+		}
 		tabcontroller->Push(tab2);
 		auto tab3 = std::make_shared<Tab>(L"Tab4", 170, 25, 50, 20, &SelectedTab);
 		tabcontroller->Push(tab3);
