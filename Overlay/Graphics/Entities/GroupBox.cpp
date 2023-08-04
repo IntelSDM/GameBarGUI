@@ -31,10 +31,10 @@ void GroupBox::Update()
 		bool inbox = (
 			GroupBox::ParentPos.x + it->Pos.x >  GroupBox::Pos.x &&
 			GroupBox::ParentPos.y + it->Pos.y >  GroupBox::Pos.y &&
-			GroupBox::ParentPos.x + it->Pos.x + it->Size.x < GroupBox::Pos.x + GroupBox::Size.x &&
-			GroupBox::ParentPos.y + it->Pos.y + it->Size.y <  GroupBox::Pos.y + GroupBox::Size.y
+			GroupBox::ParentPos.x + it->Pos.x + it->Size.x < GroupBox::ParentPos.x + GroupBox::Pos.x + GroupBox::Size.x &&
+			GroupBox::ParentPos.y + it->Pos.y + it->Size.y < GroupBox::ParentPos.y+ GroupBox::Pos.y + GroupBox::Size.y
 			);
-		//it->SetVisible(inbox);
+		it->SetVisible(inbox);
 
 	}
 	
