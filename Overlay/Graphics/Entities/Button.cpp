@@ -2,7 +2,7 @@
 #include "Input.h"
 #include "Drawing.h"
 #include "Button.h"
-
+#include "Font.h";
 
 Button::Button(float x, float y, std::wstring text, std::function<void()> click)
 {
@@ -10,9 +10,13 @@ Button::Button(float x, float y, std::wstring text, std::function<void()> click)
 	Button::Size = { 70,20 };
 	Button::Name = text;
 	Button::Action = click;
+	Button::SetWidth();
+}
+void Button::SetWidth()
+{
+	Button::Size.x = GetTextWidth(Button::Name, 11, "Verdana") + 20;
 
 }
-
 void Button::Update()
 {
 	if (!Button::Parent)
