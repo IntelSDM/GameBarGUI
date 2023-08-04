@@ -16,24 +16,25 @@ GroupBox::GroupBox(std::wstring name, float x, float y, float width, float heigh
 }
 void GroupBox::Update()
 {
-	if (!GroupBox::Parent)
+	if (!GroupBox::Parent)	
 		GroupBox::SetVisible(false);
 
 	if (!GroupBox::IsVisible())
 		return;
 	GroupBox::TextStartPos = GroupBox::Parent->GetParent()->GetPos().x + GroupBox::Pos.x + GroupBox::TextStartOffset;
-	GroupBox::ParentPos = GroupBox::GetParent()->GetPos();
-	GroupBox::ParentSize = GroupBox::GetParent()->GetSize();
+	GroupBox::ParentPos = { GroupBox::Parent->GetParent()->GetPos().x + GroupBox::Pos.x + 5, GroupBox::Parent->GetParent()->GetPos().y + GroupBox::Pos.y + 10};
+	GroupBox::ParentSize = { GroupBox::Size };
 
-	size_t ignorecount = 0;
-
-	for (child& it : GroupBox::Parent->GetContainer())
+	for (child& it : GroupBox::GetContainer())
 	{
-		if (it == shared_from_this())
-			break;
-
-		if (!it->IsVisible())
-			++ignorecount;
+		// if it exceeds the position/size of this then dont draw it.
+		bool inbox = (
+			GroupBox::ParentPos.x + it->Pos.x >  GroupBox::Pos.x &&
+			GroupBox::ParentPos.y + it->Pos.y >  GroupBox::Pos.y &&
+			GroupBox::ParentPos.x + it->Pos.x + it->Size.x < GroupBox::Pos.x + GroupBox::Size.x &&
+			GroupBox::ParentPos.y + it->Pos.y + it->Size.y <  GroupBox::Pos.y + GroupBox::Size.y
+			);
+		it->SetVisible(inbox);
 	}
 	
 

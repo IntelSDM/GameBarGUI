@@ -121,7 +121,25 @@ void CreateGUI()
 		tabcontroller->Push(tab1);
 		auto tab2 = std::make_shared<Tab>(L"Tab3", 115, 25, 50, 20, &SelectedTab);
 		{
-			auto groupbox = std::make_shared<GroupBox>(L"Groupbox", 20, 40, 250, 200);
+			auto groupbox = std::make_shared<GroupBox>(L"Groupbox", 20, 40, 400, 200);
+			{
+				auto toggle = std::make_shared<Toggle>(0, 0, L"Toggle", &ToggleTest);
+				groupbox->Push(toggle);
+				auto toggle1 = std::make_shared<Toggle>(0, 20, L"Toggle", &ToggleTest1);
+				groupbox->Push(toggle1);
+				auto label = std::make_shared<Label>(L"Label", 0, 40);
+				groupbox->Push(label);
+				auto button = std::make_shared<Button>(0, 60, L"Button", []()
+					{
+						Beep(100, 100);
+					});
+				groupbox->Push(button);
+				auto button1 = std::make_shared<Button>(0, 450, L"Button at 300", []()
+					{
+						Beep(100, 100);
+					});
+				groupbox->Push(button1);
+			}
 			tab2->Push(groupbox);
 		}
 		tabcontroller->Push(tab2);
