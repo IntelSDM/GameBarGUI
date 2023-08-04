@@ -43,40 +43,40 @@ void CreateGUI()
 		auto tabcontroller = std::make_shared<TabController>();
 			form->Push(tabcontroller);
 		//std::string name, float x, float y, float width, float height, int* selectedtab = nullptr
-		auto tab = std::make_shared<Tab>(L"Tab1", 5, 25, 50, 20, &SelectedTab);
+		auto tab = std::make_shared<Tab>(L"Tab1", 5, 55, 50, 20, &SelectedTab);
 		{			
-			auto colourpicker = std::make_shared<ColourPicker>(200, 40, &Col);
+			auto colourpicker = std::make_shared<ColourPicker>(200, 10, &Col);
 			tab->Push(colourpicker);
-			auto toggle = std::make_shared<Toggle>(10, 40, L"Toggle", &ToggleTest);
+			auto toggle = std::make_shared<Toggle>(10,10, L"Toggle", &ToggleTest);
 			tab->Push(toggle);
-			auto toggle1 = std::make_shared<Toggle>(10, 60, L"Toggle", &ToggleTest1);
+			auto toggle1 = std::make_shared<Toggle>(10, 30, L"Toggle", &ToggleTest1);
 			tab->Push(toggle1);
-			auto label = std::make_shared<Label>(L"Label", 10, 80);
+			auto label = std::make_shared<Label>(L"Label", 10, 50);
 			tab->Push(label);
-			auto button = std::make_shared<Button>(10, 100, L"Button", []()
+			auto button = std::make_shared<Button>(10, 80, L"Button", []()
 				{
 					Beep(100, 100);
 				});
 			tab->Push(button);
-			auto textbox = std::make_shared<TextBox>(10, 150, L"Textbox", &TextBoxText);
+			auto textbox = std::make_shared<TextBox>(10, 110, L"Textbox", &TextBoxText);
 			tab->Push(textbox);
-			auto floatslider = std::make_shared<Slider<float>>(10, 190, L"Slider Float", L"", 0.0f, 10.0f, &floatvalue);
+			auto floatslider = std::make_shared<Slider<float>>(10, 145, L"Slider Float", L"", 0.0f, 10.0f, &floatvalue);
 			tab->Push(floatslider);
-			auto intslider = std::make_shared<Slider<int>>(10, 220, L"Slider Int", L"%", 0, 100, &intvalue);
+			auto intslider = std::make_shared<Slider<int>>(10, 175, L"Slider Int", L"%", 0, 100, &intvalue);
 			tab->Push(intslider);
-			auto keybind = std::make_shared<KeyBind>(150, 80, L"KeyBind", &Key);
+			auto keybind = std::make_shared<KeyBind>(150, 50, L"KeyBind", &Key);
 			tab->Push(keybind);
 			std::list<std::wstring> downvalues = {L"Value 12345", L"Value 2", L"Value 3", L"Value 4" , L"Value 5", L"Value 6", L"Value 7" , L"Value 8" , L"Value 9" , L"Value 9" };
-			auto dropdown = std::make_shared<DropDown>(290, 80, L"DropDown", &Down,downvalues);
+			auto dropdown = std::make_shared<DropDown>(290, 20, L"DropDown", &Down,downvalues);
 			tab->Push(dropdown);
 			std::list<std::wstring> combovalues = { L"Value 12345", L"Value 2", L"Value 3", L"Value 4" , L"Value 5", L"Value 6", L"Value 7" , L"Value 8" };
 			std::list<bool*> bools = { &Combo1 ,&Combo2 ,&Combo3 ,&Combo4 ,&Combo5,&Combo5 ,&Combo5 ,&Combo5 };
-			auto combo = std::make_shared<ComboBox>(290, 110, L"DropDown", bools, combovalues);
+			auto combo = std::make_shared<ComboBox>(290, 50, L"DropDown", bools, combovalues);
 			tab->Push(combo);
 		
 		}
 		tabcontroller->Push(tab);
-		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 25, 50, 20, &SelectedTab);
+		auto tab1 = std::make_shared<Tab>(L"Tab2", 60, 55, 50, 20, &SelectedTab);
 		{
 		//	auto label = std::make_shared<Label>(L"Label", 10, 80);
 		//	tab1->Push(label);
@@ -119,7 +119,7 @@ void CreateGUI()
 			tab1->Push(tablist);
 		}
 		tabcontroller->Push(tab1);
-		auto tab2 = std::make_shared<Tab>(L"Tab3", 115, 25, 50, 20, &SelectedTab);
+		auto tab2 = std::make_shared<Tab>(L"Tab3", 115, 55, 50, 20, &SelectedTab);
 		{
 			auto groupbox = std::make_shared<GroupBox>(L"Groupbox", 20, 40, 400, 200);
 			{
@@ -143,7 +143,7 @@ void CreateGUI()
 			tab2->Push(groupbox);
 		}
 		tabcontroller->Push(tab2);
-		auto tab3 = std::make_shared<Tab>(L"Tab4", 170, 25, 50, 20, &SelectedTab);
+		auto tab3 = std::make_shared<Tab>(L"Tab4", 170, 55, 50, 20, &SelectedTab);
 		tabcontroller->Push(tab3);
 		
 	}

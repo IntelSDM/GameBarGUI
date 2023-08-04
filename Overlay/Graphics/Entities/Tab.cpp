@@ -21,7 +21,7 @@ void Tab::Update()
 
 	if (!Tab::IsVisible())
 		return;
-	Tab::ParentPos = Tab::GetParent()->GetPos();
+	Tab::ParentPos = Tab::GetParent()->GetParentPos();
 	Tab::ParentSize = Tab::GetParent()->GetSize();
 
 	size_t ignorecount = 0;

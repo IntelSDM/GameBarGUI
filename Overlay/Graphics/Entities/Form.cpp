@@ -94,7 +94,7 @@ void Form::Update()
     //SetCursor()
     Form::TitleBar = { Form::Size.x,  Form::Border.y };
     Form::Cursor = MousePos;
-
+    Form::ParentPos = { Form::Pos.x + Form::Border.x,Form::Pos.y + Form::Border.y };
     if (Form::Blocked)
         return;
     Form::DragAction();

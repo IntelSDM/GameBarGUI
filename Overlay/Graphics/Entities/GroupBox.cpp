@@ -24,7 +24,7 @@ void GroupBox::Update()
 	GroupBox::TextStartPos = GroupBox::Parent->GetParent()->GetPos().x + GroupBox::Pos.x + GroupBox::TextStartOffset;
 	GroupBox::ParentPos = { GroupBox::Parent->GetParent()->GetPos().x + GroupBox::Pos.x + 5, GroupBox::Parent->GetParent()->GetPos().y + GroupBox::Pos.y + 10};
 	GroupBox::ParentSize = { GroupBox::Size };
-
+	
 	for (child& it : GroupBox::GetContainer())
 	{
 		// if it exceeds the position/size of this then dont draw it.
@@ -34,7 +34,8 @@ void GroupBox::Update()
 			GroupBox::ParentPos.x + it->Pos.x + it->Size.x < GroupBox::Pos.x + GroupBox::Size.x &&
 			GroupBox::ParentPos.y + it->Pos.y + it->Size.y <  GroupBox::Pos.y + GroupBox::Size.y
 			);
-		it->SetVisible(inbox);
+		//it->SetVisible(inbox);
+
 	}
 	
 

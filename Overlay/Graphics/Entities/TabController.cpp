@@ -13,7 +13,7 @@ void TabController::Update()
 	// The tab control is NOT valid, or disabled.
 	if (!TabController::IsVisible())
 		return;
-
+	TabController::ParentPos = TabController::Parent->GetParentPos();
 	TabController::Pos.x = TabController::Parent->GetPos().x;
 	TabController::Pos.y = TabController::Parent->GetPos().y;
 	TabController::Size = TabController::Parent->GetSize();
