@@ -49,3 +49,6 @@ GUI Overlay built on the Microsoft UWP GameBar.
     * Scroll Bar To Navigate
     * Dynamic Size To Fit Text
     * Text Culling
+
+## To-Do Lists:
+* Fix Text Pasting Not Working In Gamebar(Works In VS Emulation App)
