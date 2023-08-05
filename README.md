@@ -1,8 +1,10 @@
 # GameBarGUI
 GUI Overlay built on the Microsoft UWP GameBar.
+<br>
+* [Installing Guide](./Instructions.md)
 
 ## Images/Video:
-[![IMAGE ALT TEXT](./Images/1.png)](https://www.youtube.com/watch?v=zh3jbhoyDT0 "Devblog 2")
+[![IMAGE ALT TEXT](./Images/1.png)](https://www.youtube.com/watch?v=zh3jbhoyDT0 "Video")
 
 ## Features:
 * Input Management
@@ -19,6 +21,7 @@ GUI Overlay built on the Microsoft UWP GameBar.
   * Clipped Text
   * Rounded Rectangle
   * Lines
+  * Sprite Batch Drawing (Optimised Drawing For Many Draw Calls)
 * Font System
   * Create Fonts
   * Retrieve Fonts From Dictionary
@@ -49,6 +52,5 @@ GUI Overlay built on the Microsoft UWP GameBar.
     * Scroll Bar To Navigate
     * Dynamic Size To Fit Text
     * Text Culling
-
 ## To-Do Lists:
 * Fix Text Pasting Not Working In Gamebar(Works In VS Emulation App)
