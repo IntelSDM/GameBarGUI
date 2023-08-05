@@ -149,10 +149,10 @@ void Overlay::KeyUp(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::Ke
 }
 void Overlay::SwapChainPanel_Loaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	canvasSwapChainPanel->SwapChain = ref new CanvasSwapChain(CanvasDevice::GetSharedDevice(), (float)Window::Current->CoreWindow->Bounds.Width, 
+	SwapChainPanel->SwapChain = ref new CanvasSwapChain(CanvasDevice::GetSharedDevice(), (float)Window::Current->CoreWindow->Bounds.Width, 
 		(float)Window::Current->CoreWindow->Bounds.Height, 96);
 
-	CanvasObject = canvasSwapChainPanel;
+	CanvasObject = SwapChainPanel;
 	CanvasObject->AllowFocusWhenDisabled = true;
 	//lets use this it is way better for what we want
 
