@@ -5,7 +5,8 @@ GUI Overlay built on the Microsoft UWP GameBar.
 
 ## Images/Video:
 [![IMAGE ALT TEXT](./Images/1.png)](https://www.youtube.com/watch?v=zh3jbhoyDT0 "Video")
-
+<br>
+_Click Me To Play Video_
 ## Features:
 * Input Management
   * Character Input
