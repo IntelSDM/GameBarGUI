@@ -53,5 +53,7 @@ _Click Me To Play Video_
     * Scroll Bar To Navigate
     * Dynamic Size To Fit Text
     * Text Culling
+  * Event Handler
+    * Value Changed Event
 ## To-Do Lists:
 * Fix Text Pasting Not Working In Gamebar(Works In VS Emulation App)
