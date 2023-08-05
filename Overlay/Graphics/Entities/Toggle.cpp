@@ -35,6 +35,7 @@ void Toggle::Update()
 
 			*Toggle::Data = !(*Toggle::Data);
 			Toggle::LastClick = (clock() * 0.00001f) + 0.002f;
+			Toggle::ValueChangeEvent();
 		}
 		// text click check
 		Vector2 textdimensions = { Toggle::TextWidth + 4,Toggle::TextHeight };
@@ -43,6 +44,7 @@ void Toggle::Update()
 
 			*Toggle::Data = !(*Toggle::Data);
 			Toggle::LastClick = (clock() * 0.00001f) + 0.002f;
+			Toggle::ValueChangeEvent();
 		}
 	}
 }

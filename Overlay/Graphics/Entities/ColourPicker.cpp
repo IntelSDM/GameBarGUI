@@ -44,6 +44,7 @@ void ColourPicker::Paste()
 	ColourPicker::Saturation = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).V;
 	ColourPicker::Brightness = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).S;
 	ColourPicker::Hue = RGBToHue(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B);
+	ColourPicker::ValueChangeEvent();
 }
 void ColourPicker::ContextMenu()
 {
@@ -103,6 +104,8 @@ void ColourPicker::Update()
 	}
 	if (!IsKeyDown(VK_LBUTTON) && !ColourPicker::ContextActive)
 	{
+		if(ColourPicker::HeldHue || ColourPicker::Alpha || ColourPicker::HeldSaturation)
+			ColourPicker::ValueChangeEvent();
 		ColourPicker::HeldHue = false;
 		ColourPicker::HeldAlpha = false;
 		ColourPicker::HeldSaturation = false;

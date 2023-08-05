@@ -68,6 +68,19 @@ void Entity::SetRelativeParent(child parent)
 }
 #pragma endregion
 
+#pragma region Events
+
+void Entity::SetValueChangedEvent(std::function<void()> evnt)
+{
+    Entity::ValueChangeEvent = evnt;
+}
+
+std::function<void()> Entity::GetValueChangedEvent()
+{
+    return Entity::ValueChangeEvent;
+}
+#pragma endregion
+
 #pragma region Container
 void Container::Draw()
 {

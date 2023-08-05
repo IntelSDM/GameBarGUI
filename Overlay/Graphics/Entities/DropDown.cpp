@@ -163,7 +163,8 @@ void DropDown::Update()
 				DropDown::SetBlockedSiblings(false);
 				DropDown::CalculateBuffer();
 				DropDown::ConvertSelectedName();
-
+				DropDown::ValueChangeEvent();
+				Sleep(50); // bandage fix to stop click through
 			}
 			i++;
 		}

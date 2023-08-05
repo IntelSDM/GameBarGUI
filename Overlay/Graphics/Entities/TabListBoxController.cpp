@@ -119,7 +119,7 @@ void TabListBoxController::Update()
 		float itemposy = TabListBoxController::ParentPos.y + TabListBoxController::Pos.y + ((i - TabListBoxController::PointerStart) * 20);
 		if (IsMouseInRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2, (itemposy), TabListBoxController::Size.x - (TabListBoxController::ScrollWidth + 2), 20) && TabListBoxController::LastClick < (clock() * 0.00001f) && IsKeyClicked(VK_LBUTTON))
 		{
-		
+			TabListBoxController::ValueChangeEvent();
 			*Selected = tab->Index;
 			TabListBoxController::SetActiveIndex();
 			TabListBoxController::LastClick = (clock() * 0.00001f) + 0.002f;

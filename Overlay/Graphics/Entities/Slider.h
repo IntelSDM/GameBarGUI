@@ -41,7 +41,8 @@ public:
 	
 		if (!IsKeyDown(VK_LBUTTON))
 		{
-		
+			if(Held == true)
+				ValueChangeEvent();
 			Held = false;
 		}
 		if (IsMouseInRectangle(ParentPos.x + Pos.x - 2, ParentPos.y + (Pos.y + 15) - 2, Size.x + 3, Size.y + 3) && IsKeyClicked(VK_LBUTTON) && !Blocked)

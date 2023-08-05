@@ -108,6 +108,7 @@ void KeyBind::Paste()
 {
 	*KeyBind::Key = KeyBindClipBoard;
 	KeyBind::ConvertKeyToName();
+	KeyBind::ValueChangeEvent();
 }
 void KeyBind::CollectInput()
 {
@@ -120,9 +121,10 @@ void KeyBind::CollectInput()
 		}
 		if (IsKeyClicked(i) && KeyBind::LastClick < (clock() * 0.00001f))
 		{
-			KeyBind::Key = new int(i);
+			*KeyBind::Key = i;
 			KeyBind::Active = false;
 			KeyBind::LastClick = (clock() * 0.00001f) + 0.002f;
+			KeyBind::ValueChangeEvent();
 			return;
 
 		}

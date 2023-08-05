@@ -39,9 +39,11 @@ void Tab::Update()
 	{
 		if (IsMouseInRectangle(Tab::ParentPos.x + Tab::Pos.x, (Tab::ParentPos.y + Tab::ParentSize.y) - Tab::Pos.y, Tab::Size.x, Tab::Size.y) && IsKeyClicked(VK_LBUTTON) && !selected && Tab::LastClick < (clock() * 0.00001f))
 		{
+		
 			*Selected = Index;
 			// ideally you just want to make a timer and use that but since this is just poc we do this
 			Tab::LastClick = (clock() * 0.00001f) + 0.002f;
+			Tab::ValueChangeEvent();
 		}
 	}
 

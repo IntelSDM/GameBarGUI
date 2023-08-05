@@ -200,10 +200,11 @@ void ComboBox::Update()
 			{
 				auto it = ComboBox::Items.begin();
 				std::advance(it, i);
-
+				ComboBox::ValueChangeEvent();
 				**it = !**it;
 				ComboBox::LastClick = (clock() * 0.00001f) + 0.002f;
 				ComboBox::ConvertSelectedName();
+				Sleep(50); // bandage click through fix
 			}
 			i++;
 		}

@@ -45,12 +45,13 @@ void TextBox::SetState()
 		TextBox::Selecting = false;
 		TextBox::Held = false;
 		TextBox::Active = false; // prevent 2 being active at the same time unless they are somehow fucking merged
+		TextBox::ValueChangeEvent();
 	}
 	WPARAM character = Char;
 	if (character == VK_RETURN || character == VK_ESCAPE)
 	{
 		TextBox::Active = false;
-
+		TextBox::ValueChangeEvent();
 	}
 	if (!IsKeyDown(VK_LBUTTON))
 		TextBox::Held = false;
@@ -573,6 +574,7 @@ void TextBox::ContextMenu()
 		TextBox::Held = false;
 		TextBox::Active = false; // prevent 2 being active at the same time unless they are somehow fucking merged
 		TextBox::LastClick = (clock() * 0.00001f) + 0.002f;
+		TextBox::ValueChangeEvent();
 	}
 	else if (IsKeyClicked(VK_LBUTTON) && !IsMouseInRectangle(TextBox::Pos + TextBox::ParentPos, TextBox::Size))
 	{
