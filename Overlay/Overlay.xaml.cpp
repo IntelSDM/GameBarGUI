@@ -57,7 +57,7 @@ void RenderingThread()
 		RenderGUI();
 		/*END OF RENDERING*/
 		SwapChain->Flush();
-		CanvasObject->SwapChain->Present();
+		CanvasObject->SwapChain->Present(0);
 	
 
 	
