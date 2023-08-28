@@ -8,7 +8,7 @@ if errorlevel 1 goto runAs
 goto stuff
 
 :runAs
-powershell "start installer.bat -v runAs"
+powershell "installer script.bat -v runAs"
 exit
 
 
@@ -16,4 +16,4 @@ exit
 cd /D %~dp0
 
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
-powershell -Command "add-appxpackage -path data/AppxManifest.xml -register"
+powershell -Command "add-appxpackage -path AppxManifest.xml -register"
