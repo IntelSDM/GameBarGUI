@@ -63,12 +63,6 @@
 <Pinned>true</Pinned>
                    <AllowForegroundTransparency>true</AllowForegroundTransparency>
                   <Size>
-                    <Height>1047</Height>
-                    <Width>1920</Width>
-                    <MinHeight>1047</MinHeight>
-                    <MinWidth>1920</MinWidth>
-                    <MaxHeight>1047</MaxHeight>
-                    <MaxWidth>1920</MaxWidth>
                   </Size>
                   <ResizeSupported>
                     <Horizontal>true</Horizontal>
