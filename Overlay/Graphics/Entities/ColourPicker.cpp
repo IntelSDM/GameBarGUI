@@ -41,6 +41,7 @@ void ColourPicker::Copy()
 void ColourPicker::Paste()
 {
 	*ColourPicker::MainColour = ColourPickerClipBoard;
+	ColourPicker::Alpha = ColourPickerClipBoard.A;
 	ColourPicker::Saturation = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).V;
 	ColourPicker::Brightness = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).S;
 	ColourPicker::Hue = RGBToHue(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B);
