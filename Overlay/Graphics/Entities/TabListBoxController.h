@@ -8,7 +8,7 @@ protected:
 	std::list<std::wstring> Names;
 	std::list<std::wstring> CulledNames;
 	int ScrollWidth = 5;
-	int* Selected;
+	int Selected;
 	bool ScrollBarHeld = false;
 	bool Active = false;
 
@@ -24,7 +24,7 @@ protected:
 
 	bool FirstItem = false;
 public:
-	TabListBoxController(float x, float y, float width, float height, int* selected);
+	TabListBoxController(float x, float y, float width, float height);
 	void Update();
 	void Draw();
 	void PushBack(std::shared_ptr<TabListBox> tab);

@@ -80,7 +80,7 @@ void CreateGUI()
 		{
 		//	auto label = std::make_shared<Label>(L"Label", 10, 80);
 		//	tab1->Push(label);
-			auto tablist = std::make_shared<TabListBoxController>(10, 40, 160, 160, &SelectedSubTab);
+			auto tablist = std::make_shared<TabListBoxController>(10, 40, 160, 160);
 			auto listtab1 = std::make_shared<TabListBox>(L"Tab1");
 			{
 				std::list<std::wstring> downvalues = { L"Value 12345", L"Value 2", L"Value 3", L"Value 4" , L"Value 5", L"Value 6", L"Value 7" , L"Value 8" , L"Value 9" , L"Value 9" };

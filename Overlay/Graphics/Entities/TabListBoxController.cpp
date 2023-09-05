@@ -6,11 +6,11 @@
 #include "Font.h"
 #include "Graphics.h"
 #include "TabListBox.h"
-TabListBoxController::TabListBoxController(float x, float y, float width, float height,int* selected)
+TabListBoxController::TabListBoxController(float x, float y, float width, float height)
 {
 	TabListBoxController::Pos = { x,y };
 	TabListBoxController::Size = { width,height };
-	TabListBoxController::Selected = selected;
+	TabListBoxController::Selected = 0;
 	TabListBoxController::PointerEnd = TabListBoxController::Size.y / 20;
 	TabListBoxController::PointerStart = 0;
 	TabListBoxController::SetActiveIndex();
@@ -20,7 +20,7 @@ void TabListBoxController::SetActiveIndex()
 	int i = 0;
 	for (auto tab : TabListBoxController::Tabs)
 	{
-		if (tab->Index == *TabListBoxController::Selected)
+		if (tab->Index == TabListBoxController::Selected)
 		{
 			TabListBoxController::ActiveIndex = i;
 			return;
@@ -120,7 +120,7 @@ void TabListBoxController::Update()
 		if (IsMouseInRectangle(TabListBoxController::ParentPos.x + TabListBoxController::Pos.x + TabListBoxController::ScrollWidth + 2, (itemposy), TabListBoxController::Size.x - (TabListBoxController::ScrollWidth + 2), 20) && TabListBoxController::LastClick < (clock() * 0.00001f) && IsKeyClicked(VK_LBUTTON))
 		{
 			TabListBoxController::ValueChangeEvent();
-			*Selected = tab->Index;
+			Selected = tab->Index;
 			TabListBoxController::SetActiveIndex();
 			TabListBoxController::LastClick = (clock() * 0.00001f) + 0.002f;
 		}
@@ -150,7 +150,7 @@ void TabListBoxController::Draw()
 		return;
 	for (std::shared_ptr<TabListBox> tab : TabListBoxController::Tabs)
 	{
-		if (tab->Index == *Selected)
+		if (tab->Index == Selected)
 		{
 			tab->Draw();
 			tab->Update();
@@ -242,7 +242,7 @@ void TabListBoxController::PushBack(std::shared_ptr<TabListBox> tab)
 	TabListBoxController::Names.push_back(tab->GetName());
 	if (!FirstItem)
 	{
-		*TabListBoxController::Selected = tab->Index;
+		TabListBoxController::Selected = tab->Index;
 		FirstItem = true;
 	}
 	TabListBoxController::Push(tab);
