@@ -34,8 +34,7 @@ protected:
     static float HueToSliderValue(float hue);
     static float SliderValueToHue(float slidervalue);
     static float AlphaToSliderValue(float alpha);
-    static float ColourPicker::SaturationToSliderValue(float saturation);
-    COLORREF ColourPicker::GetColorAtPosition(int x, int y);
+    static float SaturationToSliderValue(float saturation);
 public:
     ColourPicker(float x, float y, Color* colour);
     void Update();
