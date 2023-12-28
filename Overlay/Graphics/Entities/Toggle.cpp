@@ -13,7 +13,7 @@ Toggle::Toggle(float x, float y, std::wstring text, bool* data = nullptr)
 	Toggle::TextHeight = GetTextHeight(text, 12, "Verdana");
 	Toggle::TextWidth = GetTextWidth(text, 12, "Verdana");
 	Data = data;
-
+	SetVisible(true);
 
 }
 

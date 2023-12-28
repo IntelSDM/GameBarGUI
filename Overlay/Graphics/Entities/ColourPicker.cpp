@@ -14,6 +14,7 @@ ColourPicker::ColourPicker(float x, float y, Color* colour)
 	ColourPicker::Saturation = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).V;
 	ColourPicker::Brightness = RgbToHsv(ColourPicker::MainColour->R, ColourPicker::MainColour->G, ColourPicker::MainColour->B).S;
 	ColourPicker::ContextSize = { 80.0f,20.0f * (int)ColourPicker::ContextNames.size() };
+	SetVisible(true);
 }
 float ColourPicker::HueToSliderValue(float hue)
 {

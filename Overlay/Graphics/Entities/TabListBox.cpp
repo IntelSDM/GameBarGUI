@@ -11,6 +11,7 @@ TabListBox::TabListBox(std::wstring name)
 	TabListBox::Name = name;
 	TabListBox::Index = TabCount;
 	TabCount++;
+	SetVisible(true);
 }
 
 void TabListBox::Update()

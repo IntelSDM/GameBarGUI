@@ -11,6 +11,7 @@ KeyBind::KeyBind(float x, float y, std::wstring text, int* key)
 	KeyBind::Size = { 80,20 };
 	KeyBind::ConvertKeyToName();
 	KeyBind::ContextSize = { 80.0f,20.0f * (int)KeyBind::ContextNames.size() };
+	SetVisible(true);
 }
 void KeyBind::ConvertKeyToName()
 {

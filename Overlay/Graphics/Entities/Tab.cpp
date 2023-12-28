@@ -13,6 +13,7 @@ Tab::Tab(std::wstring name, float x, float y, float width, float height, int* se
 	Tab::Name = name;
 	//	Tab::Size.x += 1;
 	TabCount++;
+	SetVisible(true);
 }
 void Tab::Update()
 {

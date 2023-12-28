@@ -6,6 +6,7 @@ Label::Label(std::wstring text, float posx, float posy)
 {
 	Label::Pos = { posx,posy };
 	Label::Name = text;
+	SetVisible(true);
 }
 void Label::Update()
 {

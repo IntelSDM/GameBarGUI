@@ -19,6 +19,7 @@ TextBox::TextBox(float x, float y, std::wstring text, std::wstring* data = nullp
 	TextBox::SelectedPoint = VisiblePointerEnd - TextBox::VisiblePointerStart;
 	TextBox::SelectedPosition = GetTextWidth(TextBox::MainString->substr(TextBox::VisiblePointerStart, TextBox::SelectedPoint), 11, "Verdana");
 	TextBox::ContextSize = { 80.0f,20.0f * (int)TextBox::ContextNames.size() };
+	SetVisible(true);
 }
 void TextBox::SetStartIndex()
 {
@@ -144,6 +145,8 @@ void TextBox::InputText()
 	if (TextBox::IsKeyAcceptable())
 	{
 		//	(*TextBox::MainString) += Char;
+		SelectingEndPosition = 0;
+		SelectingStartPosition = 0;
 		TextBox::VisiblePointerEnd++;
 		TextBox::TextWidth = GetTextWidth(MainString->substr(TextBox::VisiblePointerStart, TextBox::VisiblePointerEnd), 11, "Verdana");
 		MainString->insert(TextBox::SelectedPoint, 1, Char);

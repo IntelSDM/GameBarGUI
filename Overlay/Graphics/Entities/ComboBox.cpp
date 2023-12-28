@@ -19,6 +19,7 @@ ComboBox::ComboBox(float x, float y, std::wstring text, std::list<bool*>items, s
 	}
 	ComboBox::PointerStart = 0;
 	ComboBox::PointerEnd = ComboBox::MaxVisibleItems;
+	SetVisible(true);
 }
 void ComboBox::CalculateBuffer()
 {

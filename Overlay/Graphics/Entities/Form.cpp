@@ -23,7 +23,7 @@ Form::Form(float x, float y, float w, float h, float borderwidth, float borderhe
     Form::CanStretch = stretch;
     Form::CanClose = true;
     Form::CanMinimize = true;
-
+    SetVisible(true);
 
 }
 void Form::DragAction()

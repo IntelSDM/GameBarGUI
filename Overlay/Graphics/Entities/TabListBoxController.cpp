@@ -14,6 +14,7 @@ TabListBoxController::TabListBoxController(float x, float y, float width, float 
 	TabListBoxController::PointerEnd = TabListBoxController::Size.y / 20;
 	TabListBoxController::PointerStart = 0;
 	TabListBoxController::SetActiveIndex();
+	SetVisible(true);
 }
 void TabListBoxController::SetActiveIndex()
 {

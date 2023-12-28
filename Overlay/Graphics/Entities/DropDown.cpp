@@ -18,6 +18,7 @@ DropDown::DropDown(float x, float y, std::wstring text, int* index, std::list<st
 	}
 	DropDown::PointerStart = 0;
 	DropDown::PointerEnd = DropDown::MaxVisibleItems;
+	SetVisible(true);
 }
 void DropDown::CalculateBuffer()
 {

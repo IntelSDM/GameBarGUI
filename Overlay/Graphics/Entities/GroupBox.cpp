@@ -13,6 +13,7 @@ GroupBox::GroupBox(std::wstring name, float x, float y, float width, float heigh
 	GroupBox::TextHeight = GetTextHeight(GroupBox::Name, 12, "Verdana");
 	GroupBox::TextWidth = GetTextWidth(GroupBox::Name, 12, "Verdana");
 	GroupBox::TextStartOffset = 5;
+	SetVisible(true);
 }
 void GroupBox::Update()
 {
